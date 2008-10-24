@@ -24,8 +24,7 @@ import javax.persistence.Id;
 public class TransactionHistoryEntity implements Serializable {
 
     @Id
-    private
-    String tranId;
+    private String tranId;
     private String userId;
     private String scripId;
     private String tranType;
