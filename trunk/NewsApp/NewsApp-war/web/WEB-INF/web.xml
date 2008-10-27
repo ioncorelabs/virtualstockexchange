@@ -9,16 +9,17 @@
         <servlet-class>web.PostMessage</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Login</servlet-name>
-        <servlet-class>web.Login</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>NewServlet</servlet-name>
-        <servlet-class>web.NewServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>NewLogin</servlet-name>
         <servlet-class>web.NewLogin</servlet-class>
+    </servlet>
+    <servlet><servlet-name>PostBuy</servlet-name><servlet-class>web.BuyScrips</servlet-class></servlet>
+    <servlet>
+        <servlet-name>BuyScrips</servlet-name>
+        <servlet-class>web.BuyScrips</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SellScrips</servlet-name>
+        <servlet-class>web.SellScrips</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ListNews</servlet-name>
@@ -29,16 +30,20 @@
         <url-pattern>/PostMessage</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Login</servlet-name>
-        <url-pattern>/Login</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>NewServlet</servlet-name>
-        <url-pattern>/NewServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>NewLogin</servlet-name>
         <url-pattern>/NewLogin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PostBuy</servlet-name>
+        <url-pattern>/PostBuy</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BuyScrips</servlet-name>
+        <url-pattern>/BuyScrips</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SellScrips</servlet-name>
+        <url-pattern>/SellScrips</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
