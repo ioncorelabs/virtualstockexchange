@@ -49,4 +49,8 @@ public class ScripsExchangeEntityFacade implements ScripsExchangeEntityFacadeLoc
         return em.createQuery("select object(o) from ScripsExchangeEntity as o").getResultList();
     }
     
+    public List findScripById(String scripId) {        
+        return em.createQuery("select object(o) from ScripsExchangeEntity as o where o.scripId = ?1").setParameter(1, scripId).getResultList();
+    }
+    
 }

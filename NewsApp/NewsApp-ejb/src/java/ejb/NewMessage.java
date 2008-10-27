@@ -43,11 +43,13 @@ public class NewMessage implements MessageListener {
     }
     
     public void onMessage(Message message) {
+        System.out.print("Msg-------------------->"+message);
         ObjectMessage msg = null;
         try {
             if (message instanceof ObjectMessage) {
                 msg = (ObjectMessage) message;
-                NewsEntity e = (NewsEntity) msg.getObject();
+                System.out.print("Msg-------------------->"+msg.getObject());
+                TransactionHistoryEntity e = (TransactionHistoryEntity) msg.getObject();
                 save(e);
             }
         } catch (JMSException e) {
@@ -60,7 +62,7 @@ public class NewMessage implements MessageListener {
     }
     
     public void save(Object object) {
-        // TODO:
+        // TODO:       
         em.persist(object);
     }
     
