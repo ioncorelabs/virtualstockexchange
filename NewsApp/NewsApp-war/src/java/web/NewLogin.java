@@ -33,18 +33,23 @@ public class NewLogin extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        
+        HttpSession session = request.getSession(true);
+        
         response.setContentType("text/html;charset=UTF-8");
         
         String uid=request.getParameter("userid");
         String pwd=request.getParameter("password");
+        
+        session.setAttribute("userId", uid);        
         
         if ((uid!=null) && (pwd!=null)) {
             LoginEntityFacadeLocal loginEntityFacade = (LoginEntityFacadeLocal) lookupLoginEntityFacade();
             List news = loginEntityFacade.findAll(uid, pwd);
             
             if (!news.isEmpty()) {
-                response.sendRedirect("ListNews");
-            }            
+                response.sendRedirect("SellScrips");
+            }
         }
         
         PrintWriter out = response.getWriter();
