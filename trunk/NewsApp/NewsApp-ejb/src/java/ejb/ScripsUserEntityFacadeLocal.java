@@ -28,4 +28,6 @@ public interface ScripsUserEntityFacadeLocal {
 
     List findAll();
     
+    List findScripForUser(String s1, String s2);
+    
 }

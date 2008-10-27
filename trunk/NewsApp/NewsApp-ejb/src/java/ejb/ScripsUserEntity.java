@@ -1,7 +1,7 @@
 /*
  * ScripsUserEntity.java
  *
- * Created on October 24, 2008, 7:00 PM
+ * Created on October 26, 2008, 7:00 PM
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
@@ -26,11 +26,9 @@ public class ScripsUserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
     private String scripId;
     private String userId;
     private int sharesHeld;
-    private int buyingPrice;
     
     /** Creates a new instance of ScripsUserEntity */
     public ScripsUserEntity() {
@@ -115,14 +113,6 @@ public class ScripsUserEntity implements Serializable {
 
     public void setSharesHeld(int sharesHeld) {
         this.sharesHeld = sharesHeld;
-    }
-
-    public int getBuyingPrice() {
-        return buyingPrice;
-    }
-
-    public void setBuyingPrice(int buyingPrice) {
-        this.buyingPrice = buyingPrice;
     }
     
 }

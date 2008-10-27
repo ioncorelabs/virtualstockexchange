@@ -28,4 +28,6 @@ public interface ScripsExchangeEntityFacadeLocal {
 
     List findAll();
     
+    List findScripById(String scripId);
+    
 }

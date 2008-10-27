@@ -49,4 +49,8 @@ public class ScripsUserEntityFacade implements ScripsUserEntityFacadeLocal {
         return em.createQuery("select object(o) from ScripsUserEntity as o").getResultList();
     }
     
+    public List findScripForUser(String userId, String scripId) {        
+        return em.createQuery("select object(o) from ScripsUserEntity as o where o.scripId = ?1 and o.userId = ?2").setParameter(1, scripId).setParameter(2, userId).getResultList();
+    }
+    
 }

@@ -46,7 +46,7 @@ public class TransactionHistoryEntityFacade implements TransactionHistoryEntityF
     }
 
     public List findAll() {
-        return em.createQuery("select object(o) from TransactionHistoryEntity as o").getResultList();
+        return em.createQuery("select object(o) from TransactionHistoryEntity as o").getResultList();       
     }
     
 }
