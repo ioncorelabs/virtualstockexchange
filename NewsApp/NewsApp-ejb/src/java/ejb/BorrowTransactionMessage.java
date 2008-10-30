@@ -1,7 +1,7 @@
 /*
- * SellTransactionMessage.java
+ * BorrowTransactionMessage.java
  *
- * Created on October 26, 2008, 7:45 PM
+ * Created on October 26, 2008, 1:18 PM
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
@@ -27,27 +27,30 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
- * Entity class SellTransactionMessage
+ * Entity class BorrowTransactionMessage
+ * 
  * 
  * @author Vaibhav
  */
-@MessageDriven(mappedName = "jms/SellTransactionMessage", activationConfig =  {
-        @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
-        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-        @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/mdb2")
-    })
-public class SellTransactionMessage implements MessageListener {
-
+@MessageDriven(mappedName = "jms/TransactionMessage", activationConfig =  {
+    @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
+    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
+    @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/mdb3")
+})
+public class BorrowTransactionMessage implements MessageListener {
+    
     @PersistenceContext
     private EntityManager em;
     
     @Resource
     private MessageDrivenContext mdc;
-        
-    /** Creates a new instance of SellTransactionMessage */
-    public SellTransactionMessage() {
+    
+    /**
+     * Creates a new instance of BuyTransactionMessage
+     */
+    public BorrowTransactionMessage() {
     }
-
+    
     public void onMessage(Message message) {
         ObjectMessage msg = null;
         try {
@@ -63,7 +66,7 @@ public class SellTransactionMessage implements MessageListener {
             te.printStackTrace();
         }
     }
-
+    
     public void save(Object object) {
         List al;
         List al1;
@@ -76,37 +79,40 @@ public class SellTransactionMessage implements MessageListener {
         ScripsExchangeEntityFacadeLocal seef = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityFacade();               
         
         al = seef.findScripById(scripId);
-                
+        
         if(al.isEmpty() != true) {
             ScripsExchangeEntity see = (ScripsExchangeEntity) al.get(0);
             int avail = see.getTotalAvailable();
-            see.setTotalAvailable(avail+num);
-            seef.edit(see); 
-            
-            the.setPricePerShare(see.getPricePerShare());
+            if(num>avail) {
+                //TODO: Raise exception, requesting for more shares than available
+            } else{
+                see.setTotalAvailable(avail-num);
+                seef.edit(see);
+                
+                the.setPricePerShare(see.getPricePerShare());
+            }
         } else{//TODO: Raise exception, Scrip not found
             
         }
         
-        ScripsUserEntityFacadeLocal suef = (ScripsUserEntityFacadeLocal)lookupUserEntityFacade();               
+        ScripsShortedEntityFacadeLocal ssef = (ScripsShortedEntityFacadeLocal)lookupShortedEntityFacade();               
         
-        al1 = suef.findScripForUser(userId, scripId);
+        al1 = ssef.findScripForUser(userId, scripId);
         
         if(al1.isEmpty() != true) {
             //Updating table
-            ScripsUserEntity sue = (ScripsUserEntity) al1.get(0);
-            int held = sue.getSharesHeld();
-            if(num>held) {
-                //TODO: Raise exception, attempt to sell more shares than held
-            }
-            else if(held-num == 0) {
-                suef.destroy(sue);
-            }
-            else {
-                sue.setSharesHeld(held-num);            
-                suef.edit(sue);            
-            }            
-        } else{//TODO:Scrip not held                       
+            ScripsShortedEntity sse = (ScripsShortedEntity) al1.get(0);
+            int held = sse.getSharesBorrowed();
+            sse.setSharesBorrowed(held+num);   
+            sse.setSharesShorted(0);
+            ssef.edit(sse);            
+        } else{
+            //Adding new entity
+            ScripsShortedEntity newsse = new ScripsShortedEntity();
+            newsse.setScripId(scripId);
+            newsse.setBorrowerId(userId);
+            newsse.setSharesBorrowed(num);
+            ssef.create(newsse);                        
         }
                 
         em.flush();
@@ -124,13 +130,13 @@ public class SellTransactionMessage implements MessageListener {
         }
     }
     
-    private ScripsUserEntityFacadeLocal lookupUserEntityFacade() {
+    private ScripsShortedEntityFacadeLocal lookupShortedEntityFacade() {
         try {
             Context c = new InitialContext();
-            return (ScripsUserEntityFacadeLocal) c.lookup("NewsApp/ScripsUserEntityFacade/local");
+            return (ScripsShortedEntityFacadeLocal) c.lookup("NewsApp/ScripsShortedEntityFacade/local");
         } catch(NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
             throw new RuntimeException(ne);
         }
-    }                    
+    }
 }

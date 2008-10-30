@@ -1,17 +1,15 @@
 /*
- * BuyScrips.java
+ * BorrowScrips.java
  *
- * Created on October 24, 2008, 7:08 PM
+ * Created on October 30, 2008, 2:32 PM
  */
 
 package web;
 
 import ejb.ScripsExchangeEntity;
 import ejb.ScripsExchangeEntityFacadeLocal;
-import ejb.ScripsUserEntityFacadeLocal;
 import ejb.TransactionHistoryEntity;
 import java.io.*;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,8 +32,8 @@ import javax.servlet.http.*;
  * @author Vaibhav
  * @version
  */
-public class BuyScrips extends HttpServlet {
-   
+public class BorrowScrips extends HttpServlet {
+    
     /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -58,7 +56,7 @@ public class BuyScrips extends HttpServlet {
             try {
                 
                 InitialContext ctx = new InitialContext();
-                queue = (Queue) ctx.lookup("queue/mdb1");
+                queue = (Queue) ctx.lookup("queue/mdb3");
                 QueueConnectionFactory factory =
                         (QueueConnectionFactory) ctx.lookup("ConnectionFactory");
                 connection = factory.createQueueConnection();
@@ -73,7 +71,7 @@ public class BuyScrips extends HttpServlet {
                 e.setScripId(scripId);
                 e.setUserId(appSession.getAttribute("userId").toString());
                 e.setTotalShares(Integer.parseInt(num));
-                e.setTranType("Buy");
+                e.setTranType("Borrow");
                 e.setTranDate(System.currentTimeMillis());
                 
                 message.setObject(e);
@@ -95,12 +93,12 @@ public class BuyScrips extends HttpServlet {
         //TODO output your page here
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Buy Shares</title>");
+        out.println("<title>Borrow Shares</title>");
         out.println("</head>");
         out.println("<body>");
         out.println("<h1>Servlet NewServlet at " + request.getContextPath() + "</h1>");
         out.println("<form>");
-                
+        
         ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityFacade();
         List scrips = lookupExchangeEntityEntityFacade.findAll();
         out.println("<select name='scripId'>");
@@ -108,8 +106,8 @@ public class BuyScrips extends HttpServlet {
             ScripsExchangeEntity elem = (ScripsExchangeEntity) obj;
             out.println("<option value =" +elem.getScripId()+">"+elem.getScripName() +" </option>");
         }
-        out.println("</select><br>");
-                        
+        out.println("</select><br><br>");
+        
         out.println("Number of shares: <input type='text' name='num'><br><br>");
         out.println("<input type='submit'><br/>");
         out.println("</form>");
@@ -119,6 +117,7 @@ public class BuyScrips extends HttpServlet {
         
         out.close();
     }
+    
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** Handles the HTTP <code>GET</code> method.
@@ -155,5 +154,4 @@ public class BuyScrips extends HttpServlet {
             throw new RuntimeException(ne);
         }
     }
-    
 }

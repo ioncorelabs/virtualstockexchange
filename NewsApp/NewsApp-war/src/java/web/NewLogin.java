@@ -48,7 +48,7 @@ public class NewLogin extends HttpServlet {
             List news = loginEntityFacade.findAll(uid, pwd);
             
             if (!news.isEmpty()) {
-                response.sendRedirect("SellScrips");
+                response.sendRedirect("TraderHome");
             }
         }
         

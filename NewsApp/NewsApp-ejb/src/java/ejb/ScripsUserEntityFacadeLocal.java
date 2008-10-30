@@ -30,4 +30,6 @@ public interface ScripsUserEntityFacadeLocal {
     
     List findScripForUser(String s1, String s2);
     
+    List findScrips(String userId);
+    
 }

@@ -21,6 +21,22 @@
         <servlet-name>SellScrips</servlet-name>
         <servlet-class>web.SellScrips</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>TraderHome</servlet-name>
+        <servlet-class>web.TraderHome</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShortSellHome</servlet-name>
+        <servlet-class>web.ShortSellHome</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BorrowScrips</servlet-name>
+        <servlet-class>web.BorrowScrips</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShortSellScrips</servlet-name>
+        <servlet-class>web.ShortSellScrips</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListNews</servlet-name>
         <url-pattern>/ListNews</url-pattern>
@@ -44,6 +60,19 @@
     <servlet-mapping>
         <servlet-name>SellScrips</servlet-name>
         <url-pattern>/SellScrips</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TraderHome</servlet-name>
+        <url-pattern>/TraderHome</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping><servlet-name>ShortSellHome</servlet-name><url-pattern>/ShortSellHome</url-pattern></servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BorrowScrips</servlet-name>
+        <url-pattern>/BorrowScrips</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShortSellScrips</servlet-name>
+        <url-pattern>/ShortSellScrips</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
