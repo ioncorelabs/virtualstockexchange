@@ -1,7 +1,7 @@
 /*
- * TransactionHistoryEntity.java
+ * ScripsShortedEntity.java
  *
- * Created on October 26, 2008, 3:15 PM
+ * Created on October 30, 2008, 2:21 PM
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
@@ -16,30 +16,28 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * Entity class TransactionHistoryEntity
+ * Entity class ScripsShortedEntity
  * 
  * @author Vaibhav
  */
 @Entity
-public class TransactionHistoryEntity implements Serializable {
+public class ScripsShortedEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    private String userId;
     private String scripId;
-    private String tranType;
-    private int totalShares; 
-    private double pricePerShare;
-    private long tranDate;
+    private String borrowerId;
+    private int sharesBorrowed;
+    private int sharesShorted;
     
-    /** Creates a new instance of TransactionHistoryEntity */
-    public TransactionHistoryEntity() {
+    
+    /** Creates a new instance of ScripsShortedEntity */
+    public ScripsShortedEntity() {
     }
 
     /**
-     * Gets the id of this TransactionHistoryEntity.
+     * Gets the id of this ScripsShortedEntity.
      * @return the id
      */
     public Long getId() {
@@ -47,7 +45,7 @@ public class TransactionHistoryEntity implements Serializable {
     }
 
     /**
-     * Sets the id of this TransactionHistoryEntity to the specified value.
+     * Sets the id of this ScripsShortedEntity to the specified value.
      * @param id the new id
      */
     public void setId(Long id) {
@@ -67,8 +65,8 @@ public class TransactionHistoryEntity implements Serializable {
     }
 
     /**
-     * Determines whether another object is equal to this TransactionHistoryEntity.  The result is 
-     * <code>true</code> if and only if the argument is not null and is a TransactionHistoryEntity object that 
+     * Determines whether another object is equal to this ScripsShortedEntity.  The result is 
+     * <code>true</code> if and only if the argument is not null and is a ScripsShortedEntity object that 
      * has the same id field values as this object.
      * @param object the reference object with which to compare
      * @return <code>true</code> if this object is the same as the argument;
@@ -77,10 +75,10 @@ public class TransactionHistoryEntity implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TransactionHistoryEntity)) {
+        if (!(object instanceof ScripsShortedEntity)) {
             return false;
         }
-        TransactionHistoryEntity other = (TransactionHistoryEntity)object;
+        ScripsShortedEntity other = (ScripsShortedEntity)object;
         if (this.getId() != other.getId() && (this.getId() == null || !this.getId().equals(other.getId()))) return false;
         return true;
     }
@@ -92,15 +90,7 @@ public class TransactionHistoryEntity implements Serializable {
      */
     @Override
     public String toString() {
-        return "ejb.TransactionHistoryEntity[id=" + getId() + "]";
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
+        return "ejb.ScripsShortedEntity[id=" + getId() + "]";
     }
 
     public String getScripId() {
@@ -111,36 +101,28 @@ public class TransactionHistoryEntity implements Serializable {
         this.scripId = scripId;
     }
 
-    public String getTranType() {
-        return tranType;
+    public String getBorrowerId() {
+        return borrowerId;
     }
 
-    public void setTranType(String tranType) {
-        this.tranType = tranType;
+    public void setBorrowerId(String borrowerId) {
+        this.borrowerId = borrowerId;
     }
 
-    public int getTotalShares() {
-        return totalShares;
+    public int getSharesBorrowed() {
+        return sharesBorrowed;
     }
 
-    public void setTotalShares(int totalShares) {
-        this.totalShares = totalShares;
+    public void setSharesBorrowed(int sharesBorrowed) {
+        this.sharesBorrowed = sharesBorrowed;
     }
 
-    public double getPricePerShare() {
-        return pricePerShare;
+    public int getSharesShorted() {
+        return sharesShorted;
     }
 
-    public void setPricePerShare(double pricePerShare) {
-        this.pricePerShare = pricePerShare;
-    }
-
-    public long getTranDate() {
-        return tranDate;
-    }
-
-    public void setTranDate(long tranDate) {
-        this.tranDate = tranDate;
+    public void setSharesShorted(int sharesShorted) {
+        this.sharesShorted = sharesShorted;
     }
     
 }

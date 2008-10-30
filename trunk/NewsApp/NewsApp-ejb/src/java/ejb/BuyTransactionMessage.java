@@ -88,6 +88,8 @@ public class BuyTransactionMessage implements MessageListener {
             } else{
                 see.setTotalAvailable(avail-num);
                 seef.edit(see);
+                
+                the.setPricePerShare(see.getPricePerShare());
             }
         } else{//TODO: Raise exception, Scrip not found
             
@@ -113,7 +115,7 @@ public class BuyTransactionMessage implements MessageListener {
         }
                 
         em.flush();
-        em.persist(object);
+        em.persist(the);
     }
     
     
