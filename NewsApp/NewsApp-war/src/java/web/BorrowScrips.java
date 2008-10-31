@@ -69,7 +69,7 @@ public class BorrowScrips extends HttpServlet {
                 TransactionHistoryEntity e = new TransactionHistoryEntity();
                 
                 e.setScripId(scripId);
-                e.setUserId(appSession.getAttribute("userId").toString());
+                e.setUserId(appSession.getAttribute("userid").toString());
                 e.setTotalShares(Integer.parseInt(num));
                 e.setTranType("Borrow");
                 e.setTranDate(System.currentTimeMillis());

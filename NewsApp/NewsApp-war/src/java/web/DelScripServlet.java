@@ -6,8 +6,8 @@
 
 package web;
 
-import ejb.ScripsEntity;
-import ejb.ScripsEntityFacadeLocal;
+import ejb.ScripsExchangeEntity;
+import ejb.ScripsExchangeEntityFacadeLocal;
 import java.io.*;
 import java.util.Iterator;
 import java.util.List;
@@ -46,11 +46,11 @@ public class DelScripServlet extends HttpServlet {
         System.out.println("At admin page as user '" + userid + "'");
         
         String scripid = request.getParameter("scripid");
-        ScripsEntityFacadeLocal scripsEntityFacade = (ScripsEntityFacadeLocal) lookupScripsEntityFacade();
+        ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
             
         if (formSubmitted(scripid))
         {    
-            scripsEntityFacade.delete(scripsEntityFacade.find(scripid));
+            scripsEntityFacade.destroy(scripsEntityFacade.find(scripid));
             response.sendRedirect("AdminServlet"); 
         }
         
@@ -77,7 +77,7 @@ public class DelScripServlet extends HttpServlet {
         
         for (Iterator it = scrips.iterator(); it.hasNext();)
         {
-            ScripsEntity scrip = (ScripsEntity)it.next();
+            ScripsExchangeEntity scrip = (ScripsExchangeEntity)it.next();
             out.println("<option value='" + scrip.getScripId() + "'>" + scrip.getScripId() + "</option><br/>");
         }
         
@@ -90,10 +90,10 @@ public class DelScripServlet extends HttpServlet {
         out.close();
     }
     
-    private ScripsEntityFacadeLocal lookupScripsEntityFacade() {
+    private ScripsExchangeEntityFacadeLocal lookupScripsEntityFacade() {
         try {
             Context c = new InitialContext();
-            return (ScripsEntityFacadeLocal) c.lookup("NewsApp/ScripsEntityFacade/local");
+            return (ScripsExchangeEntityFacadeLocal) c.lookup("NewsApp/ScripsExchangeEntityFacade/local");
         } catch(NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
             throw new RuntimeException(ne);

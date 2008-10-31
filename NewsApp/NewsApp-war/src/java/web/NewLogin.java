@@ -65,7 +65,7 @@ public class NewLogin extends HttpServlet {
                     if(elem.getUserRole() == 't')
                     {                     
                         session.setAttribute("userrole", "t");
-                        response.sendRedirect("TraderServlet");
+                        response.sendRedirect("TraderHome");
                     }
                     if(elem.getUserRole() == 'i')
                     {                     

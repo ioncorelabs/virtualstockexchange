@@ -48,7 +48,7 @@ public class ShortSellScrips extends HttpServlet {
         HttpSession appSession = request.getSession(true);
         
         String num = request.getParameter("number");
-        String userId = (String)appSession.getAttribute("userId");
+        String userId = (String)appSession.getAttribute("userid");
                 
         ScripsShortedEntityFacadeLocal scripsEntityFacade = (ScripsShortedEntityFacadeLocal) lookupScripsShortedEntityFacade();
         List scrips = scripsEntityFacade.findScrips(userId);

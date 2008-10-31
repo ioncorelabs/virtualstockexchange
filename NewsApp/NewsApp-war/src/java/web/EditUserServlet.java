@@ -49,8 +49,7 @@ public class EditUserServlet extends HttpServlet {
         HashMap<String, String> parameterMap = new HashMap<String, String>();
         parameterMap.put("userid",              request.getParameter("userid"));
         parameterMap.put("username",            request.getParameter("username"));
-        parameterMap.put("cashheld",            request.getParameter("cashheld"));
-        parameterMap.put("totalbuyingpower",    request.getParameter("totalbuyingpower"));
+        parameterMap.put("cashheld",            request.getParameter("cashheld"));        
         
         UsersEntityFacadeLocal usersEntityFacade = (UsersEntityFacadeLocal) lookupUsersEntityFacade();
             
@@ -58,8 +57,7 @@ public class EditUserServlet extends HttpServlet {
         {   
             UsersEntity user = usersEntityFacade.find(parameterMap.get("userid"));
             user.setUserName(parameterMap.get("username"));
-            user.setCashHeld(Double.parseDouble(parameterMap.get("cashheld")));
-            user.setTotalBuyPower(Double.parseDouble(parameterMap.get("totalbuyingpower")));
+            user.setCashHeld(Double.parseDouble(parameterMap.get("cashheld")));            
             
             usersEntityFacade.edit(user);
             response.sendRedirect("AdminServlet"); 
@@ -97,8 +95,7 @@ public class EditUserServlet extends HttpServlet {
             out.println("<form>");
             out.println("<tr><td>" + user.getUserId() + "<input type='hidden' name='userid' value='" + user.getUserId() + "'></td>");
             out.println("<td><input type='text' name='username' value='" + user.getUserName() + "'></td>");
-            out.println("<td><input type='text' name='cashheld' value='" + user.getCashHeld()+ "'></td>");
-            out.println("<td><input type='text' name='totalbuyingpower' value='" + user.getTotalBuyPower()+ "'></td>");
+            out.println("<td><input type='text' name='cashheld' value='" + user.getCashHeld()+ "'></td>");            
             out.println("<td><input type='submit' value='Edit'></td></tr>");
             out.println("</form>");        
         }
