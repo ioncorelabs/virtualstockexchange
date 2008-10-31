@@ -8,8 +8,8 @@ package web;
 
 import ejb.LoginEntity;
 import ejb.LoginEntityFacadeLocal;
-import ejb.ScripsEntity;
-import ejb.ScripsEntityFacadeLocal;
+import ejb.ScripsExchangeEntity;
+import ejb.ScripsExchangeEntityFacadeLocal;
 import ejb.UsersEntity;
 import ejb.UsersEntityFacadeLocal;
 import java.io.*;
@@ -64,8 +64,8 @@ public class AddScripServlet extends HttpServlet {
             double marketCapDbl = Double.parseDouble(parameterMap.get("marketcap"));
             double pricePerShareDbl = Double.parseDouble(parameterMap.get("pricepershare"));
             
-            ScripsEntityFacadeLocal scripsEntityFacade = (ScripsEntityFacadeLocal) lookupScripsEntityFacade();
-            ScripsEntity scripsEntity = new ScripsEntity(parameterMap.get("scripid"), 
+            ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
+            ScripsExchangeEntity scripsEntity = new ScripsExchangeEntity(parameterMap.get("scripid"), 
                                                          parameterMap.get("scripname"),
                                                          totalSharesInt, totalSharesAvailableInt, marketCapDbl, pricePerShareDbl);
             
@@ -109,10 +109,10 @@ public class AddScripServlet extends HttpServlet {
         out.close();
     }
     
-    private ScripsEntityFacadeLocal lookupScripsEntityFacade() {
+    private ScripsExchangeEntityFacadeLocal lookupScripsEntityFacade() {
         try {
             Context c = new InitialContext();
-            return (ScripsEntityFacadeLocal) c.lookup("NewsApp/ScripsEntityFacade/local");
+            return (ScripsExchangeEntityFacadeLocal) c.lookup("NewsApp/ScripsExchangeEntityFacade/local");
         } catch(NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
             throw new RuntimeException(ne);

@@ -6,8 +6,8 @@
 
 package web;
 
-import ejb.ScripsEntity;
-import ejb.ScripsEntityFacadeLocal;
+import ejb.ScripsExchangeEntity;
+import ejb.ScripsExchangeEntityFacadeLocal;
 import ejb.UsersEntityFacadeLocal;
 import java.io.*;
 import java.util.HashMap;
@@ -55,15 +55,15 @@ public class EditScripServlet extends HttpServlet {
         parameterMap.put("marketcap",               request.getParameter("marketcap"));
         parameterMap.put("pricepershare",           request.getParameter("pricepershare"));
         
-        ScripsEntityFacadeLocal scripsEntityFacade = (ScripsEntityFacadeLocal) lookupScripsEntityFacade();
+        ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
             
         if (formSubmitted(parameterMap))
         {   
-            ScripsEntity scrip = scripsEntityFacade.find(parameterMap.get("scripid"));
+            ScripsExchangeEntity scrip = scripsEntityFacade.find(parameterMap.get("scripid"));
             
             scrip.setScripName(parameterMap.get("scripname"));
             scrip.setTotalShares(Integer.parseInt(parameterMap.get("totalshares")));
-            scrip.setTotalSharesAvailable(Integer.parseInt(parameterMap.get("totalsharesavailable")));
+            scrip.setTotalAvailable(Integer.parseInt(parameterMap.get("totalsharesavailable")));
             scrip.setMarketCap(Double.parseDouble(parameterMap.get("marketcap")));
             scrip.setPricePerShare(Double.parseDouble(parameterMap.get("pricepershare")));
             
@@ -100,12 +100,12 @@ public class EditScripServlet extends HttpServlet {
         
         for (Iterator it = scrips.iterator(); it.hasNext();)
         {
-            ScripsEntity scrip = (ScripsEntity)it.next();
+            ScripsExchangeEntity scrip = (ScripsExchangeEntity)it.next();
             out.println("<form>");
             out.println("<tr><td>" + scrip.getScripId() + "<input type='hidden' name='scripid' value='" + scrip.getScripId() + "'></td>");
             out.println("<td><input type='text' name='scripname' value='" + scrip.getScripName() + "'></td>");
             out.println("<td><input type='text' name='totalshares' value='" + scrip.getTotalShares()+ "'></td>");
-            out.println("<td><input type='text' name='totalsharesavailable' value='" + scrip.getTotalSharesAvailable()+ "'></td>");
+            out.println("<td><input type='text' name='totalsharesavailable' value='" + scrip.getTotalAvailable()+ "'></td>");
             out.println("<td><input type='text' name='marketcap' value='" + scrip.getMarketCap()+ "'></td>");
             out.println("<td><input type='text' name='pricepershare' value='" + scrip.getPricePerShare()+ "'></td>");
             out.println("<td><input type='submit' value='Edit'></td></tr>");
@@ -120,10 +120,10 @@ public class EditScripServlet extends HttpServlet {
         out.close();
     }
     
-    private ScripsEntityFacadeLocal lookupScripsEntityFacade() {
+    private ScripsExchangeEntityFacadeLocal lookupScripsEntityFacade() {
         try {
             Context c = new InitialContext();
-            return (ScripsEntityFacadeLocal) c.lookup("NewsApp/ScripsEntityFacade/local");
+            return (ScripsExchangeEntityFacadeLocal) c.lookup("NewsApp/ScripsExchangeEntityFacade/local");
         } catch(NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
             throw new RuntimeException(ne);

@@ -47,7 +47,7 @@ public class SellScrips extends HttpServlet {
         HttpSession appSession = request.getSession(true);
         
         String num = request.getParameter("number");
-        String userId = (String)appSession.getAttribute("userId");
+        String userId = (String)appSession.getAttribute("userid");
                 
         ScripsUserEntityFacadeLocal scripsEntityFacade = (ScripsUserEntityFacadeLocal) lookupScripsUserEntityFacade();
         List scrips = scripsEntityFacade.findScrips(userId);

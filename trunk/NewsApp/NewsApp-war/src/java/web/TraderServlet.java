@@ -6,8 +6,8 @@
 
 package web;
 
-import ejb.ScripsEntity;
-import ejb.ScripsEntityFacadeLocal;
+import ejb.ScripsExchangeEntity;
+import ejb.ScripsExchangeEntityFacadeLocal;
 import ejb.ScripsShortedEntity;
 import ejb.ScripsShortedEntityFacadeLocal;
 import ejb.ScripsUserEntity;
@@ -59,7 +59,7 @@ public class TraderServlet extends HttpServlet {
         String userid = (String)session.getAttribute("userid");
         
         UsersEntityFacadeLocal usersEntityFacde = (UsersEntityFacadeLocal) lookupUsersEntityFacade();
-        ScripsEntityFacadeLocal scripsEntityFacade = (ScripsEntityFacadeLocal) lookupScripsEntityFacade();
+        ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
         ScripsUserEntityFacadeLocal scripsUserEntityFacade = (ScripsUserEntityFacadeLocal) lookupScripsUserEntityFacade();
         ScripsShortedEntityFacadeLocal scripsShortedEntityFacade = (ScripsShortedEntityFacadeLocal) lookupScripsShortedEntityFacade();
         TransactionHistoryEntityFacadeLocal transactionHistoryEntityFacade = 
@@ -78,7 +78,7 @@ public class TraderServlet extends HttpServlet {
         
         // get list of all scrips that this user owns
         // FIXME: hardcoded for debugging. Should be getting username from HttpSession.
-        List userscrips = scripsUserEntityFacade.findAllScripsForUser(userid); 
+        List userscrips = scripsUserEntityFacade.findScrips(userid); 
         
         // get list of all transactions from this user.
         // FIXME: hardcoded for debugging. Should be getting username from HttpSession.
@@ -111,7 +111,7 @@ public class TraderServlet extends HttpServlet {
     }
 
     private void printOwnedScripsTable( final String userid,
-                                        final ScripsEntityFacadeLocal scripsEntityFacade, 
+                                        final ScripsExchangeEntityFacadeLocal scripsEntityFacade, 
                                         final TransactionHistoryEntityFacadeLocal transactionHistoryEntityFacade,
                                         final PrintWriter out, 
                                         final List userscrips) {
@@ -127,7 +127,7 @@ public class TraderServlet extends HttpServlet {
         for (Iterator it = userscrips.iterator(); it.hasNext();)
         {
             ScripsUserEntity scripuser = (ScripsUserEntity)it.next();
-            ScripsEntity myscripsEntity = scripsEntityFacade.find(scripuser.getScripId());
+            ScripsExchangeEntity myscripsEntity = scripsEntityFacade.find(scripuser.getScripId());
             
             // FIXME: userid hardcoded for now.
             List transactionsForScrip = transactionHistoryEntityFacade.findTransactionsForUserAndScrip(userid, myscripsEntity.getScripId());
@@ -159,7 +159,7 @@ public class TraderServlet extends HttpServlet {
             out.println("<td>$" + changeValue + "</td>");
             out.println("<td>" + scripuser.getSharesHeld() + "</td>");
             out.println("<td>" + myscripsEntity.getTotalShares()+ "</td>");
-            out.println("<td>" + myscripsEntity.getTotalSharesAvailable()+ "</td>");
+            out.println("<td>" + myscripsEntity.getTotalAvailable()+ "</td>");
             out.println("<td>" + myscripsEntity.getMarketCap()+ "</td>");
             out.println("<td>$" + myscripsEntity.getPricePerShare()+ "</td>");
             out.println("</tr>");
@@ -168,7 +168,7 @@ public class TraderServlet extends HttpServlet {
     }
     
     private void printBorrowedScripsTable(  final String userid,
-                                            final ScripsEntityFacadeLocal scripsEntityFacade, 
+                                            final ScripsExchangeEntityFacadeLocal scripsEntityFacade, 
                                             final TransactionHistoryEntityFacadeLocal transactionHistoryEntityFacade,
                                             final PrintWriter out, 
                                             final List borrowedscrips) {
@@ -181,7 +181,7 @@ public class TraderServlet extends HttpServlet {
         for (Iterator it = borrowedscrips.iterator(); it.hasNext();)
         {
             ScripsShortedEntity scripshorted = (ScripsShortedEntity)it.next();
-            ScripsEntity myscripsEntity = scripsEntityFacade.find(scripshorted.getScripId());
+            ScripsExchangeEntity myscripsEntity = scripsEntityFacade.find(scripshorted.getScripId());
             
             // FIXME: userid hardcoded for now.
             List transactionsForScrip = transactionHistoryEntityFacade.findTransactionsForUserAndScrip(userid, myscripsEntity.getScripId());
@@ -239,10 +239,10 @@ public class TraderServlet extends HttpServlet {
         out.println("</table><br/>");
     }
     
-    private ScripsEntityFacadeLocal lookupScripsEntityFacade() {
+    private ScripsExchangeEntityFacadeLocal lookupScripsEntityFacade() {
         try {
             Context c = new InitialContext();
-            return (ScripsEntityFacadeLocal) c.lookup("NewsApp/ScripsEntityFacade/local");
+            return (ScripsExchangeEntityFacadeLocal) c.lookup("NewsApp/ScripsExchangeEntityFacade/local");
         } catch(NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
             throw new RuntimeException(ne);

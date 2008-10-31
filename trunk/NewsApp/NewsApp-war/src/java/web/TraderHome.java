@@ -28,7 +28,7 @@ public class TraderHome extends HttpServlet {
         
         HttpSession session = request.getSession(true);
         
-        session.setAttribute("userId", session.getAttribute("userId"));
+        session.setAttribute("userid", session.getAttribute("userid"));
         
         response.setContentType("text/html;charset=UTF-8");
         
@@ -42,6 +42,7 @@ public class TraderHome extends HttpServlet {
         out.println("<br><br><input type=button value=Buy onclick=\"javascript:window.location='BuyScrips'\"><br><br>");
         out.println("<input type=button value=Sell onclick=\"javascript:window.location='SellScrips'\"><br><br>");
         out.println("<input type=button value=\"Short Sell\" onclick=\"javascript:window.location='ShortSellHome'\">");
+        out.println("<input type=button value=\"Your Portfolio\" onclick=\"javascript:window.location='TraderServlet'\">");
         
         out.println("</body>");
         out.println("</html>");

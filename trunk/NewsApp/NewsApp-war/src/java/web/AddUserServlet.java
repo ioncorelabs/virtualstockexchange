@@ -49,15 +49,13 @@ public class AddUserServlet extends HttpServlet {
         String password=request.getParameter("password");
         String username=request.getParameter("username");
         String usertype=request.getParameter("usertype");
-        String cashheld=request.getParameter("cashheld");
-        String totalbp=request.getParameter("totalbp");
+        String cashheld=request.getParameter("cashheld");        
         
 
         
-        if ((userid!=null) && (password!=null) && (username!=null) && (usertype!=null) && (cashheld!=null) && (totalbp!=null))
+        if ((userid!=null) && (password!=null) && (username!=null) && (usertype!=null) && (cashheld!=null))
         {    char userRole = usertype.charAt(0);
-             double cashHeldDbl = Double.parseDouble(cashheld);
-             double totalBPDbl = Double.parseDouble(totalbp);
+             double cashHeldDbl = Double.parseDouble(cashheld);             
             
             LoginEntityFacadeLocal loginEntityFacade = (LoginEntityFacadeLocal) lookupLoginEntityFacade();
             LoginEntity loginEntity = new LoginEntity();
@@ -72,7 +70,6 @@ public class AddUserServlet extends HttpServlet {
             loginEntity.setUserRole(userRole);
             usersEntity.setInitialCashHeld(cashHeldDbl);
             usersEntity.setCashHeld(cashHeldDbl);
-            usersEntity.setTotalBuyPower(totalBPDbl);
             
             loginEntityFacade.create(loginEntity);
             usersEntityFacade.create(usersEntity);
@@ -100,8 +97,7 @@ public class AddUserServlet extends HttpServlet {
         out.println("<option value='trader'>Trader</option>");
         out.println("<option value='investor'>Investor</option>");
         out.println("</select><br>");
-        out.println("Cash Held: <input type='text' name='cashheld'><br/>");
-        out.println("Total Buying Power: <input type='text' name='totalbp'><br/>");
+        out.println("Cash Held: <input type='text' name='cashheld'><br/>");        
         out.println("<input type='submit'><br/>");
         out.println("</form>");        
         out.println("</body>");
