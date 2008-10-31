@@ -30,6 +30,8 @@ public class ScripsShortedEntity implements Serializable {
     private String borrowerId;
     private int sharesBorrowed;
     private int sharesShorted;
+    private int sharesReturned;
+    
     
     
     /** Creates a new instance of ScripsShortedEntity */
@@ -123,6 +125,14 @@ public class ScripsShortedEntity implements Serializable {
 
     public void setSharesShorted(int sharesShorted) {
         this.sharesShorted = sharesShorted;
+    }
+
+    public int getSharesReturned() {
+        return sharesReturned;
+    }
+
+    public void setSharesReturned(int sharesReturned) {
+        this.sharesReturned = sharesReturned;
     }
     
 }

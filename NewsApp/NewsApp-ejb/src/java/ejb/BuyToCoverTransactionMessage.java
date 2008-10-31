@@ -1,7 +1,7 @@
 /*
- * BuyTransactionMessage.java
+ * BuyToCoverTransactionMessage.java
  *
- * Created on October 26, 2008, 1:18 PM
+ * Created on October 30, 2008, 6:51 PM
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
@@ -27,30 +27,27 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
- * Entity class BuyTransactionMessage
- *
- *
+ * Entity class BuyToCoverTransactionMessage
+ * 
  * @author Vaibhav
  */
-@MessageDriven(mappedName = "jms/BuyTransactionMessage", activationConfig =  {
-    @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
-    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-    @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/mdb1")
-})
-public class BuyTransactionMessage implements MessageListener {
-    
+@MessageDriven(mappedName = "jms/BuyToCoverTransactionMessage", activationConfig =  {
+        @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
+        @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/mdb5")
+    })
+public class BuyToCoverTransactionMessage implements MessageListener {
+
     @PersistenceContext
     private EntityManager em;
     
     @Resource
     private MessageDrivenContext mdc;
-    
-    /**
-     * Creates a new instance of BuyTransactionMessage
-     */
-    public BuyTransactionMessage() {
+        
+    /** Creates a new instance of SellTransactionMessage */
+    public BuyToCoverTransactionMessage() {
     }
-    
+
     public void onMessage(Message message) {
         ObjectMessage msg = null;
         try {
@@ -66,7 +63,7 @@ public class BuyTransactionMessage implements MessageListener {
             te.printStackTrace();
         }
     }
-    
+
     public void save(Object object) {
         List al;
         List al1;
@@ -76,48 +73,48 @@ public class BuyTransactionMessage implements MessageListener {
         String userId = the.getUserId();
         int num = the.getTotalShares();
         
-        ScripsExchangeEntityFacadeLocal seef = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityFacade();
+        ScripsExchangeEntityFacadeLocal seef = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityFacade();               
         
         al = seef.findScripById(scripId);
-        
+                
         if(al.isEmpty() != true) {
             ScripsExchangeEntity see = (ScripsExchangeEntity) al.get(0);
-            int avail = see.getTotalAvailable();
-            if(num>avail) {
-                //TODO: Raise exception, requesting for more shares than available
-            } else{
-                see.setTotalAvailable(avail-num);
-                seef.edit(see);
-                
-                the.setPricePerShare(see.getPricePerShare());
-                
-                //Share price value reset, using marketcap/totalshares
-                float newprice = (see.getMarketCap())/(avail - num);
-                see.setPricePerShare(newprice);                                
-            }
+            int lent = see.getTotalSharesLent();
+            see.setTotalSharesLent(lent-num);
+            seef.edit(see); 
+            
+            the.setPricePerShare(see.getPricePerShare());
         } else{//TODO: Raise exception, Scrip not found
             
         }
         
-        ScripsUserEntityFacadeLocal suef = (ScripsUserEntityFacadeLocal)lookupUserEntityFacade();
+        ScripsShortedEntityFacadeLocal ssef = (ScripsShortedEntityFacadeLocal)lookupShortedEntityFacade();               
         
-        al1 = suef.findScripForUser(userId, scripId);
+        al1 = ssef.findScripForUser(userId, scripId);
         
         if(al1.isEmpty() != true) {
             //Updating table
-            ScripsUserEntity sue = (ScripsUserEntity) al1.get(0);
-            int held = sue.getSharesHeld();
-            sue.setSharesHeld(held+num);
-            suef.edit(sue);
-        } else{
-            //Adding new entity
-            ScripsUserEntity newsue = new ScripsUserEntity();
-            newsue.setScripId(scripId);
-            newsue.setUserId(userId);
-            newsue.setSharesHeld(num);
-            suef.create(newsue);
+            ScripsShortedEntity sse = (ScripsShortedEntity) al1.get(0);
+            int borrowed = sse.getSharesBorrowed();
+            int shorted = sse.getSharesShorted();
+            int returned = sse.getSharesReturned();
+                    
+            if((borrowed-returned)<num) {
+                //TODO: Raise exception, attempt to return more than borrowed
+            }
+            /* if(shorted != borrowed) {
+                //TODO: Warn, returning before shorting
+            }*/
+            else if(borrowed == shorted && shorted == returned) {
+                ssef.destroy(sse);
+            }
+            else {
+                sse.setSharesReturned(returned+num);
+                ssef.edit(sse);            
+            }
+        } else{//TODO:Scrip not held                       
         }
-        
+                
         em.flush();
         em.persist(the);
     }
@@ -133,13 +130,13 @@ public class BuyTransactionMessage implements MessageListener {
         }
     }
     
-    private ScripsUserEntityFacadeLocal lookupUserEntityFacade() {
+    private ScripsShortedEntityFacadeLocal lookupShortedEntityFacade() {
         try {
             Context c = new InitialContext();
-            return (ScripsUserEntityFacadeLocal) c.lookup("NewsApp/ScripsUserEntityFacade/local");
+            return (ScripsShortedEntityFacadeLocal) c.lookup("NewsApp/ScripsShortedEntityFacade/local");
         } catch(NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
             throw new RuntimeException(ne);
         }
-    }
+    }                    
 }
