@@ -32,7 +32,7 @@ import javax.persistence.PersistenceContext;
  * 
  * @author Vaibhav
  */
-@MessageDriven(mappedName = "jms/TransactionMessage", activationConfig =  {
+@MessageDriven(mappedName = "jms/BorrowTransactionMessage", activationConfig =  {
     @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
     @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
     @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/mdb3")
@@ -83,10 +83,12 @@ public class BorrowTransactionMessage implements MessageListener {
         if(al.isEmpty() != true) {
             ScripsExchangeEntity see = (ScripsExchangeEntity) al.get(0);
             int avail = see.getTotalAvailable();
+            int lent = see.getTotalSharesLent();
             if(num>avail) {
                 //TODO: Raise exception, requesting for more shares than available
             } else{
                 see.setTotalAvailable(avail-num);
+                see.setTotalSharesLent(lent+num);
                 seef.edit(see);
                 
                 the.setPricePerShare(see.getPricePerShare());
@@ -105,6 +107,7 @@ public class BorrowTransactionMessage implements MessageListener {
             int held = sse.getSharesBorrowed();
             sse.setSharesBorrowed(held+num);   
             sse.setSharesShorted(0);
+            sse.setSharesReturned(0);
             ssef.edit(sse);            
         } else{
             //Adding new entity

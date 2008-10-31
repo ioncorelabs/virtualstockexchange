@@ -80,10 +80,15 @@ public class SellTransactionMessage implements MessageListener {
         if(al.isEmpty() != true) {
             ScripsExchangeEntity see = (ScripsExchangeEntity) al.get(0);
             int avail = see.getTotalAvailable();
-            see.setTotalAvailable(avail+num);
-            seef.edit(see); 
-            
+            see.setTotalAvailable(avail+num);            
+                    
             the.setPricePerShare(see.getPricePerShare());
+            
+            //Share price value reset, using marketcap/totalshares
+            float newprice = (see.getMarketCap())/(avail + num);            
+            see.setPricePerShare(newprice);
+            
+            seef.edit(see); 
         } else{//TODO: Raise exception, Scrip not found
             
         }

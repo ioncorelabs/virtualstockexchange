@@ -30,6 +30,7 @@ public class ScripsExchangeEntity implements Serializable {
     private int totalAvailable;
     private float marketCap;
     private float pricePerShare;
+    private int totalSharesLent;
 
     
     /** Creates a new instance of ScripsExchangeEntity */
@@ -45,7 +46,7 @@ public class ScripsExchangeEntity implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.scripId != null ? this.scripId.hashCode() : 0);
+        hash += (this.getScripId() != null ? this.getScripId().hashCode() : 0);
         return hash;
     }
 
@@ -64,7 +65,7 @@ public class ScripsExchangeEntity implements Serializable {
             return false;
         }
         ScripsExchangeEntity other = (ScripsExchangeEntity)object;
-        if (this.scripId != other.scripId && (this.scripId == null || !this.scripId.equals(other.scripId))) return false;
+        if (this.getScripId() != other.getScripId() && (this.getScripId() == null || !this.getScripId().equals(other.getScripId()))) return false;
         return true;
     }
 
@@ -75,7 +76,7 @@ public class ScripsExchangeEntity implements Serializable {
      */
     @Override
     public String toString() {
-        return "ejb.ScripsExchangeEntity[id=" + scripId + "]";
+        return "ejb.ScripsExchangeEntity[id=" + getScripId() + "]";
     }
 
     public String getScripId() {
@@ -124,6 +125,14 @@ public class ScripsExchangeEntity implements Serializable {
 
     public void setPricePerShare(float pricePerShare) {
         this.pricePerShare = pricePerShare;
+    }
+
+    public int getTotalSharesLent() {
+        return totalSharesLent;
+    }
+
+    public void setTotalSharesLent(int totalSharesLent) {
+        this.totalSharesLent = totalSharesLent;
     }
     
 }
