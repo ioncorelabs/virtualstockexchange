@@ -1,14 +1,13 @@
 /*
- * ShortSellScrips.java
+ * BuyToCoverScrips.java
  *
- * Created on October 30, 2008, 3:40 PM
+ * Created on October 30, 2008, 6:47 PM
  */
 
 package web;
 
 import ejb.ScripsShortedEntity;
 import ejb.ScripsShortedEntityFacadeLocal;
-import ejb.ScripsUserEntity;
 import ejb.TransactionHistoryEntity;
 import java.io.*;
 import java.util.Iterator;
@@ -35,9 +34,9 @@ import javax.servlet.http.*;
  * @author Vaibhav
  * @version
  */
-public class ShortSellScrips extends HttpServlet {
+public class BuyToCoverScrips extends HttpServlet {
     
-    /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+   /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
      */
@@ -75,7 +74,7 @@ public class ShortSellScrips extends HttpServlet {
             try {
                 
                 InitialContext ctx = new InitialContext();
-                queue = (Queue) ctx.lookup("queue/mdb4");
+                queue = (Queue) ctx.lookup("queue/mdb5");
                 QueueConnectionFactory factory =
                         (QueueConnectionFactory) ctx.lookup("ConnectionFactory");
                 connection = factory.createQueueConnection();
@@ -90,7 +89,7 @@ public class ShortSellScrips extends HttpServlet {
                 e.setScripId(elem.getScripId());
                 e.setUserId(userId);
                 e.setTotalShares(Integer.parseInt(num));
-                e.setTranType("ShortSell");
+                e.setTranType("BuyToCover");
                  e.setTranDate(System.currentTimeMillis());
                  
                 message.setObject(e);
@@ -136,7 +135,7 @@ public class ShortSellScrips extends HttpServlet {
         request.getSession().setAttribute("Vector",vec);
         out.println("<input type =hidden name = index >" );
         
-        out.println("<tr><td colspan=4> Number of Shares to short sell <input type =text name=number id=num size =10  ></tr> ");
+        out.println("<tr><td colspan=4> Number of Shares to cover: <input type =text name=number id=num size =10  ></tr> ");
         out.println("<tr><td colspan=4><input type =submit value=submit /></tr> ");
         out.println("</table ");
         out.println("</form>");
@@ -173,7 +172,7 @@ public class ShortSellScrips extends HttpServlet {
         return "Short description";
     }
     // </editor-fold>
-   
+    
     private ScripsShortedEntityFacadeLocal lookupScripsShortedEntityFacade() {
         try {
             Context c = new InitialContext();
@@ -182,5 +181,5 @@ public class ShortSellScrips extends HttpServlet {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
             throw new RuntimeException(ne);
         }
-    }
+    }    
 }
