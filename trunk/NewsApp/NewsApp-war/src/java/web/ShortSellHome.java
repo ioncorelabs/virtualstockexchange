@@ -35,8 +35,8 @@ public class ShortSellHome extends HttpServlet {
         out.println("<h1>Servlet ShortSellHome at " + request.getContextPath () + "</h1>");
         
         out.println("<br><br><input type=button value=\"Borrow Scrips\" onclick=\"javascript:window.location='BorrowScrips'\"><br><br>");        
-        out.println("<input type=button value=\"Short Sell\" onclick=\"javascript:window.location='BuyScrips'\"><br><br>");
-        out.println("<input type=button value=\"Buy to Cover\" onclick=\"javascript:window.location='BorrowScrips'\"><br><br>");
+        out.println("<input type=button value=\"Short Sell\" onclick=\"javascript:window.location='ShortSellScrips'\"><br><br>");
+        out.println("<input type=button value=\"Buy to Cover\" onclick=\"javascript:window.location='BuyToCoverScrips'\"><br><br>");
                 
         out.println("</body>");
         out.println("</html>");         

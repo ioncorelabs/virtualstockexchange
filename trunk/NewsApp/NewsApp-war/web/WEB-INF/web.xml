@@ -37,6 +37,10 @@
         <servlet-name>ShortSellScrips</servlet-name>
         <servlet-class>web.ShortSellScrips</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>BuyToCoverScrips</servlet-name>
+        <servlet-class>web.BuyToCoverScrips</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListNews</servlet-name>
         <url-pattern>/ListNews</url-pattern>
@@ -73,6 +77,10 @@
     <servlet-mapping>
         <servlet-name>ShortSellScrips</servlet-name>
         <url-pattern>/ShortSellScrips</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BuyToCoverScrips</servlet-name>
+        <url-pattern>/BuyToCoverScrips</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

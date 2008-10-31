@@ -119,7 +119,7 @@ public class SellScrips extends HttpServlet {
         
         out.println("<form  action=ListScrips onSubmit=initializeRadio() >");
         out.println("<table border=1 align=center >");
-        out.println("<tr><td align =left>Name of the Scrip</td><td>Number of Shares</td>  ");
+        out.println("<tr><td align =left>Name of the Scrip</td><td>Number of Shares</td></tr> ");
         Vector vec = new Vector();
         
         int i =0;
@@ -135,7 +135,7 @@ public class SellScrips extends HttpServlet {
         out.println("<input type =hidden name = index >" );
         
         out.println("<tr><td colspan=2> Number of Shares to Sell <input type =text name=number id=num size =10  ></tr> ");
-        out.println("<tr><td colspan=2> Submit <input type =submit value=submit /></tr> ");
+        out.println("<tr><td colspan=2><input type =submit value=submit /></tr> ");
         out.println("</table ");
         out.println("</form>");
         
