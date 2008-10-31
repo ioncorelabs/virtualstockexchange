@@ -33,23 +33,60 @@ public class NewLogin extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        
-        HttpSession session = request.getSession(true);
-        
         response.setContentType("text/html;charset=UTF-8");
         
         String uid=request.getParameter("userid");
         String pwd=request.getParameter("password");
         
-        session.setAttribute("userId", uid);        
-        
-        if ((uid!=null) && (pwd!=null)) {
+        if ((uid!=null) && (pwd!=null)) 
+        {
             LoginEntityFacadeLocal loginEntityFacade = (LoginEntityFacadeLocal) lookupLoginEntityFacade();
-            List news = loginEntityFacade.findAll(uid, pwd);
-            
-            if (!news.isEmpty()) {
-                response.sendRedirect("TraderHome");
+            List news = loginEntityFacade.findAll(uid, pwd);          
+                      
+            Iterator it = news.iterator();
+            if (!news.isEmpty()) 
+            {   
+                if(it.hasNext())
+                {
+                    HttpSession session = request.getSession(true);
+                    if (session.isNew())
+                        System.out.println("Creating new session for user '" + uid + "'");
+                    else
+                        System.out.println("session already exists. userid = '" + (String)session.getAttribute("userid") + "', role: '" + (String)session.getAttribute("userrole") + "'");
+        
+                    LoginEntity elem = (LoginEntity) it.next();
+                    
+                    session.setAttribute("userid", elem.getUserId());
+                    if(elem.getUserRole() == 'a')
+                    {   
+                        session.setAttribute("userrole", "a");
+                        response.sendRedirect("AdminServlet");   
+                    }
+                    if(elem.getUserRole() == 't')
+                    {                     
+                        session.setAttribute("userrole", "t");
+                        response.sendRedirect("TraderServlet");
+                    }
+                    if(elem.getUserRole() == 'i')
+                    {                     
+                        session.setAttribute("userrole", "i");
+                        response.sendRedirect("InvestorServlet");
+                    }
+                }
             }
+            
+           /* for (Iterator it = news.iterator(); it.hasNext();)
+            {
+                LoginEntity elem = (LoginEntity) it.next();
+                System.out.println("User: "+elem.getUserId()+"Pass: "+elem.getPassword()+"Role: "+elem.getUserRole());
+            }
+           */
+            
+           /* if (!news.isEmpty()) {
+                response.sendRedirect("ListNews");
+            } */
+            
+            
         }
         
         PrintWriter out = response.getWriter();
