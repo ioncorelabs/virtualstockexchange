@@ -6,6 +6,7 @@
 
 package web;
 
+import ejb.ScripsExchangeEntityFacadeLocal;
 import ejb.ScripsUserEntity;
 import ejb.ScripsUserEntityFacadeLocal;
 import ejb.TransactionHistoryEntity;
@@ -43,17 +44,17 @@ public class SellScrips extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
         
         HttpSession appSession = request.getSession(true);
-        if (isInvalidSession(appSession))
-        {    
+        if (isInvalidSession(appSession)) {
             response.sendRedirect("NewLogin");
             return;
         }
         
         String num = request.getParameter("number");
         String userId = (String)appSession.getAttribute("userid");
-                
+        
         ScripsUserEntityFacadeLocal scripsEntityFacade = (ScripsUserEntityFacadeLocal) lookupScripsUserEntityFacade();
         List scrips = scripsEntityFacade.findScrips(userId);
         int index =-1;
@@ -61,16 +62,23 @@ public class SellScrips extends HttpServlet {
         
         if (num!=null) {
             
-            
             String strButtonIndex =  request.getParameter("button");
             
             if (strButtonIndex!=null) {
                 index =  Integer.parseInt(strButtonIndex);
             }//TODO: Raise exception, id index not found
             
-            Vector vec = (Vector) request.getSession().getAttribute("Vector");                        
-            ScripsUserEntity elem  = (ScripsUserEntity) vec.elementAt(index);                
-         
+            Vector vec = (Vector) request.getSession().getAttribute("Vector");
+            ScripsUserEntity elem  = (ScripsUserEntity) vec.elementAt(index);
+            
+            //Exception handling - Start
+            List held = scripsEntityFacade.findScripForUser(userId, elem.getScripId());
+            if(held.isEmpty() != true) {
+                ScripsUserEntity sue = (ScripsUserEntity)held.get(0);
+                if(Integer.parseInt(num) > sue.getSharesHeld()) {
+                    out.println("You are attempting to sell more shares than you hold!");
+                }
+            }
             
             Queue queue = null;
             QueueConnection connection = null;
@@ -95,13 +103,17 @@ public class SellScrips extends HttpServlet {
                 e.setUserId(userId);
                 e.setTotalShares(Integer.parseInt(num));
                 e.setTranType("Sell");
-                 e.setTranDate(System.currentTimeMillis());
-                 
+                e.setTranDate(System.currentTimeMillis());
+                
                 message.setObject(e);
                 messageProducer.send(message);
                 messageProducer.close();
                 connection.close();
-                //response.sendRedirect("ListNews");
+                
+                if(((String)appSession.getAttribute("userrole")).equals("t"))
+                    response.sendRedirect("TraderTradeSuccess");
+                else
+                    response.sendRedirect("InvestorTradeSuccess");
                 
             } catch (JMSException ex) {
                 ex.printStackTrace();
@@ -112,7 +124,7 @@ public class SellScrips extends HttpServlet {
         }
         
         
-        PrintWriter out = response.getWriter();
+        
         //TODO output your page here
         out.println("<html>");
         out.println("<head>");
@@ -120,14 +132,14 @@ public class SellScrips extends HttpServlet {
         out.println("</head>");
         out.println("<body>");
         
-                                               //Common Styling Code
+        //Common Styling Code
         out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
         out.println("</head>");
         out.println("<body>");
         out.println("<div id=\"tot\">");
         out.println("<div id=\"header\">");
         out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
-        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
+        out.println("<div class=\"slogan\">Bulls & Bears</div>");
         out.println("<div id=\"corp\">");
         out.println("<div class=\"main-text\">");
         //Common Ends
@@ -159,9 +171,9 @@ public class SellScrips extends HttpServlet {
         out.println("</form>");
         out.println("<input type=\"button\" value=\"Back\" onClick=\"history.back();\"/>");
         
-                        //Common Starts
+        //Common Starts
         out.println("</div></div>");
-        out.println("<div class=\"clear\"></div>");        
+        out.println("<div class=\"clear\"></div>");
         out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
         out.println("</div>");
         //Common Ends
@@ -172,11 +184,10 @@ public class SellScrips extends HttpServlet {
         out.close();
     }
     
-    private boolean isInvalidSession(final HttpSession session)
-    {
-        return (session.isNew() || 
-                session.getAttribute("userid") == null || 
-                session.getAttribute("userrole") == null || 
+    private boolean isInvalidSession(final HttpSession session) {
+        return (session.isNew() ||
+                session.getAttribute("userid") == null ||
+                session.getAttribute("userrole") == null ||
                 ((String)session.getAttribute("userrole")).equals("a"));
     }
     
@@ -210,6 +221,16 @@ public class SellScrips extends HttpServlet {
         try {
             Context c = new InitialContext();
             return (ScripsUserEntityFacadeLocal) c.lookup("NewsApp/ScripsUserEntityFacade/local");
+        } catch(NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
+            throw new RuntimeException(ne);
+        }
+    }
+    
+    private ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade() {
+        try {
+            Context c = new InitialContext();
+            return (ScripsExchangeEntityFacadeLocal) c.lookup("NewsApp/ScripsExchangeEntityFacade/local");
         } catch(NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
             throw new RuntimeException(ne);

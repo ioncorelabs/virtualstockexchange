@@ -43,8 +43,7 @@ public class BorrowScrips extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession appSession = request.getSession(true);
-        if (isInvalidSession(appSession))
-        {
+        if (isInvalidSession(appSession)) {
             response.sendRedirect("NewLogin");
             return;
         }
@@ -83,7 +82,11 @@ public class BorrowScrips extends HttpServlet {
                 messageProducer.send(message);
                 messageProducer.close();
                 connection.close();
-                //response.sendRedirect("ListNews");
+                
+                if(((String)appSession.getAttribute("userrole")).equals("t"))
+                    response.sendRedirect("TraderTradeSuccess");
+                else
+                    response.sendRedirect("InvestorTradeSuccess");
                 
             } catch (JMSException ex) {
                 ex.printStackTrace();
@@ -102,18 +105,18 @@ public class BorrowScrips extends HttpServlet {
         out.println("</head>");
         out.println("<body>");
         
-                       //Common Styling Code
+        //Common Styling Code
         out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
         out.println("</head>");
         out.println("<body>");
         out.println("<div id=\"tot\">");
         out.println("<div id=\"header\">");
         out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
-        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
+        out.println("<div class=\"slogan\">Bulls & Bears</div>");
         out.println("<div id=\"corp\">");
         out.println("<div class=\"main-text\">");
         //Common Ends
-  
+        
         
         out.println("<span class=\"ttitle\" style=\"580px;\">Borrow Shares Form</span><br>");
         out.println("<form>");
@@ -128,13 +131,13 @@ public class BorrowScrips extends HttpServlet {
         out.println("</select><br><br>");
         
         out.println("Number of shares: <input type='text' name='num'><br><br>");
-        out.println("<input type='submit' value='Submit'>  ");       
+        out.println("<input type='submit' value='Submit'>  ");
         out.println("</form>");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
         
         //Common Starts
         out.println("</div></div>");
-        out.println("<div class=\"clear\"></div>");        
+        out.println("<div class=\"clear\"></div>");
         out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
         out.println("</div>");
         //Common Ends
@@ -145,11 +148,10 @@ public class BorrowScrips extends HttpServlet {
         out.close();
     }
     
-    private boolean isInvalidSession(final HttpSession session)
-    {
-        return (session.isNew() || 
-                session.getAttribute("userid") == null || 
-                session.getAttribute("userrole") == null || 
+    private boolean isInvalidSession(final HttpSession session) {
+        return (session.isNew() ||
+                session.getAttribute("userid") == null ||
+                session.getAttribute("userrole") == null ||
                 !((String)session.getAttribute("userrole")).equals("t")); // only traders allowed to borrow
     }
     

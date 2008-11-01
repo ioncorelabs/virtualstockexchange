@@ -53,13 +53,15 @@ public class AddScripServlet extends HttpServlet {
         parameterMap.put("scripid",             request.getParameter("scripid"));
         parameterMap.put("scripname",           request.getParameter("scripname"));
         parameterMap.put("totalshares",         request.getParameter("totalshares"));
-        parameterMap.put("pricepershare",       request.getParameter("pricepershare"));
+        parameterMap.put("marketcap",       request.getParameter("marketcap"));
         
         if (formSubmitted(parameterMap))
         {    
-            int totalSharesInt              = Integer.parseInt(parameterMap.get("totalshares"));
-            double pricePerShareDbl         = Double.parseDouble(parameterMap.get("pricepershare"));
-            double marketCapDbl             = (double)totalSharesInt * (double)pricePerShareDbl;
+            int totalSharesInt              = Integer.parseInt(parameterMap.get("totalshares"));            
+            double marketCapDbl             = Double.parseDouble(parameterMap.get("marketcap"));
+            double pricePerShareDbl         = marketCapDbl / ((double)totalSharesInt);
+                    
+                   
             
             ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
             ScripsExchangeEntity scripsEntity = 
@@ -114,7 +116,7 @@ public class AddScripServlet extends HttpServlet {
         out.println("Scrip Id:<font color=\"#FFFFFF\">_________________</font><input type='text' name='scripid'><br/>");
         out.println("Scrip Name:<font color=\"#FFFFFF\">_____________</font><input type='text' name='scripname'><br/>");
         out.println("Total Shares:<font color=\"#FFFFFF\">____________</font><input type='text' name='totalshares'><br/>");
-        out.println("Price Per Share:<font color=\"#FFFFFF\">___________</font><input type='text' name='pricepershare'><br/>");
+        out.println("Market Cap:<font color=\"#FFFFFF\">___________</font><input type='text' name='marketcap'><br/>");
         out.println("<input type='submit' value='Add Scrip'>   ");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
         out.println("</form>"); 

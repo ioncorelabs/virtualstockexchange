@@ -86,7 +86,11 @@ public class BuyScrips extends HttpServlet {
                 messageProducer.send(message);
                 messageProducer.close();
                 connection.close();
-                //response.sendRedirect("ListNews");
+                
+                if(((String)appSession.getAttribute("userrole")).equals("t"))
+                    response.sendRedirect("TraderTradeSuccess");
+                else
+                    response.sendRedirect("InvestorTradeSuccess");
                 
             } catch (JMSException ex) {
                 ex.printStackTrace();
