@@ -83,23 +83,45 @@ public class AddUserServlet extends HttpServlet {
         
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Servlet AddUser</title>");
+        out.println("<title>Virtual Stock Exchance: Add User</title>");
         out.println("</head>");
         out.println("<body>");
-        out.println("<h1>Servlet AddUser at " + request.getContextPath () + "</h1>");
-        out.println("Add User Form<br>");
+        //Common Styling Code
+        out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<div id=\"tot\">");
+        out.println("<div id=\"header\">");
+        out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
+        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
+        out.println("<div id=\"corp\">");
+        out.println("<div class=\"main-text\">");
+        //Common Ends
+        
+        out.println("<span class=\"ttitle\" style=\"580px;\">Add User Form</span><br>");
+      
+       
         out.println("<form>");
-        out.println("User Id: <input type='text' name='userid'><br/>");
-        out.println("Password: <input type='password' name='password'><br/>");
-        out.println("User Name: <input type='text' name='username'><br/>");
-        out.println("User Type: <select name='usertype'>");
+        out.println("User Id:<font color=\"#FFFFFF\">____</font> <input type='text' name='userid'><br/>");
+        out.println("Password:<font color=\"#FFFFFF\">___</font> <input type='password' name='password'><br/>");
+        out.println("User Name:<font color=\"#FFFFFF\">___</font><input type='text' name='username'><br/>");
+        out.println("User Type:<font color=\"#FFFFFF\">___</font> <select name='usertype'>");
         out.println("<option value='admin'>Admin</option>");
         out.println("<option value='trader'>Trader</option>");
         out.println("<option value='investor'>Investor</option>");
         out.println("</select><br>");
-        out.println("Cash Held: <input type='text' name='cashheld'><br/>");        
-        out.println("<input type='submit'><br/>");
-        out.println("</form>");        
+        out.println("Cash Held:<font color=\"#FFFFFF\">__</font><input type='text' name='cashheld'><br/>");        
+        out.println("<input type='submit' value='Add User'>   ");
+         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
+        out.println("</form>"); 
+        
+        //Common Starts
+        out.println("</div></div>");
+        out.println("<div class=\"clear\"></div>");        
+        out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
+        out.println("</div>");
+        //Common Ends
+        
         out.println("</body>");
         out.println("</html>");
         

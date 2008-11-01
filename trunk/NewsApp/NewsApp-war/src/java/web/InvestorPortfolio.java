@@ -50,8 +50,7 @@ public class InvestorPortfolio extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession(true);
-        if (session.isNew() || session.getAttribute("userid") == null || session.getAttribute("userrole") == null || !((String)session.getAttribute("userrole")).equals("i"))
-        {
+        if (session.isNew() || session.getAttribute("userid") == null || session.getAttribute("userrole") == null || !((String)session.getAttribute("userrole")).equals("i")) {
             response.sendRedirect("NewLogin");
             return;
         }
@@ -61,8 +60,8 @@ public class InvestorPortfolio extends HttpServlet {
         UsersEntityFacadeLocal usersEntityFacde = (UsersEntityFacadeLocal) lookupUsersEntityFacade();
         ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
         ScripsUserEntityFacadeLocal scripsUserEntityFacade = (ScripsUserEntityFacadeLocal) lookupScripsUserEntityFacade();
-        TransactionHistoryEntityFacadeLocal transactionHistoryEntityFacade = 
-                    (TransactionHistoryEntityFacadeLocal) lookupTransactionHistoryEntityFacade();
+        TransactionHistoryEntityFacadeLocal transactionHistoryEntityFacade =
+                (TransactionHistoryEntityFacadeLocal) lookupTransactionHistoryEntityFacade();
         
         // my user entity, which contains my initial cash held and current net worth (buying power)
         UsersEntity self = usersEntityFacde.find(userid);
@@ -71,7 +70,7 @@ public class InvestorPortfolio extends HttpServlet {
         List allscrips = scripsEntityFacade.findAll();
         
         // get list of all scrips that this user owns
-        List userscrips = scripsUserEntityFacade.findScrips(userid); 
+        List userscrips = scripsUserEntityFacade.findScrips(userid);
         
         // get list of all transactions from this user.
         List usertransactions = transactionHistoryEntityFacade.findAllTransactionsForUser(userid);
@@ -79,10 +78,24 @@ public class InvestorPortfolio extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Servlet Investor Portfolio</title>");
+        out.println("<title>Virtual Stock Exchance: Investor Portfolio</title>");
         out.println("</head>");
         out.println("<body>");
-        out.println("<h1>Servlet Investor Portfolio at " + request.getContextPath () + "</h1><br/>");
+        
+        //Common Styling Code
+        out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<div id=\"tot\">");
+        out.println("<div id=\"header\">");
+        out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
+        out.println("<div class=\"slogan\">Bulls & Bears</div>");
+        out.println("<div id=\"corp\">");
+        out.println("<div class=\"main-text\">");
+        //Common Ends
+        
+        
+        out.println("<span class=\"ttitle\" style=\"580px;\">Investor Portfolio</span><br>");
         
         printOwnedScripsTable(userid, scripsEntityFacade, transactionHistoryEntityFacade, out, userscrips);
         printTransactionsTable(out, usertransactions);
@@ -92,18 +105,26 @@ public class InvestorPortfolio extends HttpServlet {
         out.println("Net Income/Loss: " + _numberFormat.format(self.getCashHeld() + _portfolioTotal - self.getInitialCashHeld()) + "<br/>");
         out.println("Total Assets: " + _numberFormat.format(_portfolioTotal) + "<br/>");
         out.println("Total Buying Power: " + _numberFormat.format(self.getCashHeld() + _portfolioTotal) + "<br/></b>");
+        out.println("<input type=\"button\" value=\"Back\" onClick=\"history.back();\"/>");
+        
+        //Common Starts
+        out.println("</div></div>");
+        out.println("<div class=\"clear\"></div>");
+        out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
+        out.println("</div>");
+        //Common Ends
         
         out.println("</body>");
         out.println("</html>");
         
         out.close();
     }
-
+    
     private void printOwnedScripsTable( final String userid,
-                                        final ScripsExchangeEntityFacadeLocal scripsEntityFacade, 
-                                        final TransactionHistoryEntityFacadeLocal transactionHistoryEntityFacade,
-                                        final PrintWriter out, 
-                                        final List userscrips) {
+            final ScripsExchangeEntityFacadeLocal scripsEntityFacade,
+            final TransactionHistoryEntityFacadeLocal transactionHistoryEntityFacade,
+            final PrintWriter out,
+            final List userscrips) {
         
         out.println("All of My Scrips:<br/>");
         out.println("<table width=750px border=1>");
@@ -113,16 +134,14 @@ public class InvestorPortfolio extends HttpServlet {
         _portfolioTotal = 0.0;
         _portfolioDifference = 0.0;
         
-        for (Iterator it = userscrips.iterator(); it.hasNext();)
-        {
+        for (Iterator it = userscrips.iterator(); it.hasNext();) {
             ScripsUserEntity scripuser = (ScripsUserEntity)it.next();
             ScripsExchangeEntity myscripsEntity = scripsEntityFacade.find(scripuser.getScripId());
             
             List transactionsForScrip = transactionHistoryEntityFacade.findTransactionsForUserAndScrip(userid, myscripsEntity.getScripId());
             double totalSpent = 0.0;
-            for (Iterator transIter = transactionsForScrip.iterator(); transIter.hasNext();)
-            {
-                // Sum up all buy and sell transactions, ignoring 
+            for (Iterator transIter = transactionsForScrip.iterator(); transIter.hasNext();) {
+                // Sum up all buy and sell transactions, ignoring
                 // everything else (borrow, buy-to-cover, et al)
                 TransactionHistoryEntity trans = (TransactionHistoryEntity)transIter.next();
                 if (trans.getTranType().equals("Buy"))
@@ -163,8 +182,7 @@ public class InvestorPortfolio extends HttpServlet {
         out.println("<tr><td width=70px><b>Scrip ID</b></td><td><b>Transaction Type</b></td><td><b>Total Shares Bought/Sold</b></td>");
         out.println("<td><b>Price when Bought/Sold</b></td><td><b>Date of Transaction</b></td></tr>");
         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
-        for (Iterator it = usertransactions.iterator(); it.hasNext();)
-        {
+        for (Iterator it = usertransactions.iterator(); it.hasNext();) {
             TransactionHistoryEntity transaction = (TransactionHistoryEntity)it.next();
             
             out.println("<tr>");

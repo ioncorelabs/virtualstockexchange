@@ -40,19 +40,44 @@ public class AdminServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Adminstrator</title>");
+        out.println("<title>Virtual Stock Exchance: Adminstrator Homepage</title>");
         out.println("</head>");
         out.println("<body>");
-        out.println("<center>");
-        out.println("<b>Administrator Screen</b><br/>");
-        out.println("<b>Welcome back, " + userid + "!</b><br/>");
-        out.println("<a href='AddUserServlet'>Add User</a><br/>");
-        out.println("<a href='DelUserServlet'>Delete User</a><br/>");
-        out.println("<a href='AddScripServlet'>Add Scrip</a><br/>");
-        out.println("<a href='DelScripServlet'>Delete Scrip</a><br/>");
-        out.println("<a href='EditUserServlet'>Edit User</a><br/>");
-        out.println("<a href='EditScripServlet'>Edit Scrip</a><br/>");
-        out.println("</center>");                          
+        //Common Styling Code
+        out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<div id=\"tot\">");
+        out.println("<div id=\"header\">");
+        out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
+        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
+        out.println("<div id=\"corp\">");
+        out.println("<div class=\"main-text\">");
+        //Common Ends
+        out.println("<div id=\"head\" align=\"center\"");
+        out.println("<span class=\"ttitle\" style=\"580px;\">Administrator</span><br>");
+        out.println("<span class=\"ttitle\"><b>Welcome back, " + userid + "!</b></span><br><br><br>");
+        out.println("</div>");
+        out.println("<br><br><br><br><br>");
+        
+        out.println("<div id=\"menius\">");
+        out.println("<div class=\"menu-title\">Menu</div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"AddUserServlet\">Add User</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"DelUserServlet\">Delete User</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"AddScripServlet\">Add Scrip</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"DelScripServlet\">Delete Scrip</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"EditUserServlet\">Edit User</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"EditScripServlet\">Edit Scrip</a></div>"); 
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"LogoutServlet\">Logout</a></div>");
+        out.println("</div>");
+      
+        //Common Starts
+        out.println("</div></div>");
+        out.println("<div class=\"clear\"></div>");        
+        out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
+        out.println("</div>");
+        //Common Ends
+        
         out.println("</body>");
         out.println("</html>");
         
