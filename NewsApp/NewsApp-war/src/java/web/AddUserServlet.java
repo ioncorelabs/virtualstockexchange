@@ -51,30 +51,40 @@ public class AddUserServlet extends HttpServlet {
         String usertype=request.getParameter("usertype");
         String cashheld=request.getParameter("cashheld");        
         
-
+        boolean errored = false;
         
         if ((userid!=null) && (password!=null) && (username!=null) && (usertype!=null) && (cashheld!=null))
-        {    char userRole = usertype.charAt(0);
-             double cashHeldDbl = Double.parseDouble(cashheld);             
+        {    
+            char userRole = usertype.charAt(0);
+            double cashHeldDbl = Double.parseDouble(cashheld);             
             
             LoginEntityFacadeLocal loginEntityFacade = (LoginEntityFacadeLocal) lookupLoginEntityFacade();
-            LoginEntity loginEntity = new LoginEntity();
-            
             UsersEntityFacadeLocal usersEntityFacade = (UsersEntityFacadeLocal) lookupUsersEntityFacade();
-            UsersEntity usersEntity = new UsersEntity();
             
-            usersEntity.setUserId(userid);
-            loginEntity.setUserId(userid);
-            loginEntity.setPassword(password);
-            usersEntity.setUserName(username);
-            loginEntity.setUserRole(userRole);
-            usersEntity.setInitialCashHeld(cashHeldDbl);
-            usersEntity.setCashHeld(cashHeldDbl);
+            if (loginEntityFacade.find(userid) != null)
+            {
+                errored = true;
+            }
+            else
+            {
             
-            loginEntityFacade.create(loginEntity);
-            usersEntityFacade.create(usersEntity);
-            
-            response.sendRedirect("AdminServlet"); 
+                LoginEntity loginEntity = new LoginEntity();
+                UsersEntity usersEntity = new UsersEntity();
+
+                usersEntity.setUserId(userid);
+                loginEntity.setUserId(userid);
+                loginEntity.setPassword(password);
+                usersEntity.setUserName(username);
+                loginEntity.setUserRole(userRole);
+                usersEntity.setInitialCashHeld(cashHeldDbl);
+                usersEntity.setCashHeld(cashHeldDbl);
+
+                loginEntityFacade.create(loginEntity);
+                usersEntityFacade.create(usersEntity);
+
+                response.sendRedirect("AdminServlet");
+                return;
+            }
         }
         
         
@@ -99,8 +109,8 @@ public class AddUserServlet extends HttpServlet {
         //Common Ends
         
         out.println("<span class=\"ttitle\" style=\"580px;\">Add User Form</span><br>");
-      
-       
+        if (errored)
+            out.println("<font color=red><b>That user ID already exists, stupid head!</b></font><br>");
         out.println("<form>");
         out.println("User Id:<font color=\"#FFFFFF\">____</font> <input type='text' name='userid'><br/>");
         out.println("Password:<font color=\"#FFFFFF\">___</font> <input type='password' name='password'><br/>");

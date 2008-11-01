@@ -10,6 +10,7 @@ import ejb.ScripsExchangeEntity;
 import ejb.ScripsExchangeEntityFacadeLocal;
 import ejb.ScripsUserEntityFacadeLocal;
 import java.io.*;
+import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -27,6 +28,8 @@ import javax.servlet.http.*;
  * @version
  */
 public class ListingServlet extends HttpServlet {
+    
+    private NumberFormat _nf = NumberFormat.getNumberInstance();
     
     /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -82,15 +85,17 @@ public class ListingServlet extends HttpServlet {
                 }
             }
             
-            out.println("<table border=1 align=center >");
+            _nf.setMaximumFractionDigits(2);
+            _nf.setMinimumFractionDigits(2);
             
+            out.println("<table border=1 align=center >");
             out.println(" <tr ><td align=left> "+"ScripId " +"</td> <td align=left> "+""+"ScripName"+"</td><td align=left> Status" +"</td><td align=left> Share Price" );
             if (change ==1 ){
-                out.println(" <tr ><td align=left> "+ex.getScripId()+"</td> <td align=left> "+""+ex.getScripName()+"</td><td align=left><img src=/NewsApp-war/img/market_up.gif></b><b/></td>"+"<td>"+ex.getPricePerShare()+"</td>" );
+                out.println(" <tr ><td align=left> "+ex.getScripId()+"</td> <td align=left> "+""+ex.getScripName()+"</td><td align=left><img src=/NewsApp-war/img/market_up.gif></b><b/></td>"+"<td>"+ _nf.format(ex.getPricePerShare())+"</td>" );
             }else if (change ==2 ) {
-                out.println(" <tr ><td align=left> "+ex.getScripId()+"</td> <td align=left> "+""+ex.getScripName()+"</td><td align=left><img src=/NewsApp-war/img/market_down.gif></b><b/></td>" +"<td>"+ex.getPricePerShare()+"</td>" );
+                out.println(" <tr ><td align=left> "+ex.getScripId()+"</td> <td align=left> "+""+ex.getScripName()+"</td><td align=left><img src=/NewsApp-war/img/market_down.gif></b><b/></td>" +"<td>"+_nf.format(ex.getPricePerShare())+"</td>" );
             }else {
-                out.println(" <tr><td align=left> "+ex.getScripId()+"</td> <td align=left> "+""+ex.getScripName()+"</td><td align=left>Unchanged</td>"+"<td>"+ex.getPricePerShare()+"</td></tr>");
+                out.println(" <tr><td align=left> "+ex.getScripId()+"</td> <td align=left> "+""+ex.getScripName()+"</td><td align=left>Unchanged</td>"+"<td>"+_nf.format(ex.getPricePerShare())+"</td></tr>");
             }
             out.println("</table >");
             
