@@ -46,7 +46,7 @@ public class ScripsExchangeEntity implements Serializable {
         this.scripId = scripId;
         this.scripName = scripName;
         this.totalShares = totalShares;
-        this.totalAvailable = totalAvailable;
+        this.totalAvailable = totalSharesAvailable;
         this.marketCap = marketCap;
         this.pricePerShare = pricePerShare;
     }

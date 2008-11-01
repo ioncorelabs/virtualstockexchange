@@ -53,21 +53,18 @@ public class AddScripServlet extends HttpServlet {
         parameterMap.put("scripid",             request.getParameter("scripid"));
         parameterMap.put("scripname",           request.getParameter("scripname"));
         parameterMap.put("totalshares",         request.getParameter("totalshares"));
-        parameterMap.put("totalsharesavailable",request.getParameter("totalsharesavailable"));
-        parameterMap.put("marketcap",           request.getParameter("marketcap"));
         parameterMap.put("pricepershare",       request.getParameter("pricepershare"));
         
         if (formSubmitted(parameterMap))
         {    
-            int totalSharesInt = Integer.parseInt(parameterMap.get("totalshares"));
-            int totalSharesAvailableInt = Integer.parseInt(parameterMap.get("totalsharesavailable"));
-            double marketCapDbl = Double.parseDouble(parameterMap.get("marketcap"));
-            double pricePerShareDbl = Double.parseDouble(parameterMap.get("pricepershare"));
+            int totalSharesInt              = Integer.parseInt(parameterMap.get("totalshares"));
+            double pricePerShareDbl         = Double.parseDouble(parameterMap.get("pricepershare"));
+            double marketCapDbl             = (double)totalSharesInt * (double)pricePerShareDbl;
             
             ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
-            ScripsExchangeEntity scripsEntity = new ScripsExchangeEntity(parameterMap.get("scripid"), 
-                                                         parameterMap.get("scripname"),
-                                                         totalSharesInt, totalSharesAvailableInt, marketCapDbl, pricePerShareDbl);
+            ScripsExchangeEntity scripsEntity = 
+                            new ScripsExchangeEntity(parameterMap.get("scripid"), parameterMap.get("scripname"), totalSharesInt, 
+                                                     totalSharesInt, marketCapDbl, pricePerShareDbl);
             
             scripsEntityFacade.create(scripsEntity);
             response.sendRedirect("AdminServlet"); 
@@ -98,8 +95,6 @@ public class AddScripServlet extends HttpServlet {
         out.println("Scrip Id: <input type='text' name='scripid'><br/>");
         out.println("Scrip Name: <input type='text' name='scripname'><br/>");
         out.println("Total Shares: <input type='text' name='totalshares'><br/>");
-        out.println("Total Shares Available: <input type='text' name='totalsharesavailable'><br/>");
-        out.println("Market Cap: <input type='text' name='marketcap'><br/>");
         out.println("Price Per Share: <input type='text' name='pricepershare'><br/>");
         out.println("<input type='submit'><br/>");
         out.println("</form>");        
