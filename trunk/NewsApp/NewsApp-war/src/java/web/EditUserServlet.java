@@ -11,6 +11,7 @@ import ejb.LoginEntityFacadeLocal;
 import ejb.UsersEntity;
 import ejb.UsersEntityFacadeLocal;
 import java.io.*;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -29,6 +30,8 @@ import javax.servlet.http.*;
  * @version
  */
 public class EditUserServlet extends HttpServlet {
+    
+    private NumberFormat _nf = NumberFormat.getNumberInstance();
     
     /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -121,6 +124,9 @@ public class EditUserServlet extends HttpServlet {
         out.println("<tr><td>User ID</td><td>User Name</td><td>Current Cash Held</td>");
         out.println("<td>Password</td><td>User Role</td></tr>");
         
+        _nf.setMaximumFractionDigits(2);
+        _nf.setMinimumFractionDigits(2);
+        
         for (Iterator it = users.iterator(); it.hasNext();)
         {
             UsersEntity user = (UsersEntity)it.next();
@@ -129,7 +135,7 @@ public class EditUserServlet extends HttpServlet {
             out.println("<form>");
             out.println("<tr><td>" + user.getUserId() + "<input type='hidden' name='userid' value='" + user.getUserId() + "'></td>");
             out.println("<td><input type='text' name='username' value='" + user.getUserName() + "'></td>");
-            out.println("<td><input type='text' name='cashheld' value='" + user.getCashHeld()+ "'></td>");            
+            out.println("<td><input type='text' name='cashheld' value='" + _nf.format(user.getCashHeld()) + "'></td>");            
             out.println("<td><input type='password' name='password' value='" + login.getPassword()+ "'></td>");            
             
             out.println("<td>User Type: <select name='userrole'>");
