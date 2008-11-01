@@ -40,8 +40,44 @@
     <servlet>
         <servlet-name>BuyToCoverScrips</servlet-name>
         <servlet-class>web.BuyToCoverScrips</servlet-class>
+    </servlet>    
+    <servlet>
+        <servlet-name>AdminServlet</servlet-name>
+        <servlet-class>web.AdminServlet</servlet-class>
     </servlet>
-    <servlet-mapping>
+    <servlet>
+        <servlet-name>TraderServlet</servlet-name>
+        <servlet-class>web.TraderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>InvestorServlet</servlet-name>
+        <servlet-class>web.InvestorServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddUserServlet</servlet-name>
+        <servlet-class>web.AddUserServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddScripServlet</servlet-name>
+        <servlet-class>web.AddScripServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DelScripServlet</servlet-name>
+        <servlet-class>web.DelScripServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EditUserServlet</servlet-name>
+        <servlet-class>web.EditUserServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EditScripServlet</servlet-name>
+        <servlet-class>web.EditScripServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DelUserServlet</servlet-name>
+        <servlet-class>web.DelUserServlet</servlet-class>
+    </servlet>    
+    <servlet><servlet-name>ListingServlet</servlet-name><servlet-class>web.ListingServlet</servlet-class></servlet><servlet-mapping>
         <servlet-name>ListNews</servlet-name>
         <url-pattern>/ListNews</url-pattern>
     </servlet-mapping>
@@ -81,6 +117,46 @@
     <servlet-mapping>
         <servlet-name>BuyToCoverScrips</servlet-name>
         <url-pattern>/BuyToCoverScrips</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/AdminServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TraderServlet</servlet-name>
+        <url-pattern>/TraderServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InvestorServlet</servlet-name>
+        <url-pattern>/InvestorServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddUserServlet</servlet-name>
+        <url-pattern>/AddUserServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddScripServlet</servlet-name>
+        <url-pattern>/AddScripServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DelScripServlet</servlet-name>
+        <url-pattern>/DelScripServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditUserServlet</servlet-name>
+        <url-pattern>/EditUserServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditScripServlet</servlet-name>
+        <url-pattern>/EditScripServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DelUserServlet</servlet-name>
+        <url-pattern>/DelUserServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListingServlet</servlet-name>
+        <url-pattern>/ListingServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

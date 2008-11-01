@@ -67,6 +67,7 @@ public class BuyToCoverTransactionMessage implements MessageListener {
     public void save(Object object) {
         List al;
         List al1;
+        List al2;
         
         TransactionHistoryEntity the = (TransactionHistoryEntity) object;
         String scripId = the.getScripId();
@@ -81,6 +82,11 @@ public class BuyToCoverTransactionMessage implements MessageListener {
             ScripsExchangeEntity see = (ScripsExchangeEntity) al.get(0);
             int lent = see.getTotalSharesLent();
             see.setTotalSharesLent(lent-num);
+            
+            //Share price value reset, using marketcap/totalshares
+            double newprice = (see.getMarketCap())/(see.getTotalAvailable() - num + see.getTotalSharesLent());
+            see.setPricePerShare(newprice);
+                
             seef.edit(see); 
             
             the.setPricePerShare(see.getPricePerShare());
@@ -115,6 +121,21 @@ public class BuyToCoverTransactionMessage implements MessageListener {
         } else{//TODO:Scrip not held                       
         }
                 
+        UsersEntityFacadeLocal uef = (UsersEntityFacadeLocal)lookupUsersFacade();
+        
+        al2 = uef.findUserById(userId);
+        
+        if(al2.isEmpty() != true) {
+            //Updating table
+            UsersEntity ue = (UsersEntity) al2.get(0);
+            double balance = ue.getCashHeld();
+            ue.setCashHeld(balance - (the.getPricePerShare() * num));            
+            uef.edit(ue);
+        } else{
+            //TODO: Raise exception, user doesnot exist.
+        }
+        
+        
         em.flush();
         em.persist(the);
     }
@@ -139,4 +160,14 @@ public class BuyToCoverTransactionMessage implements MessageListener {
             throw new RuntimeException(ne);
         }
     }                    
+    
+    private UsersEntityFacadeLocal lookupUsersFacade() {
+        try {
+            Context c = new InitialContext();
+            return (UsersEntityFacadeLocal) c.lookup("NewsApp/UsersEntityFacade/local");
+        } catch(NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
+            throw new RuntimeException(ne);
+        }
+    }     
 }

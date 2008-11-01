@@ -100,7 +100,7 @@ public class TraderServlet extends HttpServlet {
         
         out.println("<h3>Summary:</h3><b>");
         out.println("Current Cash Held: $" + self.getCashHeld() + "<br/>");
-        out.println("Net Income/Loss: $" + (_portfolioDifference + (self.getCashHeld() - self.getInitialCashHeld())) + "<br/>");
+        out.println("Net Income/Loss: $" + ((self.getCashHeld() + _portfolioTotal) - self.getInitialCashHeld()) + "<br/>");
         out.println("Total Assets: $" + _portfolioTotal + "<br/>");
         out.println("Total Buying Power: $" + (self.getCashHeld() + _portfolioTotal) + "<br/></b>");
         
@@ -196,7 +196,7 @@ public class TraderServlet extends HttpServlet {
                     totalBorrowingSpent -= (double)trans.getPricePerShare() * (double)trans.getTotalShares();
             }
             
-            double currentValue = (double)scripshorted.getSharesBorrowed() * (double)myscripsEntity.getPricePerShare();
+            double currentValue = (double)(scripshorted.getSharesBorrowed() - scripshorted.getSharesShorted())* (double)myscripsEntity.getPricePerShare();
             double changeValue = currentValue - totalBorrowingSpent;
             
             // NOTE: want value to be lower than what I borrowed it for 
@@ -209,7 +209,7 @@ public class TraderServlet extends HttpServlet {
             out.println("<td>" + myscripsEntity.getScripId() + "</td>");
             out.println("<td>$" + currentValue + "</td>");
             out.println("<td>$" + changeValue + "</td>");
-            out.println("<td>" + scripshorted.getSharesBorrowed()+ "</td>");
+            out.println("<td>" + (scripshorted.getSharesBorrowed() - scripshorted.getSharesShorted())+ "</td>");
             out.println("<td>$" + myscripsEntity.getPricePerShare()+ "</td>");
             out.println("</tr>");
         }

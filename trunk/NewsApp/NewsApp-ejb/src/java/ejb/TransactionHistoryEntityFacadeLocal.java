@@ -28,4 +28,8 @@ public interface TransactionHistoryEntityFacadeLocal {
 
     List findAll();
     
+    List findAllTransactionsForUser(String userId);    
+    
+    List findTransactionsForUserAndScrip(String userId, String scripId);
+    
 }

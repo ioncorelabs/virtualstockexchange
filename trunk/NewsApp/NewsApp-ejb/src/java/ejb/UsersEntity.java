@@ -27,8 +27,7 @@ public class UsersEntity implements Serializable {
     private String userId;
     private String userName;
     private double cashHeld;
-    private double initialCashHeld;
-    private double totalBuyPower; 
+    private double initialCashHeld;    
     
     /** Creates a new instance of UsersEntity */
     public UsersEntity() {
@@ -97,14 +96,6 @@ public class UsersEntity implements Serializable {
 
     public void setCashHeld(double cashHeld) {
         this.cashHeld = cashHeld;
-    }
-
-    public double getTotalBuyPower() {
-        return totalBuyPower;
-    }
-
-    public void setTotalBuyPower(double totalBuyPower) {
-        this.totalBuyPower = totalBuyPower;
     }
 
     public double getInitialCashHeld() {

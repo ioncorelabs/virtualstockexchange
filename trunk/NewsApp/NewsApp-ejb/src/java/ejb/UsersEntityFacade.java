@@ -53,4 +53,7 @@ public class UsersEntityFacade implements UsersEntityFacadeLocal {
         return em.createQuery("select object(o) from UsersEntity as o").getResultList();
     }
     
+    public List findUserById(String userId) {        
+        return em.createQuery("select object(o) from UsersEntity as o where o.userId = ?1").setParameter(1, userId).getResultList();
+    }    
 }
