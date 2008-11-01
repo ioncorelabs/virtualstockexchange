@@ -49,11 +49,14 @@ public class AddScripServlet extends HttpServlet {
         String userid = (String)session.getAttribute("userid");
         System.out.println("At admin page as user '" + userid + "'");
         
+        PrintWriter out = response.getWriter();
         HashMap<String, String> parameterMap = new HashMap<String, String>();
         parameterMap.put("scripid",             request.getParameter("scripid"));
         parameterMap.put("scripname",           request.getParameter("scripname"));
         parameterMap.put("totalshares",         request.getParameter("totalshares"));
         parameterMap.put("marketcap",       request.getParameter("marketcap"));
+        
+        boolean errored = false;
         
         if (formSubmitted(parameterMap))
         {    
@@ -64,15 +67,22 @@ public class AddScripServlet extends HttpServlet {
                    
             
             ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
-            ScripsExchangeEntity scripsEntity = 
-                            new ScripsExchangeEntity(parameterMap.get("scripid"), parameterMap.get("scripname"), totalSharesInt, 
-                                                     totalSharesInt, marketCapDbl, pricePerShareDbl);
-            
-            scripsEntityFacade.create(scripsEntity);
-            response.sendRedirect("AdminServlet"); 
+            if (scripsEntityFacade.find(parameterMap.get("scripid")) != null)
+            {
+                errored = true;
+            }
+            else
+            {
+                ScripsExchangeEntity scripsEntity =  new ScripsExchangeEntity(parameterMap.get("scripid"), parameterMap.get("scripname"), 
+                                                        totalSharesInt, totalSharesInt, marketCapDbl, pricePerShareDbl);
+
+                scripsEntityFacade.create(scripsEntity);
+                response.sendRedirect("AdminServlet");
+                return;
+            }
         }
         
-        printForm(request, response);
+        printForm(out, request, response, errored);
     }
     
     private boolean isInvalidSession(final HttpSession session)
@@ -92,8 +102,7 @@ public class AddScripServlet extends HttpServlet {
         return true;
     }
     
-    private void printForm(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
-        PrintWriter out = response.getWriter();
+    private void printForm(PrintWriter out, final HttpServletRequest request, final HttpServletResponse response, final boolean errored) throws IOException {
         out.println("<html>");
         out.println("<head>");
         out.println("<title>Virtual Stock Exchance: Add Scrip</title>");
@@ -112,6 +121,8 @@ public class AddScripServlet extends HttpServlet {
         //Common Ends
         
         out.println("<span class=\"ttitle\" style=\"580px;\">Add Scrip Form</span><br>");
+        if (errored)
+            out.println("<font color=red><b>That scrip ID already exists, stupid head!</b></font><br>");
         out.println("<form>");
         out.println("Scrip Id:<font color=\"#FFFFFF\">_________________</font><input type='text' name='scripid'><br/>");
         out.println("Scrip Name:<font color=\"#FFFFFF\">_____________</font><input type='text' name='scripname'><br/>");
