@@ -45,8 +45,11 @@ public class InvestorServlet extends HttpServlet {
         out.println("</head>");
         out.println("<body>");
         out.println("<b>Investor Menu. Welcome back, " + userid + "!</b><br>");
-        out.println("Buy<br>");
-        out.println("Sell<br>");
+        out.println("<br><br><input type=button value=Buy onclick=\"javascript:window.location='BuyScrips'\"><br><br>");
+        out.println("<input type=button value=Sell onclick=\"javascript:window.location='SellScrips'\"><br><br>");        
+        out.println("<input type=button value=\"Your Portfolio\" onclick=\"javascript:window.location='TraderServlet'\"><br><br>");
+        out.println("<input type=button value=\"Scrip Lookup\" onclick=\"javascript:window.location='ListingServlet'\"><br><br>");
+        
         out.println("</body>");
         out.println("</html>");
         
