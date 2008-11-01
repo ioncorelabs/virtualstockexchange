@@ -111,10 +111,24 @@ public class BuyToCoverScrips extends HttpServlet {
         //TODO output your page here
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Short Sell shares</title>");
+        out.println("<title>Virtual Stock Exchance: Short Sell shares</title>");
         out.println("</head>");
         out.println("<body>");
-        out.println("<h1>Servlet NewServlet at " + request.getContextPath() + "</h1>");
+        
+                
+                               //Common Styling Code
+        out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<div id=\"tot\">");
+        out.println("<div id=\"header\">");
+        out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
+        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
+        out.println("<div id=\"corp\">");
+        out.println("<div class=\"main-text\">");
+        //Common Ends
+        
+        out.println("<span class=\"ttitle\" style=\"580px;\">Buy Shares Form</span><br>");
         out.println("<form>");
         
         out.println("<form  action=ListScrips onSubmit=initializeRadio() >");
@@ -136,9 +150,17 @@ public class BuyToCoverScrips extends HttpServlet {
         out.println("<input type =hidden name = index >" );
         
         out.println("<tr><td colspan=4> Number of Shares to cover: <input type =text name=number id=num size =10  ></tr> ");
-        out.println("<tr><td colspan=4><input type =submit value=submit /></tr> ");
-        out.println("</table ");
+        out.println("<tr><td colspan=4><input type =submit value=Submit /></tr> ");
+        out.println("</table>");
         out.println("</form>");
+        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/>");
+        
+                //Common Starts
+        out.println("</div></div>");
+        out.println("<div class=\"clear\"></div>");        
+        out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
+        out.println("</div>");
+        //Common Ends
         
         out.println("</body>");
         out.println("</html>");

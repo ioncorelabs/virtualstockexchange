@@ -90,22 +90,41 @@ public class NewLogin extends HttpServlet {
         }
         
         PrintWriter out = response.getWriter();
-        //TODO output your page here
+        //Common Styling Code
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Servlet NewLogin</title>");
+        out.println("<title>Virtual Stock Exchance: Login</title>");
+        out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
         out.println("</head>");
         out.println("<body>");
-        out.println("<h1>Servlet NewLogin at " + request.getContextPath() + "</h1>");
-        out.println("<h2>Please enter your user id and password to login</h2>");
-        out.println("</body>");
-        out.println("</html>");
+        out.println("<div id=\"tot\">");
+        out.println("<div id=\"header\">");
+        out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
+        out.println("<div class=\"slogan\">Bulls & Bears</div>");
+        out.println("<div id=\"corp\">");
+        out.println("<div class=\"main-text\">");
+        //Common Ends
+        out.println("<div id=\"head\" align=\"center\">");
+        out.println("<span class=\"ttitle\" style=\"580px;\">COMS 4156: Advanced Software Engineering</span>");
+        out.println("<br><br><br><br><br><br>");
+        out.println("<span class=\"ttitle\">Sign In</span><br>");
+        
         
         out.println("<form>");
-        out.println("User Id: <input type='text' name='userid'><br/>");
-        out.println("Password: <input type='password' name='password'><br/>");
-        out.println("<input type='submit'><br/>");
+        out.println("User Id:<font color=\"#FFFFFF\">______</font<input type='text' name='userid'><br/>");
+        out.println("Password:<font color=\"#FFFFFF\">____</font<input type='password' name='password'><br/>");
+        out.println("<input type='submit' value='Login'><br/>");
         out.println("</form>");
+        out.println("</div>");
+        //Common Starts
+        out.println("</div></div>");
+        out.println("<div class=\"clear\"></div>");        
+        out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
+        out.println("</div>");
+        //Common Ends
+      
+        out.println("</body>");
+        out.println("</html>");
              
         
         out.close();

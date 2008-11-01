@@ -91,11 +91,23 @@ public class EditUserServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Servlet EditUser</title>");
+        out.println("<title>Virtual Stock Exchance: Edit User</title>");
         out.println("</head>");
         out.println("<body>");
-        out.println("<h1>Servlet EditUser at " + request.getContextPath () + "</h1>");
-        out.println("Edit User Form<br>");
+        
+                //Common Styling Code
+        out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<div id=\"tot\">");
+        out.println("<div id=\"header\">");
+        out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
+        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
+        out.println("<div id=\"corp\">");
+        out.println("<div class=\"main-text\">");
+        //Common Ends
+        
+        out.println("<span class=\"ttitle\" style=\"580px;\">Edit User Form</span><br>");   
         out.println("Users:<br>");
         out.println("<table width=700px border=1>");
         out.println("<tr><td>User ID</td><td>User Name</td><td>Current Cash Held</td>");
@@ -123,7 +135,15 @@ public class EditUserServlet extends HttpServlet {
         }
         
         out.println("</table><br>");
-        out.println("<a href='/AdminServlet'>Back to Admin Page</a><br>");
+        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
+        
+                //Common Starts
+        out.println("</div></div>");
+        out.println("<div class=\"clear\"></div>");        
+        out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
+        out.println("</div>");
+        //Common Ends
+        
         out.println("</body>");
         out.println("</html>");
         

@@ -41,15 +41,45 @@ public class InvestorServlet extends HttpServlet {
        
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Investor Homepage</title>");
+        out.println("<title>Virtual Stock Exchance: Investor Homepage</title>");
         out.println("</head>");
         out.println("<body>");
-        out.println("<b>Investor Menu. Welcome back, " + userid + "!</b><br>");
-        out.println("<br><br><input type=button value=Buy onclick=\"javascript:window.location='BuyScrips'\"><br><br>");
-        out.println("<input type=button value=Sell onclick=\"javascript:window.location='SellScrips'\"><br><br>");        
-        out.println("<input type=button value=\"Your Portfolio\" onclick=\"javascript:window.location='InvestorPortfolio'\"><br><br>");
-        out.println("<input type=button value=\"Scrip Lookup\" onclick=\"javascript:window.location='ListingServlet'\"><br><br>");
         
+                //Common Styling Code
+        out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<div id=\"tot\">");
+        out.println("<div id=\"header\">");
+        out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
+        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
+        out.println("<div id=\"corp\">");
+        out.println("<div class=\"main-text\">");
+        //Common Ends
+        
+               out.println("<div id=\"head\" align=\"center\"");
+        out.println("<span class=\"ttitle\" style=\"580px;\">Investor</span><br>");
+        out.println("<span class=\"ttitle\"><b>Welcome back, " + userid + "!</b></span><br><br><br>");
+        out.println("</div>");
+        out.println("<br><br><br><br><br>");
+        
+        out.println("<div id=\"menius\">");
+        out.println("<div class=\"menu-title\">Menu</div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"BuyScrips\">Buy</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"SellScrips\">Sell</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"InvestorPortfolio\">Your Portfolio</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"ListingServlet\">Scrip Lookup</a></div>");
+         out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"LogoutServlet\">Logout</a></div>");
+        out.println("</div>");
+        
+        //Common Starts
+        out.println("</div></div>");
+        out.println("<div class=\"clear\"></div>");        
+        out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
+        out.println("</div>");
+        //Common Ends
+        
+      
         out.println("</body>");
         out.println("</html>");
         
