@@ -36,7 +36,7 @@ import javax.servlet.http.*;
  */
 public class BuyToCoverScrips extends HttpServlet {
     
-    /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+   /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
      */
@@ -45,14 +45,10 @@ public class BuyToCoverScrips extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession appSession = request.getSession(true);
-        if (isInvalidSession(appSession)) {
-            response.sendRedirect("NewLogin");
-            return;
-        }
         
         String num = request.getParameter("number");
         String userId = (String)appSession.getAttribute("userid");
-        
+                
         ScripsShortedEntityFacadeLocal scripsEntityFacade = (ScripsShortedEntityFacadeLocal) lookupScripsShortedEntityFacade();
         List scrips = scripsEntityFacade.findScrips(userId);
         int index =-1;
@@ -67,9 +63,9 @@ public class BuyToCoverScrips extends HttpServlet {
                 index =  Integer.parseInt(strButtonIndex);
             }//TODO: Raise exception, id index not found
             
-            Vector vec = (Vector) request.getSession().getAttribute("Vector");
-            ScripsShortedEntity elem  = (ScripsShortedEntity) vec.elementAt(index);
-            
+            Vector vec = (Vector) request.getSession().getAttribute("Vector");                        
+            ScripsShortedEntity elem  = (ScripsShortedEntity) vec.elementAt(index);                
+         
             
             Queue queue = null;
             QueueConnection connection = null;
@@ -94,17 +90,13 @@ public class BuyToCoverScrips extends HttpServlet {
                 e.setUserId(userId);
                 e.setTotalShares(Integer.parseInt(num));
                 e.setTranType("BuyToCover");
-                e.setTranDate(System.currentTimeMillis());
-                
+                 e.setTranDate(System.currentTimeMillis());
+                 
                 message.setObject(e);
                 messageProducer.send(message);
                 messageProducer.close();
                 connection.close();
-                
-                if(((String)appSession.getAttribute("userrole")).equals("t"))
-                    response.sendRedirect("TraderTradeSuccess");
-                else
-                    response.sendRedirect("InvestorTradeSuccess");
+                //response.sendRedirect("ListNews");
                 
             } catch (JMSException ex) {
                 ex.printStackTrace();
@@ -123,15 +115,15 @@ public class BuyToCoverScrips extends HttpServlet {
         out.println("</head>");
         out.println("<body>");
         
-        
-        //Common Styling Code
+                
+                               //Common Styling Code
         out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
         out.println("</head>");
         out.println("<body>");
         out.println("<div id=\"tot\">");
         out.println("<div id=\"header\">");
         out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
-        out.println("<div class=\"slogan\">Bulls & Bears</div>");
+        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
         out.println("<div id=\"corp\">");
         out.println("<div class=\"main-text\">");
         //Common Ends
@@ -163,9 +155,9 @@ public class BuyToCoverScrips extends HttpServlet {
         out.println("</form>");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/>");
         
-        //Common Starts
+                //Common Starts
         out.println("</div></div>");
-        out.println("<div class=\"clear\"></div>");
+        out.println("<div class=\"clear\"></div>");        
         out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
         out.println("</div>");
         //Common Ends
@@ -175,14 +167,7 @@ public class BuyToCoverScrips extends HttpServlet {
         
         out.close();
     }
-    
-    private boolean isInvalidSession(final HttpSession session) {
-        return (session.isNew() ||
-                session.getAttribute("userid") == null ||
-                session.getAttribute("userrole") == null ||
-                !((String)session.getAttribute("userrole")).equals("t")); // only traders can BuyToCover
-    }
-    
+
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** Handles the HTTP <code>GET</code> method.
@@ -218,5 +203,5 @@ public class BuyToCoverScrips extends HttpServlet {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
             throw new RuntimeException(ne);
         }
-    }
+    }    
 }

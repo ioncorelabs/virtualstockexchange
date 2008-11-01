@@ -15,7 +15,7 @@ body {
 }
 
 #header {
-	height: 101px;
+	height: 121px;
 }
 
 .title {
@@ -70,9 +70,10 @@ body {
 }
 
 #corp {
+
 	background: #D3DBF8;
 	padding-top: 15px;
-	padding-bottom: 15px;
+	padding-bottom: 5px;
 	padding-left: 135px;
 	border-bottom: #12212E solid 2px;
 	border-top: #12212E solid 2px;
@@ -100,7 +101,7 @@ body {
 	width: 240px;
 	position:absolute;
 	top: 70px;
-	right: 100px;
+	right: 200px;
 	background: #DAE6AC;
 	border: #80942E solid 1px;
 }

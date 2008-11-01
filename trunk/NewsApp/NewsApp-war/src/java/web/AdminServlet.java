@@ -8,8 +8,6 @@ package web;
 
 import java.io.*;
 import java.net.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -30,7 +28,7 @@ public class AdminServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession(true);
-        if (isInvalidSession(session))
+        if (session.isNew() || session.getAttribute("userid") == null || session.getAttribute("userrole") == null || !((String)session.getAttribute("userrole")).equals("a"))
         {
             response.sendRedirect("NewLogin");
             return;
@@ -84,40 +82,6 @@ public class AdminServlet extends HttpServlet {
         out.println("</html>");
         
         out.close();
-    }
-    
-    private String getMD5Hash(String plaintext, final HttpSession session)
-    {
-        //byte[] defaultBytes = sessionid.getBytes();
-        byte[] defaultBytes = session.getId().getBytes();
-        StringBuffer hexString = null;
-            
-        try {
-            MessageDigest algorithm = MessageDigest.getInstance("MD5");
-            algorithm.reset();
-            algorithm.update(defaultBytes);
-            byte messageDigest[] = algorithm.digest();
-
-            hexString = new StringBuffer();
-            for (int i = 0; i < messageDigest.length; i++) {
-                    hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
-            }
-            String foo = messageDigest.toString();
-            System.out.println("plaintext " + plaintext + " md5 version is "+hexString.toString());
-        }
-        catch(NoSuchAlgorithmException nsae) {
-            nsae.printStackTrace();
-        }
-
-        return hexString.toString();
-    }
-    
-    private boolean isInvalidSession(final HttpSession session)
-    {
-        return (session.isNew() || 
-                session.getAttribute("userid") == null || 
-                session.getAttribute("userrole") == null || 
-                !((String)session.getAttribute("userrole")).equals("a"));
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
