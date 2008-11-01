@@ -28,6 +28,12 @@ public class TraderHome extends HttpServlet {
         
         HttpSession session = request.getSession(true);
         
+        if (isInvalidSession(session))
+        {
+            response.sendRedirect("NewLogin");
+            return;
+        }
+        
         session.setAttribute("userid", session.getAttribute("userid"));
         
         response.setContentType("text/html;charset=UTF-8");
@@ -77,6 +83,14 @@ public class TraderHome extends HttpServlet {
         out.println("</html>");
         
         out.close();
+    }
+    
+    private boolean isInvalidSession(final HttpSession session)
+    {
+        return (session.isNew() || 
+                session.getAttribute("userid") == null || 
+                session.getAttribute("userrole") == null || 
+                !((String)session.getAttribute("userrole")).equals("t"));
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
