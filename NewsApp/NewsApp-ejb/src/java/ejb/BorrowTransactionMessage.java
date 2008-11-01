@@ -91,7 +91,8 @@ public class BorrowTransactionMessage implements MessageListener {
                 see.setTotalSharesLent(lent+num);
                 seef.edit(see);
                 
-                the.setPricePerShare(see.getPricePerShare());
+                double price = see.getPricePerShare();
+                the.setPricePerShare(price);
             }
         } else{//TODO: Raise exception, Scrip not found
             

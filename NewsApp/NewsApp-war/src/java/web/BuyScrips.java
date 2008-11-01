@@ -10,6 +10,7 @@ import ejb.ScripsExchangeEntity;
 import ejb.ScripsExchangeEntityFacadeLocal;
 import ejb.ScripsUserEntityFacadeLocal;
 import ejb.TransactionHistoryEntity;
+import ejb.VSEGenericException;
 import java.io.*;
 import java.util.Iterator;
 import java.util.List;

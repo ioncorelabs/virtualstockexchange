@@ -30,4 +30,6 @@ public interface UsersEntityFacadeLocal {
 
     List findAll();
     
+    List findUserById(String userId);
+    
 }
