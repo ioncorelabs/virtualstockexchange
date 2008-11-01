@@ -77,7 +77,12 @@
         <servlet-name>DelUserServlet</servlet-name>
         <servlet-class>web.DelUserServlet</servlet-class>
     </servlet>    
-    <servlet><servlet-name>ListingServlet</servlet-name><servlet-class>web.ListingServlet</servlet-class></servlet><servlet-mapping>
+    <servlet><servlet-name>ListingServlet</servlet-name><servlet-class>web.ListingServlet</servlet-class></servlet>
+    <servlet>
+        <servlet-name>InvestorPortfolio</servlet-name>
+        <servlet-class>web.InvestorPortfolio</servlet-class>
+    </servlet>
+    <servlet-mapping>
         <servlet-name>ListNews</servlet-name>
         <url-pattern>/ListNews</url-pattern>
     </servlet-mapping>
@@ -157,6 +162,10 @@
     <servlet-mapping>
         <servlet-name>ListingServlet</servlet-name>
         <url-pattern>/ListingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InvestorPortfolio</servlet-name>
+        <url-pattern>/InvestorPortfolio</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
