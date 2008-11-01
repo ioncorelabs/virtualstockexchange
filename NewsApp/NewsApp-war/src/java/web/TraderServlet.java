@@ -18,6 +18,8 @@ import ejb.UsersEntity;
 import ejb.UsersEntityFacadeLocal;
 import java.io.*;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,6 +42,7 @@ public class TraderServlet extends HttpServlet {
     
     private volatile double _portfolioTotal = 0.0;
     private volatile double _portfolioDifference = 0.0;
+    private NumberFormat _numberFormat = NumberFormat.getCurrencyInstance();
     
     /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -66,22 +69,18 @@ public class TraderServlet extends HttpServlet {
                     (TransactionHistoryEntityFacadeLocal) lookupTransactionHistoryEntityFacade();
         
         // my user entity, which contains my initial cash held and current net worth (buying power)
-        // FIXME: hardcoded for debugging. Should be getting username from HttpSession.
         UsersEntity self = usersEntityFacde.find(userid);
         
         // get list of all scrips listed in exchange
         List allscrips = scripsEntityFacade.findAll();
         
         // get list of all scrips that this user has borrowed
-        // FIXME: hardcoded for debugging. Should be getting username from HttpSession.
         List borrowedscrips = scripsShortedEntityFacade.findScrips(userid);
         
         // get list of all scrips that this user owns
-        // FIXME: hardcoded for debugging. Should be getting username from HttpSession.
         List userscrips = scripsUserEntityFacade.findScrips(userid); 
         
         // get list of all transactions from this user.
-        // FIXME: hardcoded for debugging. Should be getting username from HttpSession.
         List usertransactions = transactionHistoryEntityFacade.findAllTransactionsForUser(userid);
         
         PrintWriter out = response.getWriter();
@@ -92,17 +91,16 @@ public class TraderServlet extends HttpServlet {
         out.println("<body>");
         out.println("<h1>Servlet Trader Homepage at " + request.getContextPath () + "</h1>");
         
-        // FIXME: username hardcoded
-        out.println("<b>Welcome back, Trader!<br/><br/>");
+        out.println("<b>Welcome back, " + userid + "!<br/><br/>");
         printOwnedScripsTable(userid, scripsEntityFacade, transactionHistoryEntityFacade, out, userscrips);
         printBorrowedScripsTable(userid, scripsEntityFacade, transactionHistoryEntityFacade, out, borrowedscrips);
         printTransactionsTable(out, usertransactions);
         
         out.println("<h3>Summary:</h3><b>");
-        out.println("Current Cash Held: $" + self.getCashHeld() + "<br/>");
-        out.println("Net Income/Loss: $" + ((self.getCashHeld() + _portfolioTotal) - self.getInitialCashHeld()) + "<br/>");
-        out.println("Total Assets: $" + _portfolioTotal + "<br/>");
-        out.println("Total Buying Power: $" + (self.getCashHeld() + _portfolioTotal) + "<br/></b>");
+        out.println("Current Cash Held: " + _numberFormat.format(self.getCashHeld()) + "<br/>");
+        out.println("Net Income/Loss: " + _numberFormat.format(self.getCashHeld() + _portfolioTotal - self.getInitialCashHeld()) + "<br/>");
+        out.println("Total Assets: " + _numberFormat.format(_portfolioTotal) + "<br/>");
+        out.println("Total Buying Power: " + _numberFormat.format(self.getCashHeld() + _portfolioTotal) + "<br/></b>");
         
         out.println("</body>");
         out.println("</html>");
@@ -129,7 +127,6 @@ public class TraderServlet extends HttpServlet {
             ScripsUserEntity scripuser = (ScripsUserEntity)it.next();
             ScripsExchangeEntity myscripsEntity = scripsEntityFacade.find(scripuser.getScripId());
             
-            // FIXME: userid hardcoded for now.
             List transactionsForScrip = transactionHistoryEntityFacade.findTransactionsForUserAndScrip(userid, myscripsEntity.getScripId());
             double totalSpent = 0.0;
             for (Iterator transIter = transactionsForScrip.iterator(); transIter.hasNext();)
@@ -155,13 +152,13 @@ public class TraderServlet extends HttpServlet {
                 out.println("<tr bgcolor='#67FD67'>"); // green
             
             out.println("<td>" + myscripsEntity.getScripId() + "</td>");
-            out.println("<td>$" + currentValue + "</td>");
-            out.println("<td>$" + changeValue + "</td>");
+            out.println("<td>" + _numberFormat.format(currentValue) + "</td>");
+            out.println("<td>" + _numberFormat.format(changeValue) + "</td>");
             out.println("<td>" + scripuser.getSharesHeld() + "</td>");
             out.println("<td>" + myscripsEntity.getTotalShares()+ "</td>");
             out.println("<td>" + myscripsEntity.getTotalAvailable()+ "</td>");
-            out.println("<td>" + myscripsEntity.getMarketCap()+ "</td>");
-            out.println("<td>$" + myscripsEntity.getPricePerShare()+ "</td>");
+            out.println("<td>" + _numberFormat.format(myscripsEntity.getMarketCap()) + "</td>");
+            out.println("<td>" + _numberFormat.format(myscripsEntity.getPricePerShare()) + "</td>");
             out.println("</tr>");
         }
         out.println("</table><br/>");
@@ -183,7 +180,6 @@ public class TraderServlet extends HttpServlet {
             ScripsShortedEntity scripshorted = (ScripsShortedEntity)it.next();
             ScripsExchangeEntity myscripsEntity = scripsEntityFacade.find(scripshorted.getScripId());
             
-            // FIXME: userid hardcoded for now.
             List transactionsForScrip = transactionHistoryEntityFacade.findTransactionsForUserAndScrip(userid, myscripsEntity.getScripId());
             
             double totalBorrowingSpent = 0.0;
@@ -207,10 +203,10 @@ public class TraderServlet extends HttpServlet {
                 out.println("<tr bgcolor='#67FD67'>"); // green
             
             out.println("<td>" + myscripsEntity.getScripId() + "</td>");
-            out.println("<td>$" + currentValue + "</td>");
-            out.println("<td>$" + changeValue + "</td>");
-            out.println("<td>" + (scripshorted.getSharesBorrowed() - scripshorted.getSharesShorted())+ "</td>");
-            out.println("<td>$" + myscripsEntity.getPricePerShare()+ "</td>");
+            out.println("<td>" + _numberFormat.format(currentValue) + "</td>");
+            out.println("<td>" + _numberFormat.format(changeValue) + "</td>");
+            out.println("<td>" + (scripshorted.getSharesBorrowed() - scripshorted.getSharesShorted()) + "</td>");
+            out.println("<td>" + _numberFormat.format(myscripsEntity.getPricePerShare())+ "</td>");
             out.println("</tr>");
         }
         out.println("</table><br/>");
@@ -232,7 +228,7 @@ public class TraderServlet extends HttpServlet {
             out.println("<td>" + transaction.getScripId() + "</td>");
             out.println("<td>" + transaction.getTranType() + "</td>");
             out.println("<td>" + transaction.getTotalShares()+ "</td>");
-            out.println("<td>$" + transaction.getPricePerShare()+ "</td>");
+            out.println("<td>" + _numberFormat.format(transaction.getPricePerShare()) + "</td>");
             out.println("<td width=250px>" + df.format(new Date(transaction.getTranDate())) + "</td>");
             out.println("</tr>");
         }
