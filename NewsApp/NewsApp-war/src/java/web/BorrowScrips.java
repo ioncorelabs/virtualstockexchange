@@ -43,6 +43,11 @@ public class BorrowScrips extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession appSession = request.getSession(true);
+        if (isInvalidSession(appSession))
+        {
+            response.sendRedirect("NewLogin");
+            return;
+        }
         
         String scripId=request.getParameter("scripId");
         String num=request.getParameter("num");
@@ -138,6 +143,14 @@ public class BorrowScrips extends HttpServlet {
         out.println("</html>");
         
         out.close();
+    }
+    
+    private boolean isInvalidSession(final HttpSession session)
+    {
+        return (session.isNew() || 
+                session.getAttribute("userid") == null || 
+                session.getAttribute("userrole") == null || 
+                !((String)session.getAttribute("userrole")).equals("t")); // only traders allowed to borrow
     }
     
     

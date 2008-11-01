@@ -6,19 +6,12 @@
 
 package web;
 
-import ejb.NewsEntity;
-import ejb.NewsEntityFacadeLocal;
 import ejb.ScripsExchangeEntity;
-import ejb.ScripsExchangeEntityFacade;
 import ejb.ScripsExchangeEntityFacadeLocal;
-import ejb.ScripsUserEntity;
-import ejb.ScripsUserEntityFacade;
 import ejb.ScripsUserEntityFacadeLocal;
 import java.io.*;
-import java.net.*;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
@@ -42,6 +35,14 @@ public class ListingServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        
+        HttpSession session = request.getSession(true);
+        if (isInvalidSession(session))
+        {
+            response.sendRedirect("NewLogin");
+            return;
+        }
+        
         PrintWriter out = response.getWriter();
         ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityEntityFacade();
         
@@ -132,12 +133,16 @@ public class ListingServlet extends HttpServlet {
             out.close();
             
         }
-        
     }
-    
-    
-    
-    
+        
+    private boolean isInvalidSession(final HttpSession session)
+    {
+        return (session.isNew() || 
+                session.getAttribute("userid") == null || 
+                session.getAttribute("userrole") == null || 
+                ((String)session.getAttribute("userrole")).equals("a")); // only admins CANNOT list scrips
+    }
+        
     
     
     
