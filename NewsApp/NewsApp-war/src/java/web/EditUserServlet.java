@@ -6,6 +6,8 @@
 
 package web;
 
+import ejb.LoginEntity;
+import ejb.LoginEntityFacadeLocal;
 import ejb.UsersEntity;
 import ejb.UsersEntityFacadeLocal;
 import java.io.*;
@@ -50,21 +52,30 @@ public class EditUserServlet extends HttpServlet {
         parameterMap.put("userid",              request.getParameter("userid"));
         parameterMap.put("username",            request.getParameter("username"));
         parameterMap.put("cashheld",            request.getParameter("cashheld"));        
+        parameterMap.put("password",            request.getParameter("password"));        
+        parameterMap.put("userrole",            request.getParameter("userrole"));        
         
         UsersEntityFacadeLocal usersEntityFacade = (UsersEntityFacadeLocal) lookupUsersEntityFacade();
+        LoginEntityFacadeLocal loginEntityFacade = (LoginEntityFacadeLocal) lookupLoginEntityFacade();
             
         if (formSubmitted(parameterMap))
         {   
             UsersEntity user = usersEntityFacade.find(parameterMap.get("userid"));
+            LoginEntity login = loginEntityFacade.find(parameterMap.get("userid"));
+            
+            // TODO add field
             user.setUserName(parameterMap.get("username"));
-            user.setCashHeld(Double.parseDouble(parameterMap.get("cashheld")));            
+            user.setCashHeld(Double.parseDouble(parameterMap.get("cashheld")));
+            login.setPassword(parameterMap.get("password"));
+            login.setUserRole(parameterMap.get("userrole").charAt(0));
             
             usersEntityFacade.edit(user);
+            loginEntityFacade.edit(login);
             response.sendRedirect("AdminServlet"); 
         }
         
         List users = usersEntityFacade.findAll();
-        printForm(request, response, users);
+        printForm(loginEntityFacade, request, response, users);
     }
     
     private boolean formSubmitted(HashMap<String, String> pm)
@@ -76,7 +87,7 @@ public class EditUserServlet extends HttpServlet {
         return true;
     }
     
-    private void printForm(final HttpServletRequest request, final HttpServletResponse response, List users) throws IOException {
+    private void printForm(final LoginEntityFacadeLocal loginEntityFacade, final HttpServletRequest request, final HttpServletResponse response, List users) throws IOException {
         PrintWriter out = response.getWriter();
         out.println("<html>");
         out.println("<head>");
@@ -86,16 +97,27 @@ public class EditUserServlet extends HttpServlet {
         out.println("<h1>Servlet EditUser at " + request.getContextPath () + "</h1>");
         out.println("Edit User Form<br>");
         out.println("Users:<br>");
-        out.println("<table width=600px border=1>");
-        out.println("<tr><td>User ID</td><td>User Name</td><td>Current Cash Held</td><td>Total Buying Power</td></tr>");
+        out.println("<table width=700px border=1>");
+        out.println("<tr><td>User ID</td><td>User Name</td><td>Current Cash Held</td>");
+        out.println("<td>Password</td><td>User Role</td></tr>");
         
         for (Iterator it = users.iterator(); it.hasNext();)
         {
             UsersEntity user = (UsersEntity)it.next();
+            LoginEntity login = loginEntityFacade.find(user.getUserId());
+            
             out.println("<form>");
             out.println("<tr><td>" + user.getUserId() + "<input type='hidden' name='userid' value='" + user.getUserId() + "'></td>");
             out.println("<td><input type='text' name='username' value='" + user.getUserName() + "'></td>");
             out.println("<td><input type='text' name='cashheld' value='" + user.getCashHeld()+ "'></td>");            
+            out.println("<td><input type='password' name='password' value='" + login.getPassword()+ "'></td>");            
+            
+            out.println("<td>User Type: <select name='userrole'>");
+            out.println("<option value='admin'" + ((login.getUserRole() == 'a') ? " selected" : "") + ">Admin</option>");
+            out.println("<option value='trader'" + ((login.getUserRole() == 't') ? " selected" : "") + ">Trader</option>");
+            out.println("<option value='investor'" + ((login.getUserRole() == 'i') ? " selected" : "") + ">Investor</option>");
+            out.println("</select></td>");
+            
             out.println("<td><input type='submit' value='Edit'></td></tr>");
             out.println("</form>");        
         }
@@ -106,6 +128,16 @@ public class EditUserServlet extends HttpServlet {
         out.println("</html>");
         
         out.close();
+    }
+    
+    private LoginEntityFacadeLocal lookupLoginEntityFacade() {
+        try {
+            Context c = new InitialContext();
+            return (LoginEntityFacadeLocal) c.lookup("NewsApp/LoginEntityFacade/local");
+        } catch(NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
+            throw new RuntimeException(ne);
+        }
     }
     
     private UsersEntityFacadeLocal lookupUsersEntityFacade() {
