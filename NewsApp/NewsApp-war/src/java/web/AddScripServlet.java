@@ -40,7 +40,7 @@ public class AddScripServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession(true);
-        if (isInvalidSession(session))
+        if (session.isNew() || session.getAttribute("userid") == null || session.getAttribute("userrole") == null || !((String)session.getAttribute("userrole")).equals("a"))
         {
             response.sendRedirect("NewLogin");
             return;
@@ -54,17 +54,15 @@ public class AddScripServlet extends HttpServlet {
         parameterMap.put("scripid",             request.getParameter("scripid"));
         parameterMap.put("scripname",           request.getParameter("scripname"));
         parameterMap.put("totalshares",         request.getParameter("totalshares"));
-        parameterMap.put("marketcap",       request.getParameter("marketcap"));
+        parameterMap.put("pricepershare",       request.getParameter("pricepershare"));
         
         boolean errored = false;
         
         if (formSubmitted(parameterMap))
         {    
-            int totalSharesInt              = Integer.parseInt(parameterMap.get("totalshares"));            
-            double marketCapDbl             = Double.parseDouble(parameterMap.get("marketcap"));
-            double pricePerShareDbl         = marketCapDbl / ((double)totalSharesInt);
-                    
-                   
+            int totalSharesInt              = Integer.parseInt(parameterMap.get("totalshares"));
+            double pricePerShareDbl         = Double.parseDouble(parameterMap.get("pricepershare"));
+            double marketCapDbl             = (double)totalSharesInt * (double)pricePerShareDbl;
             
             ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
             if (scripsEntityFacade.find(parameterMap.get("scripid")) != null)
@@ -83,14 +81,6 @@ public class AddScripServlet extends HttpServlet {
         }
         
         printForm(out, request, response, errored);
-    }
-    
-    private boolean isInvalidSession(final HttpSession session)
-    {
-        return (session.isNew() || 
-                session.getAttribute("userid") == null || 
-                session.getAttribute("userrole") == null || 
-                !((String)session.getAttribute("userrole")).equals("a"));
     }
     
     private boolean formSubmitted(HashMap<String, String> parameterMap)
@@ -127,7 +117,7 @@ public class AddScripServlet extends HttpServlet {
         out.println("Scrip Id:<font color=\"#FFFFFF\">_________________</font><input type='text' name='scripid'><br/>");
         out.println("Scrip Name:<font color=\"#FFFFFF\">_____________</font><input type='text' name='scripname'><br/>");
         out.println("Total Shares:<font color=\"#FFFFFF\">____________</font><input type='text' name='totalshares'><br/>");
-        out.println("Market Cap:<font color=\"#FFFFFF\">___________</font><input type='text' name='marketcap'><br/>");
+        out.println("Price Per Share:<font color=\"#FFFFFF\">___________</font><input type='text' name='pricepershare'><br/>");
         out.println("<input type='submit' value='Add Scrip'>   ");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
         out.println("</form>"); 

@@ -32,8 +32,30 @@ public class TraderTradeSuccess extends HttpServlet {
         out.println("<title>Trade Successful</title>");
         out.println("</head>");
         out.println("<body>");
+        
+                        //Common Styling Code
+        out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<div id=\"tot\">");
+        out.println("<div id=\"header\">");
+        out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
+        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
+        out.println("<div id=\"corp\">");
+        out.println("<div class=\"main-text\">");
+        //Common Ends
+        
+        
         out.println("<h4>Your trade was successfully executed<br><br> Please click " +
                 "<a href=\"TraderHome\">here</a> to return to menu. </h4>");
+        
+                       //Common Starts
+        out.println("</div></div>");
+        out.println("<div class=\"clear\"></div>");        
+        out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
+        out.println("</div>");
+        //Common Ends
+        
         out.println("</body>");
         out.println("</html>");         
         out.close();

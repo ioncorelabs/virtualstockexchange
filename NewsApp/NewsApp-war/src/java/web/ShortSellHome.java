@@ -26,30 +26,22 @@ public class ShortSellHome extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
-        HttpSession session = request.getSession(true);
-        if (isInvalidSession(session))
-        {
-            response.sendRedirect("NewLogin");
-            return;
-        }
-        
-        PrintWriter out = response.getWriter();        
+        PrintWriter out = response.getWriter();
         out.println("<html>");
         out.println("<head>");
         out.println("<title>Virtual Stock Exchance: Short Sell Home</title>");
         out.println("</head>");
         out.println("<body>");
         
-                
-                                       //Common Styling Code
+        
+        //Common Styling Code
         out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
         out.println("</head>");
         out.println("<body>");
         out.println("<div id=\"tot\">");
         out.println("<div id=\"header\">");
         out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
-        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
+        out.println("<div class=\"slogan\">Bulls & Bears</div>");
         out.println("<div id=\"corp\">");
         out.println("<div class=\"main-text\">");
         //Common Ends
@@ -57,29 +49,28 @@ public class ShortSellHome extends HttpServlet {
         
         out.println("<span class=\"ttitle\" style=\"580px;\">Short Sell</span><br>");
         
-        out.println("<br><br><input type=button value=\"Borrow Scrips\" onclick=\"javascript:window.location='BorrowScrips'\"><br><br>");        
-        out.println("<input type=button value=\"Short Sell\" onclick=\"javascript:window.location='ShortSellScrips'\"><br><br>");
-        out.println("<input type=button value=\"Buy to Cover\" onclick=\"javascript:window.location='BuyToCoverScrips'\"><br><br>");
         
-        out.println("<input type=\"button\" value=\"Back\" onClick=\"history.back();\"/>");
+        out.println("<div id=\"menius\">");
+        out.println("<div class=\"menu-title\">Menu</div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"BorrowScrips\">Borrow Scrips</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"ShortSellScrips\">Short Sell</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"BuyToCoverScrips\">Buy to Cover</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"TraderHome\">Cancel</a></div>");
         
-               //Common Starts
+        out.println("</div>");
+        
+        
+        //out.println("<input type=\"button\" value=\"Back\" onClick=\"history.back();\"/>");
+        
+        //Common Starts
         out.println("</div></div>");
-        out.println("<div class=\"clear\"></div>");        
+        out.println("<div class=\"clear\"></div>");
         out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
         out.println("</div>");
         //Common Ends
         out.println("</body>");
-        out.println("</html>");         
+        out.println("</html>");
         out.close();
-    }
-    
-    private boolean isInvalidSession(final HttpSession session)
-    {
-        return (session.isNew() || 
-                session.getAttribute("userid") == null || 
-                session.getAttribute("userrole") == null || 
-                !((String)session.getAttribute("userrole")).equals("t"));
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

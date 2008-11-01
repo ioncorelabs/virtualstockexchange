@@ -53,7 +53,7 @@ public class TraderServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession(true);
-        if (isInvalidSession(session))
+        if (session.isNew() || (String)session.getAttribute("userid") == null || (String)session.getAttribute("userrole") == null || !((String)session.getAttribute("userrole")).equals("t"))
         {
             response.sendRedirect("NewLogin");
             return;
@@ -86,12 +86,24 @@ public class TraderServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Servlet Trader Homepage</title>");
+        out.println("<title>Virtual Stock Exchance:  Trader Homepage</title>");
+        out.println("</head>");
+        //Common Styling Code
+        out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
         out.println("</head>");
         out.println("<body>");
-        out.println("<h1>Servlet Trader Homepage at " + request.getContextPath () + "</h1>");
+        out.println("<div id=\"tot\">");
+        out.println("<div id=\"header\">");
+        out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
+        out.println("<div class=\"slogan\">Bulls & Bears</div>");
+        out.println("<div id=\"corp\">");
+        out.println("<div class=\"main-text\">");
+        //Common Ends
         
-        out.println("<b>Welcome back, " + userid + "!<br/><br/>");
+        out.println("<body>");
+       
+        
+        
         printOwnedScripsTable(userid, scripsEntityFacade, transactionHistoryEntityFacade, out, userscrips);
         printBorrowedScripsTable(userid, scripsEntityFacade, transactionHistoryEntityFacade, out, borrowedscrips);
         printTransactionsTable(out, usertransactions);
@@ -101,19 +113,19 @@ public class TraderServlet extends HttpServlet {
         out.println("Net Income/Loss: " + _numberFormat.format(self.getCashHeld() + _portfolioTotal - self.getInitialCashHeld()) + "<br/>");
         out.println("Total Assets: " + _numberFormat.format(_portfolioTotal) + "<br/>");
         out.println("Total Buying Power: " + _numberFormat.format(self.getCashHeld() + _portfolioTotal) + "<br/></b>");
+        out.println("<br><input type=\"button\" value=\"Back\" onClick=\"history.back();\"/>");
         
+                    //Common Starts
+            out.println("</div></div>");
+            out.println("<div class=\"clear\"></div>");
+            out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
+            out.println("</div>");
+            //Common Ends
+            
         out.println("</body>");
         out.println("</html>");
         
         out.close();
-    }
-    
-    private boolean isInvalidSession(final HttpSession session)
-    {
-        return (session.isNew() || 
-                session.getAttribute("userid") == null || 
-                session.getAttribute("userrole") == null || 
-                !((String)session.getAttribute("userrole")).equals("t"));
     }
 
     private void printOwnedScripsTable( final String userid,

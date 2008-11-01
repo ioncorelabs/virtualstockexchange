@@ -10,8 +10,6 @@ import ejb.ScripsExchangeEntity;
 import ejb.ScripsExchangeEntityFacadeLocal;
 import ejb.UsersEntityFacadeLocal;
 import java.io.*;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,8 +29,6 @@ import javax.servlet.http.*;
  */
 public class EditScripServlet extends HttpServlet {
     
-    private NumberFormat _nf = NumberFormat.getNumberInstance();
-    
     /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -42,7 +38,7 @@ public class EditScripServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession(true);
-        if (isInvalidSession(session))
+        if (session.isNew() || session.getAttribute("userid") == null || session.getAttribute("userrole") == null || !((String)session.getAttribute("userrole")).equals("a"))
         {
             response.sendRedirect("NewLogin");
             return;
@@ -56,7 +52,8 @@ public class EditScripServlet extends HttpServlet {
         parameterMap.put("scripname",               request.getParameter("scripname"));
         parameterMap.put("totalshares",             request.getParameter("totalshares"));
         parameterMap.put("totalsharesavailable",    request.getParameter("totalsharesavailable"));
-        parameterMap.put("marketcap",               request.getParameter("marketcap"));        
+        parameterMap.put("marketcap",               request.getParameter("marketcap"));
+        parameterMap.put("pricepershare",           request.getParameter("pricepershare"));
         
         ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
             
@@ -68,7 +65,7 @@ public class EditScripServlet extends HttpServlet {
             scrip.setTotalShares(Integer.parseInt(parameterMap.get("totalshares")));
             scrip.setTotalAvailable(Integer.parseInt(parameterMap.get("totalsharesavailable")));
             scrip.setMarketCap(Double.parseDouble(parameterMap.get("marketcap")));
-            scrip.setPricePerShare(scrip.getMarketCap() / scrip.getTotalAvailable());
+            scrip.setPricePerShare(Double.parseDouble(parameterMap.get("pricepershare")));
             
             scripsEntityFacade.edit(scrip);
             response.sendRedirect("AdminServlet"); 
@@ -76,14 +73,6 @@ public class EditScripServlet extends HttpServlet {
         
         List scrips = scripsEntityFacade.findAll();
         printForm(request, response, scrips);
-    }
-    
-    private boolean isInvalidSession(final HttpSession session)
-    {
-        return (session.isNew() || 
-                session.getAttribute("userid") == null || 
-                session.getAttribute("userrole") == null || 
-                !((String)session.getAttribute("userrole")).equals("a"));
     }
     
     private boolean formSubmitted(HashMap<String, String> pm)
@@ -120,11 +109,8 @@ public class EditScripServlet extends HttpServlet {
         out.println("Users:<br>");
         out.println("<table width=750px border=1>");
         out.println("<tr><td>Scrip ID</td><td>Scrip Name</td><td>Total Shares</td><td>Total Shares Available</td>");
-        out.println("<td>Market Cap</td></tr>");
+        out.println("<td>Market Cap</td><td>Price Per Share</td></tr>");
         
-        _nf.setMaximumFractionDigits(2);
-        _nf.setMinimumFractionDigits(2);
-
         for (Iterator it = scrips.iterator(); it.hasNext();)
         {
             ScripsExchangeEntity scrip = (ScripsExchangeEntity)it.next();
@@ -133,7 +119,8 @@ public class EditScripServlet extends HttpServlet {
             out.println("<td><input type='text' name='scripname' value='" + scrip.getScripName() + "'></td>");
             out.println("<td><input type='text' name='totalshares' value='" + scrip.getTotalShares()+ "'></td>");
             out.println("<td><input type='text' name='totalsharesavailable' value='" + scrip.getTotalAvailable()+ "'></td>");
-            out.println("<td><input type='text' name='marketcap' value='" + _nf.format(scrip.getMarketCap())+ "'></td>");            
+            out.println("<td><input type='text' name='marketcap' value='" + scrip.getMarketCap()+ "'></td>");
+            out.println("<td><input type='text' name='pricepershare' value='" + scrip.getPricePerShare()+ "'></td>");
             out.println("<td><input type='submit' value='Edit'></td></tr>");
             out.println("</form>");        
         }
