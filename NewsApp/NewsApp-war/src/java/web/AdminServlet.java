@@ -11,6 +11,8 @@ import java.net.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+import org.apache.html.dom.HTMLBuilder;
+import web.utils.HtmlBuilder;
 
 /**
  *
@@ -38,49 +40,32 @@ public class AdminServlet extends HttpServlet {
         System.out.println("At admin page as user '" + userid + "'");
         
         PrintWriter out = response.getWriter();
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Virtual Stock Exchance: Adminstrator Homepage</title>");
-        out.println("</head>");
-        out.println("<body>");
-        //Common Styling Code
-        out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
-        out.println("</head>");
-        out.println("<body>");
-        out.println("<div id=\"tot\">");
-        out.println("<div id=\"header\">");
-        out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
-        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
-        out.println("<div id=\"corp\">");
-        out.println("<div class=\"main-text\">");
-        //Common Ends
+        out.println(HtmlBuilder.getInstance().getInstance().buildHtmlHeader("Administrator Homepage"));
         out.println("<div id=\"head\" align=\"center\"");
         out.println("<span class=\"ttitle\" style=\"580px;\">Administrator</span><br>");
         out.println("<span class=\"ttitle\"><b>Welcome back, " + userid + "!</b></span><br><br><br>");
         out.println("</div>");
-        out.println("<br><br><br><br><br>");
+        
+        out.println("<div class=\"main-content\">");
+        out.println("This is mockup the main user pages. Choose from the menu options to the left to do super awesome things.");
+        out.println("</div><br>");
+        
+        out.println("<div class=\"main-content\">");
+        out.println("John: I think I like pushing the menu table to the left and leaving this center area open for some description, instructions, etc.");
+        out.println("</div>");
         
         out.println("<div id=\"menius\">");
         out.println("<div class=\"menu-title\">Menu</div>");
-        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"AddUserServlet\">Add User</a></div>");
-        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"DelUserServlet\">Delete User</a></div>");
-        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"AddScripServlet\">Add Scrip</a></div>");
-        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"DelScripServlet\">Delete Scrip</a></div>");
-        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"EditUserServlet\">Edit User</a></div>");
-        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"EditScripServlet\">Edit Scrip</a></div>"); 
-        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"LogoutServlet\">Logout</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"AddUserServlet\">Add User</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"DelUserServlet\">Delete User</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"AddScripServlet\">Add Scrip</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"DelScripServlet\">Delete Scrip</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"EditUserServlet\">Edit User</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"EditScripServlet\">Edit Scrip</a></div>"); 
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"LogoutServlet\">Logout</a></div>");
         out.println("</div>");
       
-        //Common Starts
-        out.println("</div></div>");
-        out.println("<div class=\"clear\"></div>");        
-        out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
-        out.println("</div>");
-        //Common Ends
-        
-        out.println("</body>");
-        out.println("</html>");
-        
+        out.println(HtmlBuilder.getInstance().buildHtmlFooter());
         out.close();
     }
     
