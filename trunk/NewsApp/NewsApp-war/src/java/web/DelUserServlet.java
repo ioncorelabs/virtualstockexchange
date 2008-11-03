@@ -19,6 +19,7 @@ import javax.naming.NamingException;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+import web.utils.HtmlBuilder;
 
 /**
  *
@@ -55,31 +56,17 @@ public class DelUserServlet extends HttpServlet {
             response.sendRedirect("AdminServlet"); 
         }
         
-        List users = usersEntityFacade.findAll();      
+        List users = usersEntityFacade.findAll();
+        printForm(users, response);
+    }
+
+    private void printForm(final List users, final HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
-       
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Virtual Stock Exchance: Delete User</title>");
-        out.println("</head>");
-        out.println("<body>");
-        //Common Styling Code
-        out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
-        out.println("</head>");
-        out.println("<body>");
-        out.println("<div id=\"tot\">");
-        out.println("<div id=\"header\">");
-        out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
-        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
-        out.println("<div id=\"corp\">");
-        out.println("<div class=\"main-text\">");
-        //Common Ends
-        
+        out.println(HtmlBuilder.getInstance().buildHtmlHeader("Delete User"));
         out.println("<span class=\"ttitle\" style=\"580px;\">Delete User Form</span><br>");
         
         out.println("<form>");
         out.println("User Id: <select name='userid'>");
-        
                 
         for (Iterator it = users.iterator(); it.hasNext();)
         {
@@ -92,17 +79,7 @@ public class DelUserServlet extends HttpServlet {
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
         out.println("</form>");  
                 
-        //Common Starts
-        out.println("</div></div>");
-        out.println("<div class=\"clear\"></div>");        
-        out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
-        out.println("</div>");
-        //Common Ends
-        
-        
-        out.println("</body>");
-        out.println("</html>");
-       
+        out.println(HtmlBuilder.getInstance().buildHtmlFooter());
         out.close();
     }
     

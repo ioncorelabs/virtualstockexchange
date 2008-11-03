@@ -19,6 +19,7 @@ import javax.naming.NamingException;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+import web.utils.HtmlBuilder;
 
 /**
  *
@@ -90,51 +91,29 @@ public class AddUserServlet extends HttpServlet {
         
         
         PrintWriter out = response.getWriter();
-        
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Virtual Stock Exchance: Add User</title>");
-        out.println("</head>");
-        out.println("<body>");
-        //Common Styling Code
-        out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
-        out.println("</head>");
-        out.println("<body>");
-        out.println("<div id=\"tot\">");
-        out.println("<div id=\"header\">");
-        out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
-        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
-        out.println("<div id=\"corp\">");
-        out.println("<div class=\"main-text\">");
-        //Common Ends
+        out.println(HtmlBuilder.getInstance().buildHtmlHeader("Add User"));
         
         out.println("<span class=\"ttitle\" style=\"580px;\">Add User Form</span><br>");
         if (errored)
             out.println("<font color=red><b>That user ID already exists, stupid head!</b></font><br>");
         out.println("<form>");
-        out.println("User Id:<font color=\"#FFFFFF\">____</font> <input type='text' name='userid'><br/>");
-        out.println("Password:<font color=\"#FFFFFF\">___</font> <input type='password' name='password'><br/>");
-        out.println("User Name:<font color=\"#FFFFFF\">___</font><input type='text' name='username'><br/>");
-        out.println("User Type:<font color=\"#FFFFFF\">___</font> <select name='usertype'>");
+        
+        out.println("<table width=350px cellpadding=4px>");
+        out.println("<tr><td width=150px>User Id:</td><td><input type='text' name='userid'></td></tr>");
+        out.println("<tr><td>Password:</td><td><input type='password' name='password'></td></tr>");
+        out.println("<tr><td>User Name:</td><td><input type='text' name='username'></td></tr>");
+        out.println("<tr><td>User Type:</td><td><select name='usertype'>");
         out.println("<option value='admin'>Admin</option>");
         out.println("<option value='trader'>Trader</option>");
         out.println("<option value='investor'>Investor</option>");
-        out.println("</select><br>");
-        out.println("Cash Held:<font color=\"#FFFFFF\">__</font><input type='text' name='cashheld'><br/>");        
+        out.println("</select></td></tr>");
+        out.println("<tr><td>Cash Held:</td><td><input type='text' name='cashheld'></td></tr>");
+        out.println("</table>");
         out.println("<input type='submit' value='Add User'>   ");
-         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
+        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
         out.println("</form>"); 
         
-        //Common Starts
-        out.println("</div></div>");
-        out.println("<div class=\"clear\"></div>");        
-        out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
-        out.println("</div>");
-        //Common Ends
-        
-        out.println("</body>");
-        out.println("</html>");
-        
+        out.println(HtmlBuilder.getInstance().buildHtmlFooter());
         out.close();
     }
     
