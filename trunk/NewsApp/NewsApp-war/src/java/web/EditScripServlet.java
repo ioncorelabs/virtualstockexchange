@@ -104,7 +104,7 @@ public class EditScripServlet extends HttpServlet {
         
         out.println("<span class=\"ttitle\" style=\"580px;\">Edit Scrip Form</span><br>");
         out.println("Users:<br>");
-        out.println("<table width=750px border=1>");
+        out.println("<table width=680px border=1>");
         out.println("<tr><td>Scrip ID</td><td>Scrip Name</td><td>Total Shares</td><td>Total Shares Available</td>");
         out.println("<td>Market Cap</td><td>Price Per Share</td></tr>");
         
@@ -117,13 +117,13 @@ public class EditScripServlet extends HttpServlet {
             ScripsExchangeEntity scrip = (ScripsExchangeEntity)it.next();
             out.println("<form>");
             out.println("<tr><td>" + scrip.getScripId() + "<input type='hidden' name='scripid' value='" + scrip.getScripId() + "'></td>");
-            out.println("<td><input type='text' name='scripname' value='" + scrip.getScripName() + "'></td>");
-            out.println("<td><input type='text' name='totalshares' value='" + scrip.getTotalShares()+ "'></td>");
-            out.println("<td><input type='text' name='totalsharesavailable' value='" + scrip.getTotalAvailable()+ "'></td>");
-            out.println("<td><input type='text' name='marketcap' value='" + _nf.format(scrip.getMarketCap())+ "'></td>");
-            out.println("<td><input type='text' name='pricepershare' value='" + _nf.format(scrip.getPricePerShare())+ "'></td>");
+            out.println("<td><input type='text' name='scripname' value='" + scrip.getScripName() + "' size=10 maxlength=20></td>");
+            out.println("<td><input type='text' name='totalshares' value='" + scrip.getTotalShares()+ "' size=10 maxlength=20></td>");
+            out.println("<td><input type='text' name='totalsharesavailable' value='" + scrip.getTotalAvailable()+ "' size=10 maxlength=20></td>");
+            out.println("<td><input type='text' name='marketcap' value='" + _nf.format(scrip.getMarketCap())+ "' size=10 maxlength=20></td>");
+            out.println("<td><input type='text' name='pricepershare' value='" + _nf.format(scrip.getPricePerShare())+ "' size=10 maxlength=20></td>");
             out.println("<td><input type='submit' value='Edit'></td></tr>");
-            out.println("</form>");        
+            out.println("</form>");
         }
         
         out.println("</table><br>");

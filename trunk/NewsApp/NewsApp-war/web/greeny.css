@@ -89,30 +89,38 @@ body {
 	border: #5288AE solid 1px;
 	padding-left: 15px;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 13px;
+	font-size: 12px;
+}
+
+.main-content {
+	position: relative;
+	padding-left: 180px;
+	padding-right: 20px;
+	line-height: 16px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
 }
 
 .main-text p{
 	line-height: 130%;
 	padding-right: 50px;
-	}
+}
 
 #menius{ 	
-	width: 240px;
+	width: 160px;
 	position:absolute;
 	top: 70px;
-	right: 200px;
 	background: #DAE6AC;
 	border: #80942E solid 1px;
 }
 
 .menu-item {
-	height: 30px;
+	height: 23px;
 	background: #DAE6AC;
-	line-height: 30px;
+	line-height: 23px;
 	font-family:Arial, Helvetica, sans-serif;
 	font-weight: bold;
-	font-size:16px;
+	font-size:14px;
 }
 
 .menu-item a{
