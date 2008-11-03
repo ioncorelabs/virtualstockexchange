@@ -10,6 +10,9 @@ import ejb.ScripsExchangeEntity;
 import ejb.ScripsExchangeEntityFacadeLocal;
 import ejb.UsersEntityFacadeLocal;
 import java.io.*;
+import java.text.FieldPosition;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -29,6 +32,8 @@ import javax.servlet.http.*;
  */
 public class EditScripServlet extends HttpServlet {
     
+    private NumberFormat _nf = NumberFormat.getNumberInstance();
+    
     /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -38,7 +43,7 @@ public class EditScripServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession(true);
-        if (session.isNew() || session.getAttribute("userid") == null || session.getAttribute("userrole") == null || !((String)session.getAttribute("userrole")).equals("a"))
+        if (isInvalidSession(session))
         {
             response.sendRedirect("NewLogin");
             return;
@@ -73,6 +78,14 @@ public class EditScripServlet extends HttpServlet {
         
         List scrips = scripsEntityFacade.findAll();
         printForm(request, response, scrips);
+    }
+    
+    private boolean isInvalidSession(final HttpSession session)
+    {
+        return  session.isNew() || 
+                session.getAttribute("userid") == null || 
+                session.getAttribute("userrole") == null || 
+                !((String)session.getAttribute("userrole")).equals("a");
     }
     
     private boolean formSubmitted(HashMap<String, String> pm)
@@ -111,6 +124,10 @@ public class EditScripServlet extends HttpServlet {
         out.println("<tr><td>Scrip ID</td><td>Scrip Name</td><td>Total Shares</td><td>Total Shares Available</td>");
         out.println("<td>Market Cap</td><td>Price Per Share</td></tr>");
         
+        _nf.setMaximumFractionDigits(2);
+        _nf.setMinimumFractionDigits(2);
+        _nf.setGroupingUsed(false);
+        
         for (Iterator it = scrips.iterator(); it.hasNext();)
         {
             ScripsExchangeEntity scrip = (ScripsExchangeEntity)it.next();
@@ -119,8 +136,8 @@ public class EditScripServlet extends HttpServlet {
             out.println("<td><input type='text' name='scripname' value='" + scrip.getScripName() + "'></td>");
             out.println("<td><input type='text' name='totalshares' value='" + scrip.getTotalShares()+ "'></td>");
             out.println("<td><input type='text' name='totalsharesavailable' value='" + scrip.getTotalAvailable()+ "'></td>");
-            out.println("<td><input type='text' name='marketcap' value='" + scrip.getMarketCap()+ "'></td>");
-            out.println("<td><input type='text' name='pricepershare' value='" + scrip.getPricePerShare()+ "'></td>");
+            out.println("<td><input type='text' name='marketcap' value='" + _nf.format(scrip.getMarketCap())+ "'></td>");
+            out.println("<td><input type='text' name='pricepershare' value='" + _nf.format(scrip.getPricePerShare())+ "'></td>");
             out.println("<td><input type='submit' value='Edit'></td></tr>");
             out.println("</form>");        
         }

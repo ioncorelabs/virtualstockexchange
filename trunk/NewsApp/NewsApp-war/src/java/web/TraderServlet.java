@@ -53,7 +53,7 @@ public class TraderServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession(true);
-        if (session.isNew() || (String)session.getAttribute("userid") == null || (String)session.getAttribute("userrole") == null || !((String)session.getAttribute("userrole")).equals("t"))
+        if (isInvalidSession(session))
         {
             response.sendRedirect("NewLogin");
             return;
@@ -101,8 +101,6 @@ public class TraderServlet extends HttpServlet {
         //Common Ends
         
         out.println("<body>");
-       
-        
         
         printOwnedScripsTable(userid, scripsEntityFacade, transactionHistoryEntityFacade, out, userscrips);
         printBorrowedScripsTable(userid, scripsEntityFacade, transactionHistoryEntityFacade, out, borrowedscrips);
@@ -115,17 +113,25 @@ public class TraderServlet extends HttpServlet {
         out.println("Total Buying Power: " + _numberFormat.format(self.getCashHeld() + _portfolioTotal) + "<br/></b>");
         out.println("<br><input type=\"button\" value=\"Back\" onClick=\"history.back();\"/>");
         
-                    //Common Starts
-            out.println("</div></div>");
-            out.println("<div class=\"clear\"></div>");
-            out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
-            out.println("</div>");
-            //Common Ends
+        //Common Starts
+        out.println("</div></div>");
+        out.println("<div class=\"clear\"></div>");
+        out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
+        out.println("</div>");
+        //Common Ends
             
         out.println("</body>");
         out.println("</html>");
         
         out.close();
+    }
+    
+    private boolean isInvalidSession(final HttpSession session)
+    {
+        return  session.isNew() || 
+                session.getAttribute("userid") == null || 
+                session.getAttribute("userrole") == null || 
+                !((String)session.getAttribute("userrole")).equals("t");
     }
 
     private void printOwnedScripsTable( final String userid,

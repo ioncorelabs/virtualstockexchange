@@ -40,7 +40,7 @@ public class AddScripServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession(true);
-        if (session.isNew() || session.getAttribute("userid") == null || session.getAttribute("userrole") == null || !((String)session.getAttribute("userrole")).equals("a"))
+        if (isInvalidSession(session))
         {
             response.sendRedirect("NewLogin");
             return;
@@ -81,6 +81,14 @@ public class AddScripServlet extends HttpServlet {
         }
         
         printForm(out, request, response, errored);
+    }
+    
+    private boolean isInvalidSession(final HttpSession session)
+    {
+        return  session.isNew() || 
+                session.getAttribute("userid") == null || 
+                session.getAttribute("userrole") == null || 
+                !((String)session.getAttribute("userrole")).equals("a");
     }
     
     private boolean formSubmitted(HashMap<String, String> parameterMap)
