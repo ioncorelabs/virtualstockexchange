@@ -22,6 +22,8 @@ import javax.naming.NamingException;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+import org.apache.html.dom.HTMLBuilder;
+import web.utils.HtmlBuilder;
 
 /**
  *
@@ -101,44 +103,24 @@ public class AddScripServlet extends HttpServlet {
     }
     
     private void printForm(PrintWriter out, final HttpServletRequest request, final HttpServletResponse response, final boolean errored) throws IOException {
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Virtual Stock Exchance: Add Scrip</title>");
-        out.println("</head>");
-        out.println("<body>");
-        //Common Styling Code
-        out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
-        out.println("</head>");
-        out.println("<body>");
-        out.println("<div id=\"tot\">");
-        out.println("<div id=\"header\">");
-        out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
-        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
-        out.println("<div id=\"corp\">");
-        out.println("<div class=\"main-text\">");
-        //Common Ends
-        
+        out.println(HtmlBuilder.getInstance().buildHtmlHeader("Add Scrip"));
         out.println("<span class=\"ttitle\" style=\"580px;\">Add Scrip Form</span><br>");
         if (errored)
             out.println("<font color=red><b>That scrip ID already exists, stupid head!</b></font><br>");
         out.println("<form>");
-        out.println("Scrip Id:<font color=\"#FFFFFF\">_________________</font><input type='text' name='scripid'><br/>");
-        out.println("Scrip Name:<font color=\"#FFFFFF\">_____________</font><input type='text' name='scripname'><br/>");
-        out.println("Total Shares:<font color=\"#FFFFFF\">____________</font><input type='text' name='totalshares'><br/>");
-        out.println("Price Per Share:<font color=\"#FFFFFF\">___________</font><input type='text' name='pricepershare'><br/>");
+        
+        out.println("<table width=350px cellpadding=4px>");
+        out.println("<tr><td width=150px>Scrip Id:</td><td><input type='text' name='scripid'></td></tr>");
+        out.println("<tr><td>Scrip Name:</td><td><input type='text' name='scripname'></td></tr>");
+        out.println("<tr><td>Total Shares:</td><td><input type='text' name='totalshares'></td></tr>");
+        out.println("<tr><td>Price Per Share:</td><td><input type='text' name='pricepershare'></td></tr>");
+        out.println("</table>");
+        
         out.println("<input type='submit' value='Add Scrip'>   ");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
         out.println("</form>"); 
         
-        //Common Starts
-        out.println("</div></div>");
-        out.println("<div class=\"clear\"></div>");        
-        out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
-        out.println("</div>");
-        //Common Ends
-        out.println("</body>");
-        out.println("</html>");
-        
+        out.println(HtmlBuilder.getInstance().buildHtmlFooter());
         out.close();
     }
     
