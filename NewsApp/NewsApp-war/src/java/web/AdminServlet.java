@@ -28,7 +28,7 @@ public class AdminServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession(true);
-        if (session.isNew() || session.getAttribute("userid") == null || session.getAttribute("userrole") == null || !((String)session.getAttribute("userrole")).equals("a"))
+        if (isInvalidSession(session))
         {
             response.sendRedirect("NewLogin");
             return;
@@ -82,6 +82,14 @@ public class AdminServlet extends HttpServlet {
         out.println("</html>");
         
         out.close();
+    }
+    
+    private boolean isInvalidSession(final HttpSession session)
+    {
+        return  session.isNew() || 
+                session.getAttribute("userid") == null || 
+                session.getAttribute("userrole") == null || 
+                !((String)session.getAttribute("userrole")).equals("a");
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

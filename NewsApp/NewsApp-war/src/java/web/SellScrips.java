@@ -45,6 +45,11 @@ public class SellScrips extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession appSession = request.getSession(true);
+        if (isInvalidSession(appSession))
+        {
+            response.sendRedirect("NewLogin");
+            return;
+        }
         
         String num = request.getParameter("number");
         String userId = (String)appSession.getAttribute("userid");
@@ -165,6 +170,14 @@ public class SellScrips extends HttpServlet {
         out.println("</html>");
         
         out.close();
+    }
+    
+    private boolean isInvalidSession(final HttpSession session)
+    {
+        return  session.isNew() || 
+                session.getAttribute("userid") == null || 
+                session.getAttribute("userrole") == null || 
+                ((String)session.getAttribute("userrole")).equals("a"); // only admins CANNOT participate in exchange.
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

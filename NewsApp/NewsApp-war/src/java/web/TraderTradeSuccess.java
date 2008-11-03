@@ -26,6 +26,14 @@ public class TraderTradeSuccess extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        
+        HttpSession session = request.getSession(true);
+        if (isInvalidSession(session))
+        {
+            response.sendRedirect("NewLogin");
+            return;
+        }
+        
         PrintWriter out = response.getWriter();
         out.println("<html>");
         out.println("<head>");
@@ -59,6 +67,14 @@ public class TraderTradeSuccess extends HttpServlet {
         out.println("</body>");
         out.println("</html>");         
         out.close();
+    }
+    
+    private boolean isInvalidSession(final HttpSession session)
+    {
+        return  session.isNew() || 
+                session.getAttribute("userid") == null || 
+                session.getAttribute("userrole") == null || 
+                !((String)session.getAttribute("userrole")).equals("t");
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

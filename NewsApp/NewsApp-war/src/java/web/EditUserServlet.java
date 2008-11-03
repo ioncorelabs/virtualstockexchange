@@ -9,6 +9,7 @@ package web;
 import ejb.UsersEntity;
 import ejb.UsersEntityFacadeLocal;
 import java.io.*;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +29,8 @@ import javax.servlet.http.*;
  */
 public class EditUserServlet extends HttpServlet {
     
+    private NumberFormat _nf = NumberFormat.getNumberInstance();
+    
     /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -37,7 +40,7 @@ public class EditUserServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession(true);
-        if (session.isNew() || session.getAttribute("userid") == null || session.getAttribute("userrole") == null || !((String)session.getAttribute("userrole")).equals("a"))
+        if (isInvalidSession(session))
         {
             response.sendRedirect("NewLogin");
             return;
@@ -65,6 +68,14 @@ public class EditUserServlet extends HttpServlet {
         
         List users = usersEntityFacade.findAll();
         printForm(request, response, users);
+    }
+    
+    private boolean isInvalidSession(final HttpSession session)
+    {
+        return  session.isNew() || 
+                session.getAttribute("userid") == null || 
+                session.getAttribute("userrole") == null || 
+                !((String)session.getAttribute("userrole")).equals("a");
     }
     
     private boolean formSubmitted(HashMap<String, String> pm)
@@ -101,13 +112,17 @@ public class EditUserServlet extends HttpServlet {
         out.println("<table width=600px border=1>");
         out.println("<tr><td>User ID</td><td>User Name</td><td>Current Cash Held</td><td>Total Buying Power</td></tr>");
         
+        _nf.setMaximumFractionDigits(2);
+        _nf.setMinimumFractionDigits(2);
+        _nf.setGroupingUsed(false);
+        
         for (Iterator it = users.iterator(); it.hasNext();)
         {
             UsersEntity user = (UsersEntity)it.next();
             out.println("<form>");
             out.println("<tr><td>" + user.getUserId() + "<input type='hidden' name='userid' value='" + user.getUserId() + "'></td>");
             out.println("<td><input type='text' name='username' value='" + user.getUserName() + "'></td>");
-            out.println("<td><input type='text' name='cashheld' value='" + user.getCashHeld()+ "'></td>");            
+            out.println("<td><input type='text' name='cashheld' value='" + _nf.format(user.getCashHeld())+ "'></td>");            
             out.println("<td><input type='submit' value='Edit'></td></tr>");
             out.println("</form>");        
         }
