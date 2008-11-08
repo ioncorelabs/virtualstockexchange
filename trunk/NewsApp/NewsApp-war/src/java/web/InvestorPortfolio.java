@@ -8,8 +8,6 @@ package web;
 
 import ejb.ScripsExchangeEntity;
 import ejb.ScripsExchangeEntityFacadeLocal;
-import ejb.ScripsShortedEntity;
-import ejb.ScripsShortedEntityFacadeLocal;
 import ejb.ScripsUserEntity;
 import ejb.ScripsUserEntityFacadeLocal;
 import ejb.TransactionHistoryEntity;
