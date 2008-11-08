@@ -64,12 +64,12 @@ public class TraderHome extends HttpServlet {
                 
         out.println("<div id=\"menius\">");
         out.println("<div class=\"menu-title\">Menu</div>");
-        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"BuyScrips\">Buy</a></div>");
-        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"SellScrips\">Sell</a></div>");
-        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"ShortSellHome\">Short Sell</a></div>");
-        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"TraderServlet\">Your Portfolio</a></div>");
-        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"ListingServlet\">Scrip Lookup</a></div>");
-        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" vspace=\"5\" align=\"left\" /><a href=\"LogoutServlet\">Logout</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"BuyScrips\">Buy</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"SellScrips\">Sell</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"ShortSellHome\">Short Sell</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"TraderServlet\">Your Portfolio</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"ListingServlet\">Scrip Lookup</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"LogoutServlet\">Logout</a></div>");
         out.println("</div>");
                 
         //Common Starts
