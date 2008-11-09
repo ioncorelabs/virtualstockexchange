@@ -8,11 +8,8 @@ package web;
 
 import ejb.ScripsExchangeEntity;
 import ejb.ScripsExchangeEntityFacadeLocal;
-import ejb.UsersEntityFacadeLocal;
 import java.io.*;
-import java.text.FieldPosition;
 import java.text.NumberFormat;
-import java.text.ParsePosition;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
