@@ -107,12 +107,12 @@ public class NewLogin extends HttpServlet {
         out.println("<div id=\"head\" align=\"center\">");
         out.println("<span class=\"ttitle\" style=\"580px;\">COMS 4156: Advanced Software Engineering</span>");
         out.println("<br><br><br><br><br><br>");
-        out.println("<span class=\"ttitle\">Sign In</span><br>");
+        out.println("<span class=\"ttitle\">Sign In</span><br><br>");
         
         
         out.println("<form>");
         out.println("User Id:<font color=\"#FFFFFF\">______</font<input type='text' name='userid'><br/>");
-        out.println("Password:<font color=\"#FFFFFF\">____</font<input type='password' name='password'><br/>");
+        out.println("Password:<font color=\"#FFFFFF\">____</font<input type='password' name='password'><br/><br>");
         out.println("<input type='submit' value='Login'><br/>");
         out.println("</form>");
         out.println("</div>");
