@@ -60,11 +60,41 @@ public class BuyScrips extends HttpServlet {
             return;
         }
         
-        String scripId=request.getParameter("scripId");
-        String num=request.getParameter("num");
+       
+        boolean erroredSelect = false;
+        boolean erroredNumNull = false;
+        boolean erroredNumType = false;
         
+        String scripId=request.getParameter("scripId");
+        String num=request.getParameter("num"); 
+        
+        if(scripId != null && num != null)
+        {
+        System.out.println("check1");
+            if((num.equals("")))
+            {
+                erroredNumNull = true;
+                System.out.println("check2");
+            }
+            else
+            {
+                try{int numInt = Integer.parseInt(num);}
+                catch(NumberFormatException e)
+                {
+                    erroredNumType = true;
+                    System.out.println("check4");
+                }
+            }
+            if((scripId.equals("--SELECT--")))
+            {
+                erroredSelect = true;
+                System.out.println("check3");
+            }
+
+
+        }
         //Adding data to queue on page submit
-        if ((scripId!=null) && (num!=null)) {
+        if ((scripId!=null) && (num!=null) && (!erroredNumNull) && (!erroredNumType) && (!erroredSelect)) {
             
             Queue queue = null;
             QueueConnection connection = null;
@@ -123,9 +153,15 @@ public class BuyScrips extends HttpServlet {
         PrintWriter out = response.getWriter();        
         //output boilerplate HTML header
         out.println(HtmlBuilder.buildHtmlHeader("Buy Shares"));
-        
+
         //main HTML content
         out.println("<span class=\"ttitle\" style=\"580px;\">Buy Shares</span><br>");
+        if (erroredNumNull)
+        out.println("<font color=red><b>Please enter the number of scrips to buy</b></font><br>");
+        if (erroredNumType)
+        out.println("<font color=red><b>Please enter a valid value for scrips</b></font><br>");
+        if (erroredSelect)
+        out.println("<font color=red><b>Please select a scrip to buy</b></font><br>");
         out.println("<form>");
                 
         //Doing a JNDI lookup for ScripsExchangeEntityFacade
@@ -135,8 +171,9 @@ public class BuyScrips extends HttpServlet {
         //Showingall the Scrips in the system in a Select box
         out.println("<br> Scrip Name:");
         out.println("<select name='scripId'>");
+        out.println("<option value =\"--SELECT--\")>--SELECT--</option>");
         for (Object obj : scrips) {
-            ScripsExchangeEntity elem = (ScripsExchangeEntity) obj;
+            ScripsExchangeEntity elem = (ScripsExchangeEntity) obj;            
             out.println("<option value =" +elem.getScripId()+">"+elem.getScripName() +" </option>");
         }
         out.println("</select><br><br>");
@@ -148,6 +185,7 @@ public class BuyScrips extends HttpServlet {
                 
         //Common Starts
         out.println(HtmlBuilder.buildHtmlFooter());
+       
         out.close();
     }
     
