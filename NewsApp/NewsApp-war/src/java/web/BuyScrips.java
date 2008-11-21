@@ -37,11 +37,11 @@ import web.utils.HtmlBuilder;
  * @version
  *
  * The servlet that generates the page for buying shares in a Scrip.
- * Shows the user all the Scrips available and needs the user to enter 
+ * Shows the user all the Scrips available and needs the user to enter
  * the number of shares to be bought.
  */
 public class BuyScrips extends HttpServlet {
-   
+    
     /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -52,10 +52,16 @@ public class BuyScrips extends HttpServlet {
         
         //Creating session object
         HttpSession appSession = request.getSession(true);
+        int errorcode = 0;
         
-        //Checking if the session and logged in user are valid 
-        if (isInvalidSession(appSession))
-        {
+        //Doing a JNDI lookup for ScripsExchangeEntityFacade
+        ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade
+                = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityFacade();
+        
+        
+        
+        //Checking if the session and logged in user are valid
+        if (isInvalidSession(appSession)) {
             response.sendRedirect("NewLogin");
             return;
         }
@@ -96,76 +102,81 @@ public class BuyScrips extends HttpServlet {
         //Adding data to queue on page submit
         if ((scripId!=null) && (num!=null) && (!erroredNumNull) && (!erroredNumType) && (!erroredSelect)) {
             
-            Queue queue = null;
-            QueueConnection connection = null;
-            QueueSession session = null;
-            MessageProducer messageProducer = null;
-            try {
+            List scrip = lookupExchangeEntityEntityFacade.findScripById(scripId);
+            
+            if(((ScripsExchangeEntity)scrip.get(0)).getTotalAvailable() < Integer.parseInt(num)) {
+                errorcode = 1;
+            } else {
                 
-                InitialContext ctx = new InitialContext();
-                
-                //Doing a JNDI lookup on the Message-driven Bean JMS queue
-                queue = (Queue) ctx.lookup("queue/mdb1");
-                QueueConnectionFactory factory =
-                        (QueueConnectionFactory) ctx.lookup("ConnectionFactory");
-                connection = factory.createQueueConnection();
-                session = connection.createQueueSession(false,
-                        QueueSession.AUTO_ACKNOWLEDGE);
-                messageProducer = session.createProducer(queue);
-                
-                ObjectMessage message = session.createObjectMessage();
-                
-                //Creating a TransactionHistoryEntity object, that will be sent in the JMS message
-                TransactionHistoryEntity e = new TransactionHistoryEntity();
-                
-                //Adding data to the object
-                e.setScripId(scripId);
-                e.setUserId(appSession.getAttribute("userid").toString());
-                e.setTotalShares(Integer.parseInt(num));
-                e.setTranType("Buy");
-                e.setTranDate(System.currentTimeMillis());
-                
-                //Adding message to the queue
-                message.setObject(e);
-                messageProducer.send(message);
-                messageProducer.close();
-                connection.close();
-                
-                //Redirecting depending on the role of the user
-                if(appSession.getAttribute("userrole").equals("t")) {
-                    response.sendRedirect("TraderTradeSuccess");
-                }                                
-                else if(appSession.getAttribute("userrole").equals("i")) {
-                    response.sendRedirect("InvestorTradeSuccess");
+                Queue queue = null;
+                QueueConnection connection = null;
+                QueueSession session = null;
+                MessageProducer messageProducer = null;
+                try {
+                    
+                    InitialContext ctx = new InitialContext();
+                    
+                    //Doing a JNDI lookup on the Message-driven Bean JMS queue
+                    queue = (Queue) ctx.lookup("queue/mdb1");
+                    QueueConnectionFactory factory =
+                            (QueueConnectionFactory) ctx.lookup("ConnectionFactory");
+                    connection = factory.createQueueConnection();
+                    session = connection.createQueueSession(false,
+                            QueueSession.AUTO_ACKNOWLEDGE);
+                    messageProducer = session.createProducer(queue);
+                    
+                    ObjectMessage message = session.createObjectMessage();
+                    
+                    //Creating a TransactionHistoryEntity object, that will be sent
+                    //in the JMS message
+                    TransactionHistoryEntity e = new TransactionHistoryEntity();
+                    
+                    //Adding data to the object
+                    e.setScripId(scripId);
+                    e.setUserId(appSession.getAttribute("userid").toString());
+                    e.setTotalShares(Integer.parseInt(num));
+                    e.setTranType("Buy");
+                    e.setTranDate(System.currentTimeMillis());
+                    
+                    //Adding message to the queue
+                    message.setObject(e);
+                    messageProducer.send(message);
+                    messageProducer.close();
+                    connection.close();
+                    
+                    //Redirecting depending on the role of the user
+                    if(appSession.getAttribute("userrole").equals("t")) {
+                        response.sendRedirect("TraderTradeSuccess");
+                    } else if(appSession.getAttribute("userrole").equals("i")) {
+                        response.sendRedirect("InvestorTradeSuccess");
+                    } else {
+                        response.sendRedirect("RoleEmptyFailure");
+                    }
+                } catch (JMSException ex) {
+                    ex.printStackTrace();
+                } catch (NamingException ex) {
+                    ex.printStackTrace();
                 }
-                else {
-                    response.sendRedirect("RoleEmptyFailure");
-                }                                
-            } catch (JMSException ex) {
-                ex.printStackTrace();
-            } catch (NamingException ex) {
-                ex.printStackTrace();
             }
             
         }
         
         
-        PrintWriter out = response.getWriter();        
+        PrintWriter out = response.getWriter();
         //output boilerplate HTML header
         out.println(HtmlBuilder.buildHtmlHeader("Buy Shares"));
 
         //main HTML content
         out.println("<span class=\"ttitle\" style=\"580px;\">Buy Shares</span><br>");
-        if (erroredNumNull)
-        out.println("<font color=red><b>Please enter the number of scrips to buy</b></font><br>");
-        if (erroredNumType)
-        out.println("<font color=red><b>Please enter a valid value for scrips</b></font><br>");
-        if (erroredSelect)
-        out.println("<font color=red><b>Please select a scrip to buy</b></font><br>");
+        
+        if (errorcode == 1) {
+            out.println("<font color=red><b>You are attempting to buy more " +
+                    "shares than available with the Exchange, please try again." +
+                    "</b></font><br>");
+        }
+        
         out.println("<form>");
-                
-        //Doing a JNDI lookup for ScripsExchangeEntityFacade
-        ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityFacade();
+        
         List scrips = lookupExchangeEntityEntityFacade.findAll();
         
         //Showingall the Scrips in the system in a Select box
@@ -177,12 +188,12 @@ public class BuyScrips extends HttpServlet {
             out.println("<option value =" +elem.getScripId()+">"+elem.getScripName() +" </option>");
         }
         out.println("</select><br><br>");
-                        
+        
         out.println("Number of shares: <input type='text' name='num'><br><br>");
         out.println("<input type='submit' value = 'Submit'>  ");
         out.println("</form>");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/>");
-                
+        
         //Common Starts
         out.println(HtmlBuilder.buildHtmlFooter());
        
@@ -194,11 +205,10 @@ public class BuyScrips extends HttpServlet {
      * @param session
      * @return returns true if allowed, false if not allowed
      */
-    private boolean isInvalidSession(final HttpSession session)
-    {
-        return  session.isNew() || 
-                session.getAttribute("userid") == null || 
-                session.getAttribute("userrole") == null || 
+    private boolean isInvalidSession(final HttpSession session) {
+        return  session.isNew() ||
+                session.getAttribute("userid") == null ||
+                session.getAttribute("userrole") == null ||
                 ((String)session.getAttribute("userrole")).equals("a"); // only admin's CANNOT participate in exchange
     }
     
