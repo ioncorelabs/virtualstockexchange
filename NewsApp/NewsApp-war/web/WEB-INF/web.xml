@@ -94,6 +94,10 @@
         <servlet-name>InvestorTradeSuccess</servlet-name>
         <servlet-class>web.InvestorTradeSuccess</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RoleEmptyFailure</servlet-name>
+        <servlet-class>web.RoleEmptyFailure</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListNews</servlet-name>
         <url-pattern>/ListNews</url-pattern>
@@ -187,7 +191,12 @@
         <servlet-name>TraderTradeSuccess</servlet-name>
         <url-pattern>/TraderTradeSuccess</url-pattern>
     </servlet-mapping>
-    <servlet-mapping><servlet-name>InvestorTradeSuccess</servlet-name><url-pattern>/InvestorTradeSuccess</url-pattern></servlet-mapping><session-config>
+    <servlet-mapping><servlet-name>InvestorTradeSuccess</servlet-name><url-pattern>/InvestorTradeSuccess</url-pattern></servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RoleEmptyFailure</servlet-name>
+        <url-pattern>/RoleEmptyFailure</url-pattern>
+    </servlet-mapping>
+    <session-config>
         <session-timeout>
             30
         </session-timeout>
