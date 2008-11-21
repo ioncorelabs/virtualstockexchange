@@ -74,7 +74,7 @@ public class DelScripServlet extends HttpServlet {
     
     private void printForm(final HttpServletRequest request, final HttpServletResponse response, List scrips) throws IOException {
         PrintWriter out = response.getWriter();
-        out.println(HtmlBuilder.getInstance().buildHtmlHeader("Delete Scrip"));
+        out.println(HtmlBuilder.buildHtmlHeader("Delete Scrip"));
         
         out.println("<span class=\"ttitle\" style=\"580px;\">Delete Scrip Form</span><br>");   
         out.println("<form>");
@@ -91,7 +91,7 @@ public class DelScripServlet extends HttpServlet {
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
         out.println("</form>");  
         
-        out.println(HtmlBuilder.getInstance().buildHtmlFooter());
+        out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
     }
     
