@@ -57,10 +57,13 @@ public class TraderHome extends HttpServlet {
         //Common Ends
         
         out.println("<div id=\"head\" align=\"center\"");
-        out.println("<span class=\"ttitle\" style=\"580px;\">Trader Homepage</span><br>");
-        
+        out.println("<span class=\"ttitle\" style=\"580px;\">Trader Homepage</span><br><br>");       
         out.println("</div>");
-        out.println("<br><br><br><br><br>");
+        out.println("<br><br><br>");
+        
+        out.println("<div class=\"main-content\">");
+        out.println("Please refer to the menu on the left for the activities available to you. ");
+        out.println("</div>");
                 
         out.println("<div id=\"menius\">");
         out.println("<div class=\"menu-title\">Menu</div>");
