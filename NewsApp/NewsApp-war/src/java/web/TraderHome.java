@@ -34,8 +34,6 @@ public class TraderHome extends HttpServlet {
             return;
         }
         
-        session.setAttribute("userid", session.getAttribute("userid"));
-        
         response.setContentType("text/html;charset=UTF-8");
         
         PrintWriter out = response.getWriter();        
@@ -49,7 +47,7 @@ public class TraderHome extends HttpServlet {
         out.println("<br><br><br>");
         
         out.println("<div class=\"main-content\">");
-        out.println("Please refer to the menu on the left for the activities available to you. ");
+        out.println("Please refer to the menu on the left for the activities available to you.");
         out.println("</div>");
                 
         out.println("<div id=\"menius\">");
@@ -67,6 +65,12 @@ public class TraderHome extends HttpServlet {
         out.close();
     }
     
+    /**
+     * Helper function for checking if the user is authorized to be at this page.
+     * Checks that a valid session exists and for the appropriate role.
+     * @param session
+     * @return true if valid, false if invalid session or not authorized
+     */
     private boolean isInvalidSession(final HttpSession session)
     {
         return  session.isNew() || 

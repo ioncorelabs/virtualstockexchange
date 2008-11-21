@@ -151,7 +151,11 @@ public class AddUserServlet extends HttpServlet {
     }
     // </editor-fold>
     
-        private UsersEntityFacadeLocal lookupUsersEntityFacade() {
+    /**
+     * Perform JNDI lookup on UsersEntity for handle on its facade.
+     * @return Local facade of the UsersEntity 
+     */
+    private UsersEntityFacadeLocal lookupUsersEntityFacade() {
         try {
             Context c = new InitialContext();
             return (UsersEntityFacadeLocal) c.lookup("NewsApp/UsersEntityFacade/local");
@@ -160,8 +164,12 @@ public class AddUserServlet extends HttpServlet {
             throw new RuntimeException(ne);
         }
     }
-        
-        private LoginEntityFacadeLocal lookupLoginEntityFacade() {
+    
+    /**
+     * Perform JNDI lookup on LoginEntity for handle on its facade.
+     * @return Local facade of the LoginEntity 
+     */
+    private LoginEntityFacadeLocal lookupLoginEntityFacade() {
         try {
             Context c = new InitialContext();
             return (LoginEntityFacadeLocal) c.lookup("NewsApp/LoginEntityFacade/local");
