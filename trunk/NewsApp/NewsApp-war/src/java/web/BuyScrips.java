@@ -109,7 +109,7 @@ public class BuyScrips extends HttpServlet {
         //TODO output your page here
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Virtual Stock Exchance: Buy Shares</title>");
+        out.println("<title>Virtual Stock Exchange: Buy Shares</title>");
         out.println("</head>");
         out.println("<body>");
         
@@ -124,17 +124,18 @@ public class BuyScrips extends HttpServlet {
         out.println("<div id=\"corp\">");
         out.println("<div class=\"main-text\">");
         //Common Ends
-        out.println("<span class=\"ttitle\" style=\"580px;\">Buy Shares Form</span><br>");
+        out.println("<span class=\"ttitle\" style=\"580px;\">Buy Shares</span><br>");
         out.println("<form>");
                 
         ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityFacade();
         List scrips = lookupExchangeEntityEntityFacade.findAll();
+        out.println("<br> Scrip Name:");
         out.println("<select name='scripId'>");
         for (Object obj : scrips) {
             ScripsExchangeEntity elem = (ScripsExchangeEntity) obj;
             out.println("<option value =" +elem.getScripId()+">"+elem.getScripName() +" </option>");
         }
-        out.println("</select><br>");
+        out.println("</select><br><br>");
                         
         out.println("Number of shares: <input type='text' name='num'><br><br>");
         out.println("<input type='submit' value = 'Submit'>  ");
