@@ -34,6 +34,10 @@ import javax.servlet.http.*;
  *
  * @author Vaibhav
  * @version
+ *
+ * The servlet that generates the page for buying shares in a Scrip.
+ * Shows the user all the Scrips available and needs the user to enter 
+ * the number of shares to be bought.
  */
 public class BuyScrips extends HttpServlet {
    
@@ -45,7 +49,10 @@ public class BuyScrips extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
+        //Creating session object
         HttpSession appSession = request.getSession(true);
+        
+        //Checking if the session and logged in user are valid 
         if (isInvalidSession(appSession))
         {
             response.sendRedirect("NewLogin");
@@ -55,6 +62,7 @@ public class BuyScrips extends HttpServlet {
         String scripId=request.getParameter("scripId");
         String num=request.getParameter("num");
         
+        //Adding data to queue on page submit
         if ((scripId!=null) && (num!=null)) {
             
             Queue queue = null;
@@ -64,6 +72,8 @@ public class BuyScrips extends HttpServlet {
             try {
                 
                 InitialContext ctx = new InitialContext();
+                
+                //Doing a JNDI lookup on the Message-driven Bean JMS queue
                 queue = (Queue) ctx.lookup("queue/mdb1");
                 QueueConnectionFactory factory =
                         (QueueConnectionFactory) ctx.lookup("ConnectionFactory");
@@ -73,20 +83,24 @@ public class BuyScrips extends HttpServlet {
                 messageProducer = session.createProducer(queue);
                 
                 ObjectMessage message = session.createObjectMessage();
-                // here we create a NewsEntity, that will be sent in JMS message
+                
+                //Creating a TransactionHistoryEntity object, that will be sent in the JMS message
                 TransactionHistoryEntity e = new TransactionHistoryEntity();
                 
+                //Adding data to the object
                 e.setScripId(scripId);
                 e.setUserId(appSession.getAttribute("userid").toString());
                 e.setTotalShares(Integer.parseInt(num));
                 e.setTranType("Buy");
                 e.setTranDate(System.currentTimeMillis());
                 
+                //Adding message to the queue
                 message.setObject(e);
                 messageProducer.send(message);
                 messageProducer.close();
                 connection.close();
                 
+                //Redirecting depending on the role of the user
                 if(appSession.getAttribute("userrole").equals("t")) {
                     response.sendRedirect("TraderTradeSuccess");
                 }                                
@@ -105,15 +119,14 @@ public class BuyScrips extends HttpServlet {
         }
         
         
-        PrintWriter out = response.getWriter();
-        //TODO output your page here
+        PrintWriter out = response.getWriter();        
         out.println("<html>");
         out.println("<head>");
         out.println("<title>Virtual Stock Exchange: Buy Shares</title>");
         out.println("</head>");
         out.println("<body>");
         
-                               //Common Styling Code
+        //Common Styling Code
         out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
         out.println("</head>");
         out.println("<body>");
@@ -127,8 +140,11 @@ public class BuyScrips extends HttpServlet {
         out.println("<span class=\"ttitle\" style=\"580px;\">Buy Shares</span><br>");
         out.println("<form>");
                 
+        //Doing a JNDI lookup for ScripsExchangeEntityFacade
         ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityFacade();
         List scrips = lookupExchangeEntityEntityFacade.findAll();
+        
+        //Showingall the Scrips in the system in a Select box
         out.println("<br> Scrip Name:");
         out.println("<select name='scripId'>");
         for (Object obj : scrips) {
