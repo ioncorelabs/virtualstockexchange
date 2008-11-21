@@ -39,7 +39,7 @@ public class AdminServlet extends HttpServlet {
         System.out.println("At admin page as user '" + userid + "'");
         
         PrintWriter out = response.getWriter();
-        out.println(HtmlBuilder.getInstance().getInstance().buildHtmlHeader("Administrator Homepage"));
+        out.println(HtmlBuilder.buildHtmlHeader("Administrator Homepage"));
         out.println("<div id=\"head\" align=\"center\"");
         out.println("<span class=\"ttitle\" style=\"580px;\">Administrator</span><br>");
         out.println("<span class=\"ttitle\"><b>Welcome back, " + userid + "!</b></span><br><br><br>");
@@ -64,7 +64,7 @@ public class AdminServlet extends HttpServlet {
         out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"LogoutServlet\">Logout</a></div>");
         out.println("</div>");
       
-        out.println(HtmlBuilder.getInstance().buildHtmlFooter());
+        out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
     }
     

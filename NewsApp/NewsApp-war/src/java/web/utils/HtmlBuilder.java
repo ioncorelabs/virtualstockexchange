@@ -15,14 +15,6 @@ package web.utils;
  */
 public class HtmlBuilder {
     
-    private static class HtmlBuilderCreator {
-        private static final HtmlBuilder _instance = new HtmlBuilder();
-    }
-    
-    public static HtmlBuilder getInstance() {
-        return HtmlBuilderCreator._instance;
-    }
-    
     /** cannot instantiate */
     protected HtmlBuilder() {}
     

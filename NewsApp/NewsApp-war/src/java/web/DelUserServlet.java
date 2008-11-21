@@ -62,7 +62,7 @@ public class DelUserServlet extends HttpServlet {
 
     private void printForm(final List users, final HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
-        out.println(HtmlBuilder.getInstance().buildHtmlHeader("Delete User"));
+        out.println(HtmlBuilder.buildHtmlHeader("Delete User"));
         out.println("<span class=\"ttitle\" style=\"580px;\">Delete User Form</span><br>");
         
         out.println("<form>");
@@ -79,7 +79,7 @@ public class DelUserServlet extends HttpServlet {
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
         out.println("</form>");  
                 
-        out.println(HtmlBuilder.getInstance().buildHtmlFooter());
+        out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
     }
     

@@ -29,6 +29,7 @@ import javax.naming.NamingException;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+import web.utils.HtmlBuilder;
 
 /**
  *
@@ -120,23 +121,10 @@ public class BuyScrips extends HttpServlet {
         
         
         PrintWriter out = response.getWriter();        
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Virtual Stock Exchange: Buy Shares</title>");
-        out.println("</head>");
-        out.println("<body>");
+        //output boilerplate HTML header
+        out.println(HtmlBuilder.buildHtmlHeader("Buy Shares"));
         
-        //Common Styling Code
-        out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
-        out.println("</head>");
-        out.println("<body>");
-        out.println("<div id=\"tot\">");
-        out.println("<div id=\"header\">");
-        out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
-        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
-        out.println("<div id=\"corp\">");
-        out.println("<div class=\"main-text\">");
-        //Common Ends
+        //main HTML content
         out.println("<span class=\"ttitle\" style=\"580px;\">Buy Shares</span><br>");
         out.println("<form>");
                 
@@ -159,15 +147,7 @@ public class BuyScrips extends HttpServlet {
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/>");
                 
         //Common Starts
-        out.println("</div></div>");
-        out.println("<div class=\"clear\"></div>");        
-        out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
-        out.println("</div>");
-        //Common Ends
-        
-        out.println("</body>");
-        out.println("</html>");
-        
+        out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
     }
     

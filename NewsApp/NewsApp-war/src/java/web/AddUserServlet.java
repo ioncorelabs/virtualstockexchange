@@ -91,7 +91,7 @@ public class AddUserServlet extends HttpServlet {
         
         
         PrintWriter out = response.getWriter();
-        out.println(HtmlBuilder.getInstance().buildHtmlHeader("Add User"));
+        out.println(HtmlBuilder.buildHtmlHeader("Add User"));
         
         out.println("<span class=\"ttitle\" style=\"580px;\">Add User Form</span><br>");
         if (errored)
@@ -113,7 +113,7 @@ public class AddUserServlet extends HttpServlet {
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
         out.println("</form>"); 
         
-        out.println(HtmlBuilder.getInstance().buildHtmlFooter());
+        out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
     }
     

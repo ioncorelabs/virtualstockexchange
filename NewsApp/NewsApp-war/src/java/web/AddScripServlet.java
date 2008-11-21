@@ -102,7 +102,7 @@ public class AddScripServlet extends HttpServlet {
     }
     
     private void printForm(PrintWriter out, final HttpServletRequest request, final HttpServletResponse response, final boolean errored) throws IOException {
-        out.println(HtmlBuilder.getInstance().buildHtmlHeader("Add Scrip"));
+        out.println(HtmlBuilder.buildHtmlHeader("Add Scrip"));
         out.println("<span class=\"ttitle\" style=\"580px;\">Add Scrip Form</span><br>");
         if (errored)
             out.println("<font color=red><b>That scrip ID already exists, stupid head!</b></font><br>");
@@ -119,7 +119,7 @@ public class AddScripServlet extends HttpServlet {
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
         out.println("</form>"); 
         
-        out.println(HtmlBuilder.getInstance().buildHtmlFooter());
+        out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
     }
     

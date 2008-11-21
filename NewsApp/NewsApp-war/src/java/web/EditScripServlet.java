@@ -97,7 +97,7 @@ public class EditScripServlet extends HttpServlet {
     
     private void printForm(final HttpServletRequest request, final HttpServletResponse response, List scrips) throws IOException {
         PrintWriter out = response.getWriter();
-        out.println(HtmlBuilder.getInstance().buildHtmlHeader("Edit Scrip"));
+        out.println(HtmlBuilder.buildHtmlHeader("Edit Scrip"));
         
         out.println("<span class=\"ttitle\" style=\"580px;\">Edit Scrip Form</span><br>");
         out.println("Users:<br>");
@@ -125,7 +125,7 @@ public class EditScripServlet extends HttpServlet {
         
         out.println("</table><br>");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
-        out.println(HtmlBuilder.getInstance().buildHtmlFooter());
+        out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
     }
     
