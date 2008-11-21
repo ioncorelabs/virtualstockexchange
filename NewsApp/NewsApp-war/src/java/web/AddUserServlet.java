@@ -95,7 +95,7 @@ public class AddUserServlet extends HttpServlet {
         
         out.println("<span class=\"ttitle\" style=\"580px;\">Add User Form</span><br>");
         if (errored)
-            out.println("<font color=red><b>That user ID already exists, stupid head!</b></font><br>");
+            out.println("<font color=red><b>That user ID already exists, please try again.</b></font><br>");
         out.println("<form>");
         
         out.println("<table width=350px cellpadding=4px>");
