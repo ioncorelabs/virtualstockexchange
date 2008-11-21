@@ -36,11 +36,11 @@ public class NewLogin extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        String uid=request.getParameter("userid");
-        String pwd=request.getParameter("password");
-        
-        if ((uid!=null) && (pwd!=null)) 
+        if (isFormSubmitted(request)) 
         {
+            String uid=request.getParameter("userid");
+            String pwd=request.getParameter("password");
+        
             LoginEntityFacadeLocal loginEntityFacade = (LoginEntityFacadeLocal) lookupLoginEntityFacade();
             List news = loginEntityFacade.findAll(uid, pwd);          
                       
@@ -75,19 +75,6 @@ public class NewLogin extends HttpServlet {
                     }
                 }
             }
-            
-           /* for (Iterator it = news.iterator(); it.hasNext();)
-            {
-                LoginEntity elem = (LoginEntity) it.next();
-                System.out.println("User: "+elem.getUserId()+"Pass: "+elem.getPassword()+"Role: "+elem.getUserRole());
-            }
-           */
-            
-           /* if (!news.isEmpty()) {
-                response.sendRedirect("ListNews");
-            } */
-            
-            
         }
         
         PrintWriter out = response.getWriter();
@@ -110,6 +97,16 @@ public class NewLogin extends HttpServlet {
         //Common HTML Footer
         out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
+    }
+    
+    /**
+     * Helper function for checking if user submitted the HTML form.
+     * @param request
+     * @return true if HTML form was submitted, false if this is first time page is being loaded
+     */
+    private boolean isFormSubmitted(final HttpServletRequest request)       
+    {
+        return (request.getParameter("userid") != null && request.getParameter("password") != null);
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -138,6 +135,10 @@ public class NewLogin extends HttpServlet {
     }
     // </editor-fold>
     
+    /**
+     * Perform JNDI lookup for LoginEntity
+     * @return Local facade of LoginEntity bean.
+     */
     private LoginEntityFacadeLocal lookupLoginEntityFacade() {
         try {
             Context c = new InitialContext();

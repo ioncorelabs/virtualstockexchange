@@ -151,6 +151,11 @@ public class BuyScrips extends HttpServlet {
         out.close();
     }
     
+    /**
+     * Helper function to validate if the user is authorized to be at this page.
+     * @param session
+     * @return returns true if allowed, false if not allowed
+     */
     private boolean isInvalidSession(final HttpSession session)
     {
         return  session.isNew() || 
@@ -185,6 +190,10 @@ public class BuyScrips extends HttpServlet {
     }
     // </editor-fold>
     
+    /**
+     * Performs JNDI lookup on ScripsExchangeEntity
+     * @return Local facade of the ScripsExchangeEntity
+     */
     private ScripsExchangeEntityFacadeLocal lookupExchangeEntityFacade() {
         try {
             Context c = new InitialContext();
