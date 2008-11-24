@@ -31,7 +31,11 @@ import javax.persistence.PersistenceContext;
  *
  *
  * @author Vaibhav
+ *
+ * This is the Message-driven Bean that feeds off the queue dedicated to buy requests
+ * and executes the buy transaction.
  */
+//Creating 
 @MessageDriven(mappedName = "jms/BuyTransactionMessage", activationConfig =  {
     @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
     @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
@@ -51,11 +55,16 @@ public class BuyTransactionMessage implements MessageListener {
     public BuyTransactionMessage() {
     }
     
+    
     public void onMessage(Message message) {
         ObjectMessage msg = null;
         try {
             if (message instanceof ObjectMessage) {
+                
+                //Grabbing message from queue
                 msg = (ObjectMessage) message;
+                
+                //Creating TransactionHistoryEntity object from message
                 TransactionHistoryEntity e = (TransactionHistoryEntity) msg.getObject();                
                 save(e);
             }
@@ -64,6 +73,7 @@ public class BuyTransactionMessage implements MessageListener {
             mdc.setRollbackOnly();
         } 
     }
+    
     
     public void save(Object object) {
         List al;
@@ -75,10 +85,14 @@ public class BuyTransactionMessage implements MessageListener {
         String userId = the.getUserId();
         int num = the.getTotalShares();        
         
+        //Doing a JNDI lookup on ScripsExchangeEntityFacade
         ScripsExchangeEntityFacadeLocal seef = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityFacade();
         
+        //Finding Scrip details by Scrip Id
         al = seef.findScripById(scripId);
         
+        //Updating total available shares and price per share (according to 
+        //market model) in ScripsExchangeEntity
         if(al.isEmpty() != true) {
             ScripsExchangeEntity see = (ScripsExchangeEntity) al.get(0);
             int avail = see.getTotalAvailable();
@@ -100,11 +114,13 @@ public class BuyTransactionMessage implements MessageListener {
         }
         
         
-        
+        //Doing a JNDI lookup on ScripsUserEntityFacade
         ScripsUserEntityFacadeLocal suef = (ScripsUserEntityFacadeLocal)lookupUserEntityFacade();
         
         al1 = suef.findScripForUser(userId, scripId);
         
+        //Updating Scrip entry to ScripsUserEntity or adding one if it doesnot 
+        //exist
         if(al1.isEmpty() != true) {
             //Updating table
             ScripsUserEntity sue = (ScripsUserEntity) al1.get(0);
@@ -120,11 +136,12 @@ public class BuyTransactionMessage implements MessageListener {
             suef.create(newsue);
         }
         
-        
+        //Doing a JNDI lookup on UsersEntityFacade
         UsersEntityFacadeLocal uef = (UsersEntityFacadeLocal)lookupUsersFacade();
         
         al2 = uef.findUserById(userId);
         
+        //Updating user's cash held
         if(al2.isEmpty() != true) {
             //Updating table
             UsersEntity ue = (UsersEntity) al2.get(0);
@@ -138,7 +155,6 @@ public class BuyTransactionMessage implements MessageListener {
         em.flush();
         em.persist(the);
     }
-    
     
     private ScripsExchangeEntityFacadeLocal lookupExchangeEntityFacade() {
         try {
