@@ -10,6 +10,9 @@ import ejb.ScripsExchangeEntity;
 import ejb.ScripsExchangeEntityFacadeLocal;
 import ejb.ScripsUserEntityFacadeLocal;
 import ejb.TransactionHistoryEntity;
+import ejb.UsersEntity;
+import ejb.UsersEntityFacade;
+import ejb.UsersEntityFacadeLocal;
 import ejb.VSEGenericException;
 import java.io.*;
 import java.util.Iterator;
@@ -58,6 +61,8 @@ public class BuyScrips extends HttpServlet {
         ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade
                 = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityFacade();
         
+        UsersEntityFacadeLocal uef = (UsersEntityFacadeLocal)lookupUsersFacade();
+        
         
         
         //Checking if the session and logged in user are valid
@@ -96,9 +101,14 @@ public class BuyScrips extends HttpServlet {
         if ((scripId!=null) && (num!=null) && (!erroredNumNull) && (!erroredNumType) && (!erroredSelect)) {
             
             List scrip = lookupExchangeEntityEntityFacade.findScripById(scripId);
+            List user = uef.findUserById(appSession.getAttribute("userid").toString());
+            
+            double pricePerShare = ((ScripsExchangeEntity)scrip.get(0)).getPricePerShare();
             
             if(((ScripsExchangeEntity)scrip.get(0)).getTotalAvailable() < Integer.parseInt(num)) {
                 errorcode = 1;
+            } else if(((UsersEntity)user.get(0)).getCashHeld() < (pricePerShare*(Integer.parseInt(num)))) {
+                errorcode = 2;
             } else {
                 
                 Queue queue = null;
@@ -167,7 +177,13 @@ public class BuyScrips extends HttpServlet {
                     "shares than available with the Exchange, please try again." +
                     "</b></font><br>");
         }
-             
+        
+        if (errorcode == 2) {
+            out.println("<font color=red><b>You are attempting to buy shares totaling value" +
+                    " greater than your cash held, please try again." +
+                    "</b></font><br>");
+        }
+        
         if (erroredNumNull)
             out.println("<font color=red><b>Please enter the number of scrips to buy</b></font><br>");
         if (erroredNumType)
@@ -252,4 +268,13 @@ public class BuyScrips extends HttpServlet {
         }
     }
     
+    private UsersEntityFacadeLocal lookupUsersFacade() {
+        try {
+            Context c = new InitialContext();
+            return (UsersEntityFacadeLocal) c.lookup("NewsApp/UsersEntityFacade/local");
+        } catch(NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
+            throw new RuntimeException(ne);
+        }
+    }
 }
