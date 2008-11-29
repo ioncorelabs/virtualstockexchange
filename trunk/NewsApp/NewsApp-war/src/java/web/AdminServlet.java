@@ -56,10 +56,10 @@ public class AdminServlet extends HttpServlet {
         out.println("<div id=\"menius\">");
         out.println("<div class=\"menu-title\">Menu</div>");
         out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"AddUserServlet\">Add User</a></div>");
-        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"DelUserServlet\">Delete User</a></div>");
-        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"AddScripServlet\">Add Scrip</a></div>");
-        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"DelScripServlet\">Delete Scrip</a></div>");
         out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"EditUserServlet\">Edit User</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"DelUserServlet\">Deactivate User</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"ReUserServlet\">Reactivate User</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"AddScripServlet\">Add Scrip</a></div>");                
         out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"EditScripServlet\">Edit Scrip</a></div>"); 
         out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"LogoutServlet\">Logout</a></div>");
         out.println("</div>");

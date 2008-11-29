@@ -67,7 +67,7 @@ public class EditUserServlet extends HttpServlet {
             response.sendRedirect("AdminServlet"); 
         }
         
-        List users = usersEntityFacade.findAll();
+        List users = usersEntityFacade.findAllActive();
         printForm(request, response, users);
     }
     

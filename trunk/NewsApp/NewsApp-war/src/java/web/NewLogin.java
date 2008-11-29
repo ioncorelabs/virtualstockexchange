@@ -8,6 +8,8 @@ package web;
 
 import ejb.LoginEntity;
 import ejb.LoginEntityFacadeLocal;
+import ejb.UsersEntity;
+import ejb.UsersEntityFacadeLocal;
 import java.io.*;
 import java.util.Iterator;
 import java.util.List;
@@ -36,46 +38,53 @@ public class NewLogin extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        if (isFormSubmitted(request)) 
-        {
+        int errorcode = 0;
+        
+        if (isFormSubmitted(request)) {
             String uid=request.getParameter("userid");
             String pwd=request.getParameter("password");
-        
+            
+            
             LoginEntityFacadeLocal loginEntityFacade = (LoginEntityFacadeLocal) lookupLoginEntityFacade();
-            List news = loginEntityFacade.findAll(uid, pwd);          
-                      
+            List news = loginEntityFacade.findAll(uid, pwd);
+            
             Iterator it = news.iterator();
-            if (!news.isEmpty()) 
-            {   
-                if(it.hasNext())
-                {
+            if (!news.isEmpty()) {
+                if(it.hasNext()) {
                     HttpSession session = request.getSession(true);
                     if (session.isNew())
                         System.out.println("Creating new session for user '" + uid + "'");
                     else
                         System.out.println("session already exists. userid = '" + (String)session.getAttribute("userid") + "', role: '" + (String)session.getAttribute("userrole") + "'");
-        
+                    
                     LoginEntity elem = (LoginEntity) it.next();
                     
                     session.setAttribute("userid", elem.getUserId());
-                    if(elem.getUserRole() == 'a')
-                    {   
+                    if(elem.getUserRole() == 'a') {
                         session.setAttribute("userrole", "a");
-                        response.sendRedirect("AdminServlet");   
-                    }
-                    if(elem.getUserRole() == 't')
-                    {                     
-                        session.setAttribute("userrole", "t");
-                        response.sendRedirect("TraderHome");
-                    }
-                    if(elem.getUserRole() == 'i')
-                    {                     
-                        session.setAttribute("userrole", "i");
-                        response.sendRedirect("InvestorServlet");
+                        response.sendRedirect("AdminServlet");
+                    } else {
+                        
+                        UsersEntityFacadeLocal usersEntityFacade = (UsersEntityFacadeLocal) lookupUsersEntityFacade();
+                        UsersEntity user = usersEntityFacade.find(uid);
+                        
+                        if(user.getActive() == 'n') {
+                            errorcode = 1;
+                        } else {
+                            if(elem.getUserRole() == 't') {
+                                session.setAttribute("userrole", "t");
+                                response.sendRedirect("TraderHome");
+                            }
+                            if(elem.getUserRole() == 'i') {
+                                session.setAttribute("userrole", "i");
+                                response.sendRedirect("InvestorServlet");
+                            }
+                        }
                     }
                 }
             }
         }
+        
         
         PrintWriter out = response.getWriter();
         //Common Styling Code
@@ -86,6 +95,12 @@ public class NewLogin extends HttpServlet {
         out.println("<span class=\"ttitle\" style=\"580px;\">COMS 4156: Advanced Software Engineering</span>");
         out.println("<br><br><br><br><br><br>");
         out.println("<span class=\"ttitle\">Sign In</span><br><br>");
+        
+        if (errorcode == 1) {
+            out.println("<br><font color=red><b>Your account has been deactivated. " +
+                    "Please contact the administrator or try a different login." +
+                    "</b></font><br><br>");
+        }
         
         out.println("<form>");
         out.println("User Id:<font color=\"#FFFFFF\">______</font<input type='text' name='userid'><br/>");
@@ -104,8 +119,7 @@ public class NewLogin extends HttpServlet {
      * @param request
      * @return true if HTML form was submitted, false if this is first time page is being loaded
      */
-    private boolean isFormSubmitted(final HttpServletRequest request)       
-    {
+    private boolean isFormSubmitted(final HttpServletRequest request) {
         return (request.getParameter("userid") != null && request.getParameter("password") != null);
     }
     
@@ -149,5 +163,13 @@ public class NewLogin extends HttpServlet {
         }
     }
     
-    
+    private UsersEntityFacadeLocal lookupUsersEntityFacade() {
+        try {
+            Context c = new InitialContext();
+            return (UsersEntityFacadeLocal) c.lookup("NewsApp/UsersEntityFacade/local");
+        } catch(NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
+            throw new RuntimeException(ne);
+        }
+    }
 }

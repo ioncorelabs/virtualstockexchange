@@ -98,6 +98,10 @@
         <servlet-name>RoleEmptyFailure</servlet-name>
         <servlet-class>web.RoleEmptyFailure</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ReUserServlet</servlet-name>
+        <servlet-class>web.ReUserServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListNews</servlet-name>
         <url-pattern>/ListNews</url-pattern>
@@ -195,6 +199,10 @@
     <servlet-mapping>
         <servlet-name>RoleEmptyFailure</servlet-name>
         <url-pattern>/RoleEmptyFailure</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReUserServlet</servlet-name>
+        <url-pattern>/ReUserServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

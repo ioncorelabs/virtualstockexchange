@@ -79,6 +79,7 @@ public class AddUserServlet extends HttpServlet {
                 loginEntity.setUserRole(userRole);
                 usersEntity.setInitialCashHeld(cashHeldDbl);
                 usersEntity.setCashHeld(cashHeldDbl);
+                usersEntity.setActive('y');
 
                 loginEntityFacade.create(loginEntity);
                 usersEntityFacade.create(usersEntity);
