@@ -36,13 +36,11 @@ public class AddScripServlet extends HttpServlet {
      * @param response servlet response
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException 
-    {
+    throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession(true);
-        if (isInvalidSession(session))
-        {
+        if (isInvalidSession(session)) {
             response.sendRedirect("NewLogin");
             return;
         }
@@ -58,42 +56,63 @@ public class AddScripServlet extends HttpServlet {
         parameterMap.put("pricepershare",       request.getParameter("pricepershare"));
         
         boolean errored = false;
+        boolean erroredNumNull = false;
+        boolean erroredNumType = false;
+        int numInttshare = 0;
+        int numIntpshare = 0;
         
-        if (formSubmitted(parameterMap))
-        {    
+        if (formSubmitted(parameterMap)) {
+            
+            if((parameterMap.get("scripid").equals("")) || (parameterMap.get("scripname").equals("")) || (parameterMap.get("totalshares").equals("")) || (parameterMap.get("pricepershare").equals(""))){
+                erroredNumNull = true;
+            }else{
+                try{numInttshare = Integer.parseInt(parameterMap.get("totalshares"));
+                    numIntpshare = Integer.parseInt(parameterMap.get("pricepershare"));
+                } catch(NumberFormatException e) {
+                    erroredNumType = true;
+                }
+            }
+            if(!erroredNumType && ((numInttshare<0) || (numIntpshare<0))) {
+                erroredNumType = true;
+            }
+            
+            if(!erroredNumNull && !erroredNumType)
+            {
+               
+              
+            
             int totalSharesInt              = Integer.parseInt(parameterMap.get("totalshares"));
             double pricePerShareDbl         = Double.parseDouble(parameterMap.get("pricepershare"));
             double marketCapDbl             = (double)totalSharesInt * (double)pricePerShareDbl;
             
             ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
-            if (scripsEntityFacade.find(parameterMap.get("scripid")) != null)
-            {
+            if (scripsEntityFacade.find(parameterMap.get("scripid")) != null) {
                 errored = true;
-            }
-            else
-            {
-                ScripsExchangeEntity scripsEntity =  new ScripsExchangeEntity(parameterMap.get("scripid"), parameterMap.get("scripname"), 
-                                                        totalSharesInt, totalSharesInt, marketCapDbl, pricePerShareDbl);
-
+            } else {
+                ScripsExchangeEntity scripsEntity =  new ScripsExchangeEntity(parameterMap.get("scripid"), parameterMap.get("scripname"),
+                        totalSharesInt, totalSharesInt, marketCapDbl, pricePerShareDbl);
+                
                 scripsEntityFacade.create(scripsEntity);
                 response.sendRedirect("AdminServlet");
                 return;
             }
+            }
+            
+            
+            
         }
         
-        printForm(out, request, response, errored);
+        printForm(out, request, response, errored, erroredNumNull, erroredNumType);
     }
     
-    private boolean isInvalidSession(final HttpSession session)
-    {
-        return  session.isNew() || 
-                session.getAttribute("userid") == null || 
-                session.getAttribute("userrole") == null || 
+    private boolean isInvalidSession(final HttpSession session) {
+        return  session.isNew() ||
+                session.getAttribute("userid") == null ||
+                session.getAttribute("userrole") == null ||
                 !((String)session.getAttribute("userrole")).equals("a");
     }
     
-    private boolean formSubmitted(HashMap<String, String> parameterMap)
-    {
+    private boolean formSubmitted(HashMap<String, String> parameterMap) {
         for (String value : parameterMap.values())
             if (value == null)
                 return false;
@@ -101,11 +120,15 @@ public class AddScripServlet extends HttpServlet {
         return true;
     }
     
-    private void printForm(PrintWriter out, final HttpServletRequest request, final HttpServletResponse response, final boolean errored) throws IOException {
+    private void printForm(PrintWriter out, final HttpServletRequest request, final HttpServletResponse response, final boolean errored, final  boolean erroredNumNull, final  boolean erroredNumType) throws IOException {
         out.println(HtmlBuilder.buildHtmlHeader("Add Scrip"));
         out.println("<span class=\"ttitle\" style=\"580px;\">Add Scrip Form</span><br>");
         if (errored)
             out.println("<font color=red><b>That scrip ID already exists, stupid head!</b></font><br>");
+        if (erroredNumNull)
+            out.println("<br><font color=red><b>All fields are required</b></font><br><br>");
+        if (erroredNumType)
+            out.println("<br><font color=red><b>Error in fields related to shares</b></font><br><br>");
         out.println("<form>");
         
         out.println("<table width=350px cellpadding=4px>");
@@ -117,7 +140,7 @@ public class AddScripServlet extends HttpServlet {
         
         out.println("<input type='submit' value='Add Scrip'>   ");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
-        out.println("</form>"); 
+        out.println("</form>");
         
         out.println(HtmlBuilder.buildHtmlFooter());
         out.close();

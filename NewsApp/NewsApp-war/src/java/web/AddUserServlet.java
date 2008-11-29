@@ -19,6 +19,7 @@ import javax.naming.NamingException;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+import org.apache.html.dom.HTMLBuilder;
 import web.utils.HtmlBuilder;
 
 /**
@@ -37,8 +38,7 @@ public class AddUserServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession(true);
-        if (isInvalidSession(session))
-        {
+        if (isInvalidSession(session)) {
             response.sendRedirect("NewLogin");
             return;
         }
@@ -50,28 +50,49 @@ public class AddUserServlet extends HttpServlet {
         String password=request.getParameter("password");
         String username=request.getParameter("username");
         String usertype=request.getParameter("usertype");
-        String cashheld=request.getParameter("cashheld");        
+        String cashheld=request.getParameter("cashheld");
         
         boolean errored = false;
+        boolean erroredNumNull = false;
+        boolean erroredNumType = false;
+        boolean erroredUserName = false;
+        int numInt = 0;
         
-        if ((userid!=null) && (password!=null) && (username!=null) && (usertype!=null) && (cashheld!=null))
-        {    
+        if((userid != null) && (password != null) && (username != null) && (usertype != null) && (cashheld != null) ) {
+            
+            if((userid.equals("")) || (password.equals("")) || (username.equals("")) || (cashheld.equals(""))){
+                erroredNumNull = true;
+            }else{
+                try{numInt = Integer.parseInt(cashheld);} catch(NumberFormatException e) {
+                    erroredNumType = true;
+                }
+            }
+            if(!erroredNumType && (numInt<0)) {
+                erroredNumType = true;
+            }
+            
+            if(HtmlBuilder.hasNumber(username)) {
+                erroredUserName = true;
+            }
+        }
+        
+        
+        
+        
+        if ((userid!=null) && (password!=null) && (username!=null) && (usertype!=null) && (cashheld!=null) && (!erroredNumNull) && (!erroredNumType) && (!erroredUserName)) {
             char userRole = usertype.charAt(0);
-            double cashHeldDbl = Double.parseDouble(cashheld);             
+            double cashHeldDbl = Double.parseDouble(cashheld);
             
             LoginEntityFacadeLocal loginEntityFacade = (LoginEntityFacadeLocal) lookupLoginEntityFacade();
             UsersEntityFacadeLocal usersEntityFacade = (UsersEntityFacadeLocal) lookupUsersEntityFacade();
             
-            if (loginEntityFacade.find(userid) != null)
-            {
+            if (loginEntityFacade.find(userid) != null) {
                 errored = true;
-            }
-            else
-            {
-            
+            } else {
+                
                 LoginEntity loginEntity = new LoginEntity();
                 UsersEntity usersEntity = new UsersEntity();
-
+                
                 usersEntity.setUserId(userid);
                 loginEntity.setUserId(userid);
                 loginEntity.setPassword(password);
@@ -83,7 +104,7 @@ public class AddUserServlet extends HttpServlet {
 
                 loginEntityFacade.create(loginEntity);
                 usersEntityFacade.create(usersEntity);
-
+                
                 response.sendRedirect("AdminServlet");
                 return;
             }
@@ -97,6 +118,14 @@ public class AddUserServlet extends HttpServlet {
         out.println("<span class=\"ttitle\" style=\"580px;\">Add User Form</span><br>");
         if (errored)
             out.println("<font color=red><b>That user ID already exists, please try again.</b></font><br>");
+        
+        if (erroredNumNull)
+            out.println("<br><font color=red><b>All fields are required</b></font><br><br>");
+        if (erroredNumType)
+            out.println("<br><font color=red><b>Please enter a valid value for cash held</b></font><br><br>");
+        if (erroredUserName)
+            out.println("<br><font color=red><b>User Name can only contain alphabets </b></font><br><br>");
+        
         out.println("<form>");
         
         out.println("<table width=350px cellpadding=4px>");
@@ -112,17 +141,16 @@ public class AddUserServlet extends HttpServlet {
         out.println("</table>");
         out.println("<input type='submit' value='Add User'>   ");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
-        out.println("</form>"); 
+        out.println("</form>");
         
         out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
     }
     
-    private boolean isInvalidSession(final HttpSession session)
-    {
-        return  session.isNew() || 
-                session.getAttribute("userid") == null || 
-                session.getAttribute("userrole") == null || 
+    private boolean isInvalidSession(final HttpSession session) {
+        return  session.isNew() ||
+                session.getAttribute("userid") == null ||
+                session.getAttribute("userrole") == null ||
                 !((String)session.getAttribute("userrole")).equals("a");
     }
     
@@ -154,7 +182,7 @@ public class AddUserServlet extends HttpServlet {
     
     /**
      * Perform JNDI lookup on UsersEntity for handle on its facade.
-     * @return Local facade of the UsersEntity 
+     * @return Local facade of the UsersEntity
      */
     private UsersEntityFacadeLocal lookupUsersEntityFacade() {
         try {
@@ -168,7 +196,7 @@ public class AddUserServlet extends HttpServlet {
     
     /**
      * Perform JNDI lookup on LoginEntity for handle on its facade.
-     * @return Local facade of the LoginEntity 
+     * @return Local facade of the LoginEntity
      */
     private LoginEntityFacadeLocal lookupLoginEntityFacade() {
         try {

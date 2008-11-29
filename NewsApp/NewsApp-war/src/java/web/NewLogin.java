@@ -38,6 +38,7 @@ public class NewLogin extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
+        boolean invalidCredentials = false;
         int errorcode = 0;
         
         if (isFormSubmitted(request)) {
@@ -82,6 +83,8 @@ public class NewLogin extends HttpServlet {
                         }
                     }
                 }
+            } else{
+                invalidCredentials = true;
             }
         }
         
@@ -95,6 +98,9 @@ public class NewLogin extends HttpServlet {
         out.println("<span class=\"ttitle\" style=\"580px;\">COMS 4156: Advanced Software Engineering</span>");
         out.println("<br><br><br><br><br><br>");
         out.println("<span class=\"ttitle\">Sign In</span><br><br>");
+        
+        if (invalidCredentials)
+            out.println("<br><font color=red><b>Invalid Username or Password. Please try again.</b></font><br><br>");
         
         if (errorcode == 1) {
             out.println("<br><font color=red><b>Your account has been deactivated. " +

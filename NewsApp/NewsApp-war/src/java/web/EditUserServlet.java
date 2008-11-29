@@ -41,8 +41,7 @@ public class EditUserServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession(true);
-        if (isInvalidSession(session))
-        {
+        if (isInvalidSession(session)) {
             response.sendRedirect("NewLogin");
             return;
         }
@@ -53,34 +52,58 @@ public class EditUserServlet extends HttpServlet {
         HashMap<String, String> parameterMap = new HashMap<String, String>();
         parameterMap.put("userid",              request.getParameter("userid"));
         parameterMap.put("username",            request.getParameter("username"));
-        parameterMap.put("cashheld",            request.getParameter("cashheld"));        
+        parameterMap.put("cashheld",            request.getParameter("cashheld"));
         
         UsersEntityFacadeLocal usersEntityFacade = (UsersEntityFacadeLocal) lookupUsersEntityFacade();
+        
+        boolean erroredNumNull = false;
+        boolean erroredNumType = false;
+        boolean erroredUserName = false;
+        int numInt = 0;
+        
+        if (formSubmitted(parameterMap)) {
             
-        if (formSubmitted(parameterMap))
-        {   
-            UsersEntity user = usersEntityFacade.find(parameterMap.get("userid"));
-            user.setUserName(parameterMap.get("username"));
-            user.setCashHeld(Double.parseDouble(parameterMap.get("cashheld")));            
+            if((parameterMap.get("userid").equals("")) || (parameterMap.get("username").equals("")) || (parameterMap.get("cashheld").equals(""))){
+                erroredNumNull = true;
+            }else{
+                try{numInt = Integer.parseInt( parameterMap.get("cashheld").replace(".","") );} catch(NumberFormatException e) {
+                    erroredNumType = true;
+                }
+            }
+            if(!erroredNumType && (numInt<0)) {
+                erroredNumType = true;
+            }
+            if(HtmlBuilder.hasNumber(parameterMap.get("username"))) {
+                erroredUserName = true;
+            }
             
-            usersEntityFacade.edit(user);
-            response.sendRedirect("AdminServlet"); 
+            
+            
+            if((!erroredNumNull) && (!erroredNumType) && (!erroredUserName)) {
+                
+                
+                UsersEntity user = usersEntityFacade.find(parameterMap.get("userid"));
+                user.setUserName(parameterMap.get("username"));
+                user.setCashHeld(Double.parseDouble(parameterMap.get("cashheld")));
+                
+                usersEntityFacade.edit(user);
+                response.sendRedirect("AdminServlet");
+                
+            }
         }
         
         List users = usersEntityFacade.findAllActive();
-        printForm(request, response, users);
+        printForm(request, response, users, erroredNumNull, erroredNumType, erroredUserName);
     }
     
-    private boolean isInvalidSession(final HttpSession session)
-    {
-        return  session.isNew() || 
-                session.getAttribute("userid") == null || 
-                session.getAttribute("userrole") == null || 
+    private boolean isInvalidSession(final HttpSession session) {
+        return  session.isNew() ||
+                session.getAttribute("userid") == null ||
+                session.getAttribute("userrole") == null ||
                 !((String)session.getAttribute("userrole")).equals("a");
     }
     
-    private boolean formSubmitted(HashMap<String, String> pm)
-    {
+    private boolean formSubmitted(HashMap<String, String> pm) {
         for (String value : pm.values())
             if (value == null)
                 return false;
@@ -88,34 +111,40 @@ public class EditUserServlet extends HttpServlet {
         return true;
     }
     
-    private void printForm(final HttpServletRequest request, final HttpServletResponse response, List users) throws IOException {
+    private void printForm(final HttpServletRequest request, final HttpServletResponse response, List users, final boolean erroredNumNull, final boolean erroredNumType, final boolean erroredUserName) throws IOException {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Edit User"));
         
-        out.println("<span class=\"ttitle\" style=\"580px;\">Edit User Form</span><br>");   
+        out.println("<span class=\"ttitle\" style=\"580px;\">Edit User Form</span><br>");
+        if (erroredNumNull)
+            out.println("<br><font color=red><b>All fields are required</b></font><br><br>");
+        if (erroredNumType)
+            out.println("<br><font color=red><b>Please enter a valid value for cash held</b></font><br><br>");
+        if (erroredUserName)
+            out.println("<br><font color=red><b>User Name can only contain alphabets </b></font><br><br>");
         out.println("Users:<br>");
         out.println("<table width=600px border=1>");
         out.println("<tr><td>User ID</td><td>User Name</td><td>Current Cash Held</td><td>Total Buying Power</td></tr>");
+        
         
         _nf.setMaximumFractionDigits(2);
         _nf.setMinimumFractionDigits(2);
         _nf.setGroupingUsed(false);
         
-        for (Iterator it = users.iterator(); it.hasNext();)
-        {
+        for (Iterator it = users.iterator(); it.hasNext();) {
             UsersEntity user = (UsersEntity)it.next();
             out.println("<form>");
             out.println("<tr><td>" + user.getUserId() + "<input type='hidden' name='userid' value='" + user.getUserId() + "'></td>");
             out.println("<td><input type='text' name='username' value='" + user.getUserName() + "'></td>");
-            out.println("<td><input type='text' name='cashheld' value='" + _nf.format(user.getCashHeld())+ "'></td>");            
+            out.println("<td><input type='text' name='cashheld' value='" + _nf.format(user.getCashHeld())+ "'></td>");
             out.println("<td><input type='submit' value='Edit'></td></tr>");
-            out.println("</form>");        
+            out.println("</form>");
         }
         
         out.println("</table><br>");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
         
-        out.println(HtmlBuilder.buildHtmlFooter());        
+        out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
     }
     

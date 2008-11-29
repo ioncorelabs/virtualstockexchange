@@ -79,21 +79,26 @@ public class BuyScrips extends HttpServlet {
         String scripId=request.getParameter("scripId");
         String num=request.getParameter("num");
         
+        int numInt = 0;
+        
         if(scripId != null && num != null) {
             System.out.println("check1");
             if((num.equals(""))) {
                 erroredNumNull = true;
                 System.out.println("check2");
             } else {
-                try{int numInt = Integer.parseInt(num);} catch(NumberFormatException e) {
+                try{numInt = Integer.parseInt(num);} catch(NumberFormatException e) {
                     erroredNumType = true;
                     System.out.println("check4");
                 }
             }
+            if(!erroredNumType && (numInt<0)) {
+                erroredNumType = true;
+            }
             if((scripId.equals("--SELECT--"))) {
                 erroredSelect = true;
                 System.out.println("check3");
-            }                        
+            }
         }
         
         //Adding data to queue on page submit

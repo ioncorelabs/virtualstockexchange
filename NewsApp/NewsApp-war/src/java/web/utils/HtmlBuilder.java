@@ -18,8 +18,7 @@ public class HtmlBuilder {
     /** cannot instantiate */
     protected HtmlBuilder() {}
     
-    public static String buildHtmlHeader(final String pageTitle)
-    {
+    public static String buildHtmlHeader(final String pageTitle) {
         StringBuffer header = new StringBuffer();
         header.append("<html>");
         header.append("<head>");
@@ -33,17 +32,16 @@ public class HtmlBuilder {
         header.append("<div id=\"tot\">");
         header.append("<div id=\"header\">");
         header.append("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
-        header.append("<div class=\"slogan\">Bulls & Bears</div>");       
+        header.append("<div class=\"slogan\">Bulls & Bears</div>");
         header.append("<div id=\"corp\">");
         header.append("<div class=\"main-text\">");
         return header.toString();
     }
     
-    public static String buildHtmlFooter()
-    {
+    public static String buildHtmlFooter() {
         StringBuffer footer = new StringBuffer();
         footer.append("</div></div>");
-        footer.append("<div class=\"clear\"></div>");        
+        footer.append("<div class=\"clear\"></div>");
         footer.append("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
         footer.append("</div>");
         //Common Ends
@@ -51,5 +49,15 @@ public class HtmlBuilder {
         footer.append("</html>");
         return footer.toString();
     }
+    
+public static boolean hasNumber(String s) {
+        for (int j = 0;j < s.length();j++) {
+            if (Character.isDigit(s.charAt(j))) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     
 }
