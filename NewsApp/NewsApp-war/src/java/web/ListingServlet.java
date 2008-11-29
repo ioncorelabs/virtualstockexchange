@@ -98,9 +98,9 @@ public class ListingServlet extends HttpServlet {
             out.println("<table border=1 align=center >");
             out.println(" <tr ><td align=left> "+"ScripId " +"</td> <td align=left> "+""+"ScripName"+"</td><td align=left> Status" +"</td><td align=left> Share Price" );
             if (change ==1 ){
-                out.println(" <tr ><td align=left> "+ex.getScripId()+"</td> <td align=left> "+""+ex.getScripName()+"</td><td align=left><img src=/NewsApp-war/img/market_up.gif></b><b/></td>"+"<td>"+ _nf.format(ex.getPricePerShare())+"</td>" );
+                out.println(" <tr ><td align=left> "+ex.getScripId()+"</td> <td align=left> "+""+ex.getScripName()+"</td><td align=center><img src=/NewsApp-war/img/market_up.gif></b><b/></td>"+"<td>"+ _nf.format(ex.getPricePerShare())+"</td>" );
             }else if (change ==2 ) {
-                out.println(" <tr ><td align=left> "+ex.getScripId()+"</td> <td align=left> "+""+ex.getScripName()+"</td><td align=left><img src=/NewsApp-war/img/market_down.gif></b><b/></td>" +"<td>"+_nf.format(ex.getPricePerShare())+"</td>" );
+                out.println(" <tr ><td align=left> "+ex.getScripId()+"</td> <td align=left> "+""+ex.getScripName()+"</td><td align=center><img src=/NewsApp-war/img/market_down.gif></b><b/></td>" +"<td>"+_nf.format(ex.getPricePerShare())+"</td>" );
             }else {
                 out.println(" <tr><td align=left> "+ex.getScripId()+"</td> <td align=left> "+""+ex.getScripName()+"</td><td align=left>Unchanged</td>"+"<td>"+_nf.format(ex.getPricePerShare())+"</td></tr>");
             }
@@ -122,7 +122,7 @@ public class ListingServlet extends HttpServlet {
             
             System.out.println("Size IS  " + changes.size() );
             
-            out.println( "<tr><td ><select id=scripSelected name=scripSelected>");
+            out.println( "<tr><td align=center><select id=scripSelected name=scripSelected>");
             for (Iterator it = changes.iterator(); it.hasNext();){
                 ScripsExchangeEntity elem = (ScripsExchangeEntity) it.next();
                 out.println( "<option  name=scripSelected value"+ elem.getScripId() +">"+elem.getScripId());
