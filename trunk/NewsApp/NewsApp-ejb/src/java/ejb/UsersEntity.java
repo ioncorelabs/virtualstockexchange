@@ -28,6 +28,7 @@ public class UsersEntity implements Serializable {
     private String userName;
     private double cashHeld;
     private double initialCashHeld;    
+    private char active;
     
     /** Creates a new instance of UsersEntity */
     public UsersEntity() {
@@ -104,6 +105,14 @@ public class UsersEntity implements Serializable {
 
     public void setInitialCashHeld(double initialCashHeld) {
         this.initialCashHeld = initialCashHeld;
+    }
+
+    public char getActive() {
+        return active;
+    }
+
+    public void setActive(char active) {
+        this.active = active;
     }
     
 }

@@ -20,18 +20,18 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class UsersEntityFacade implements UsersEntityFacadeLocal {
-
+    
     @PersistenceContext
     private EntityManager em;
     
     /** Creates a new instance of UsersEntityFacade */
     public UsersEntityFacade() {
     }
-
+    
     public void create(UsersEntity usersEntity) {
         em.persist(usersEntity);
     }
-
+    
     public void edit(UsersEntity usersEntity) {
         em.merge(usersEntity);
     }
@@ -39,21 +39,29 @@ public class UsersEntityFacade implements UsersEntityFacadeLocal {
     public void delete(UsersEntity usersEntity) {
         em.remove(usersEntity);
     }
-
+    
     public void destroy(UsersEntity usersEntity) {
         em.merge(usersEntity);
         em.remove(usersEntity);
     }
-
+    
     public UsersEntity find(Object pk) {
         return (UsersEntity) em.find(UsersEntity.class, pk);
     }
-
+    
     public List findAll() {
         return em.createQuery("select object(o) from UsersEntity as o").getResultList();
     }
     
-    public List findUserById(String userId) {        
+    public List findUserById(String userId) {
         return em.createQuery("select object(o) from UsersEntity as o where o.userId = ?1").setParameter(1, userId).getResultList();
-    }    
+    }
+    
+    public List findAllActive() {
+        return em.createQuery("select object(o) from UsersEntity as o where o.active = 'y'").getResultList();
+    }
+    
+    public List findAllInActive() {
+        return em.createQuery("select object(o) from UsersEntity as o where o.active = 'n'").getResultList();
+    }
 }

@@ -19,17 +19,20 @@ import javax.ejb.Local;
 @Local
 public interface UsersEntityFacadeLocal {
     void create(UsersEntity usersEntity);
-
+    
     void edit(UsersEntity usersEntity);
-
+    
     void destroy(UsersEntity usersEntity);
     
     void delete(UsersEntity usersEntity);
-
+    
     UsersEntity find(Object pk);
-
+    
     List findAll();
     
     List findUserById(String userId);
     
+    List findAllActive();
+    
+    List findAllInActive();
 }

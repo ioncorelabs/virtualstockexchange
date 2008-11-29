@@ -30,7 +30,7 @@ public class LogoutServlet extends HttpServlet {
         
         HttpSession session = request.getSession(true);
         session.invalidate();
-
+        
         
         out.println("<html>");
         out.println("<head>");
@@ -38,25 +38,25 @@ public class LogoutServlet extends HttpServlet {
         out.println("</head>");
         out.println("<body>");
         
-                //Common Styling Code
+        //Common Styling Code
         out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
         out.println("</head>");
         out.println("<body>");
         out.println("<div id=\"tot\">");
         out.println("<div id=\"header\">");
         out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
-        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
+        out.println("<div class=\"slogan\">Bulls & Bears</div>");
         out.println("<div id=\"corp\">");
         out.println("<div class=\"main-text\">");
         //Common Ends
         
-        out.println("<span class=\"ttitle\" style=\"580px;\">You have been Logged Out</span><br>");
+        out.println("<p align=center><br><br><br><br><br><br><span class=\"ttitle\" style=\"580px\"><font size=2>You have been Logged Out</font></span><br>");
         
-        out.println("<span class=\"ttitle\" style=\"580px;\"><a href='AdminServlet'>Click Here to Login again</a></span><br>");
-       
-                              //Common Starts
+        out.println("<br><span class=\"ttitle\" style=\"580px;\"><a href='AdminServlet'><font size=2>Click Here to Login again</font></a></span><br></p>");
+        
+        //Common Starts
         out.println("</div></div>");
-        out.println("<div class=\"clear\"></div>");        
+        out.println("<div class=\"clear\"></div>");
         out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
         out.println("</div>");
         //Common Ends
