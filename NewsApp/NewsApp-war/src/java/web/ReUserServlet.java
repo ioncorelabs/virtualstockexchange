@@ -1,5 +1,5 @@
 /*
- * DelUserServlet.java
+ * ReUserServlet.java
  *
  * Created on October 29, 2008, 7:30 PM
  */
@@ -26,7 +26,7 @@ import web.utils.HtmlBuilder;
  * @author Milind Nimesh
  * @version
  */
-public class DelUserServlet extends HttpServlet {
+public class ReUserServlet extends HttpServlet {
     
     /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -52,18 +52,18 @@ public class DelUserServlet extends HttpServlet {
         if (userid != null)
         {   
             UsersEntity user = usersEntityFacade.find(userid);
-            user.setActive('n');                        
+            user.setActive('y');                        
             usersEntityFacade.edit(user);
             response.sendRedirect("AdminServlet"); 
         }
         
-        List users = usersEntityFacade.findAllActive();
+        List users = usersEntityFacade.findAllInActive();
         printForm(users, response);
     }
 
     private void printForm(final List users, final HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
-        out.println(HtmlBuilder.buildHtmlHeader("Delete User"));
+        out.println(HtmlBuilder.buildHtmlHeader("Reactivate User"));
         out.println("<span class=\"ttitle\" style=\"580px;\">Deactivate User Form</span><br>");
         
         out.println("<form>");
@@ -76,7 +76,7 @@ public class DelUserServlet extends HttpServlet {
         }
         
         out.println("</select><br>");
-        out.println("<input type='submit' value='Deactivate User'>   ");
+        out.println("<input type='submit' value='Reactivate User'>   ");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
         out.println("</form>");  
                 
