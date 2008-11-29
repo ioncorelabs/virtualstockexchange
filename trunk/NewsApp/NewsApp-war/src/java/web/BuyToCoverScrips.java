@@ -36,7 +36,7 @@ import javax.servlet.http.*;
  */
 public class BuyToCoverScrips extends HttpServlet {
     
-   /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+    /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
      */
@@ -45,21 +45,33 @@ public class BuyToCoverScrips extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession appSession = request.getSession(true);
-        if (isInvalidSession(appSession))
-        {
+        if (isInvalidSession(appSession)) {
             response.sendRedirect("NewLogin");
             return;
         }
         
         String num = request.getParameter("number");
         String userId = (String)appSession.getAttribute("userid");
-                
+        
         ScripsShortedEntityFacadeLocal scripsEntityFacade = (ScripsShortedEntityFacadeLocal) lookupScripsShortedEntityFacade();
         List scrips = scripsEntityFacade.findScrips(userId);
         int index =-1;
+        int errorcode = 0;
+        boolean erroredNumNull = false;
+        boolean erroredNumType = false;
+        
+        if(num!=null) {
+            if((num.equals(""))) {
+                erroredNumNull = true;
+            } else {
+                try{int numInt = Integer.parseInt(num);} catch(NumberFormatException e) {
+                    erroredNumType = true;
+                }
+            }
+        }
         
         
-        if (num!=null) {
+        if (num!=null && (!erroredNumNull) && (!erroredNumType)) {
             
             
             String strButtonIndex =  request.getParameter("button");
@@ -68,47 +80,59 @@ public class BuyToCoverScrips extends HttpServlet {
                 index =  Integer.parseInt(strButtonIndex);
             }//TODO: Raise exception, id index not found
             
-            Vector vec = (Vector) request.getSession().getAttribute("Vector");                        
-            ScripsShortedEntity elem  = (ScripsShortedEntity) vec.elementAt(index);                
-         
+            Vector vec = (Vector) request.getSession().getAttribute("Vector");
+            ScripsShortedEntity elem  = (ScripsShortedEntity) vec.elementAt(index);
             
-            Queue queue = null;
-            QueueConnection connection = null;
-            QueueSession session = null;
-            MessageProducer messageProducer = null;
-            try {
-                
-                InitialContext ctx = new InitialContext();
-                queue = (Queue) ctx.lookup("queue/mdb5");
-                QueueConnectionFactory factory =
-                        (QueueConnectionFactory) ctx.lookup("ConnectionFactory");
-                connection = factory.createQueueConnection();
-                session = connection.createQueueSession(false,
-                        QueueSession.AUTO_ACKNOWLEDGE);
-                messageProducer = session.createProducer(queue);
-                
-                ObjectMessage message = session.createObjectMessage();
-                // here we create a NewsEntity, that will be sent in JMS message
-                TransactionHistoryEntity e = new TransactionHistoryEntity();
-                
-                e.setScripId(elem.getScripId());
-                e.setUserId(userId);
-                e.setTotalShares(Integer.parseInt(num));
-                e.setTranType("BuyToCover");
-                 e.setTranDate(System.currentTimeMillis());
-                 
-                message.setObject(e);
-                messageProducer.send(message);
-                messageProducer.close();
-                connection.close();
-                //response.sendRedirect("ListNews");
-                
-            } catch (JMSException ex) {
-                ex.printStackTrace();
-            } catch (NamingException ex) {
-                ex.printStackTrace();
+            List scrip = scripsEntityFacade.findScripForUser(userId, elem.getScripId());
+            
+            if((((ScripsShortedEntity)scrip.get(0)).getSharesBorrowed() - ((ScripsShortedEntity)scrip.get(0)).getSharesReturned()) < Integer.parseInt(num)) {
+                errorcode = 1;
+            } else {
+                Queue queue = null;
+                QueueConnection connection = null;
+                QueueSession session = null;
+                MessageProducer messageProducer = null;
+                try {
+                    
+                    InitialContext ctx = new InitialContext();
+                    queue = (Queue) ctx.lookup("queue/mdb5");
+                    QueueConnectionFactory factory =
+                            (QueueConnectionFactory) ctx.lookup("ConnectionFactory");
+                    connection = factory.createQueueConnection();
+                    session = connection.createQueueSession(false,
+                            QueueSession.AUTO_ACKNOWLEDGE);
+                    messageProducer = session.createProducer(queue);
+                    
+                    ObjectMessage message = session.createObjectMessage();
+                    // here we create a NewsEntity, that will be sent in JMS message
+                    TransactionHistoryEntity e = new TransactionHistoryEntity();
+                    
+                    e.setScripId(elem.getScripId());
+                    e.setUserId(userId);
+                    e.setTotalShares(Integer.parseInt(num));
+                    e.setTranType("BuyToCover");
+                    e.setTranDate(System.currentTimeMillis());
+                    
+                    message.setObject(e);
+                    messageProducer.send(message);
+                    messageProducer.close();
+                    connection.close();
+                    
+                    //Redirecting depending on the role of the user
+                    if(appSession.getAttribute("userrole").equals("t")) {
+                        response.sendRedirect("TraderTradeSuccess");
+                    } else if(appSession.getAttribute("userrole").equals("i")) {
+                        response.sendRedirect("RoleEmptyFailure");
+                    } else {
+                        response.sendRedirect("RoleEmptyFailure");
+                    }
+                    
+                } catch (JMSException ex) {
+                    ex.printStackTrace();
+                } catch (NamingException ex) {
+                    ex.printStackTrace();
+                }
             }
-            
         }
         
         
@@ -120,20 +144,33 @@ public class BuyToCoverScrips extends HttpServlet {
         out.println("</head>");
         out.println("<body>");
         
-                
-                               //Common Styling Code
+        
+        //Common Styling Code
         out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
         out.println("</head>");
         out.println("<body>");
         out.println("<div id=\"tot\">");
         out.println("<div id=\"header\">");
         out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
-        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
+        out.println("<div class=\"slogan\">Bulls & Bears</div>");
         out.println("<div id=\"corp\">");
         out.println("<div class=\"main-text\">");
         //Common Ends
         
         out.println("<span class=\"ttitle\" style=\"580px;\">Buy Shares Form</span><br>");
+        
+        if (errorcode == 1) {
+            out.println("<br><font color=red><b>You are attempting to cover more " +
+                    "shares than you have borrowed, please try again." +
+                    "</b></font><br><br>");
+        }
+        
+        if (erroredNumNull)
+            out.println("<br><font color=red><b>Please enter the number of scrips to short sell</b></font><br><br>");
+        if (erroredNumType)
+            out.println("<br><font color=red><b>Please enter a valid value for number of scrips to short sell</b></font><br><br>");
+        
+        
         out.println("<form>");
         
         out.println("<form  action=ListScrips onSubmit=initializeRadio() >");
@@ -160,9 +197,9 @@ public class BuyToCoverScrips extends HttpServlet {
         out.println("</form>");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/>");
         
-                //Common Starts
+        //Common Starts
         out.println("</div></div>");
-        out.println("<div class=\"clear\"></div>");        
+        out.println("<div class=\"clear\"></div>");
         out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
         out.println("</div>");
         //Common Ends
@@ -173,16 +210,15 @@ public class BuyToCoverScrips extends HttpServlet {
         out.close();
     }
     
-    private boolean isInvalidSession(final HttpSession session)
-    {
-        return  session.isNew() || 
-                session.getAttribute("userid") == null || 
-                session.getAttribute("userrole") == null || 
+    private boolean isInvalidSession(final HttpSession session) {
+        return  session.isNew() ||
+                session.getAttribute("userid") == null ||
+                session.getAttribute("userrole") == null ||
                 !((String)session.getAttribute("userrole")).equals("t"); // only traders can shortsell
     }
-
     
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -206,7 +242,7 @@ public class BuyToCoverScrips extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }
-    // </editor-fold>
+// </editor-fold>
     
     private ScripsShortedEntityFacadeLocal lookupScripsShortedEntityFacade() {
         try {
@@ -216,5 +252,5 @@ public class BuyToCoverScrips extends HttpServlet {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
             throw new RuntimeException(ne);
         }
-    }    
+    }
 }

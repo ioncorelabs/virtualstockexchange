@@ -93,10 +93,9 @@ public class BuyScrips extends HttpServlet {
             if((scripId.equals("--SELECT--"))) {
                 erroredSelect = true;
                 System.out.println("check3");
-            }
-            
-            
+            }                        
         }
+        
         //Adding data to queue on page submit
         if ((scripId!=null) && (num!=null) && (!erroredNumNull) && (!erroredNumType) && (!erroredSelect)) {
             
@@ -105,7 +104,7 @@ public class BuyScrips extends HttpServlet {
             
             double pricePerShare = ((ScripsExchangeEntity)scrip.get(0)).getPricePerShare();
             
-            if(((ScripsExchangeEntity)scrip.get(0)).getTotalAvailable() < Integer.parseInt(num)) {
+            if((((ScripsExchangeEntity)scrip.get(0)).getTotalAvailable() - ((ScripsExchangeEntity)scrip.get(0)).getTotalSharesLent()) < Integer.parseInt(num)) {
                 errorcode = 1;
             } else if(((UsersEntity)user.get(0)).getCashHeld() < (pricePerShare*(Integer.parseInt(num)))) {
                 errorcode = 2;
@@ -173,23 +172,23 @@ public class BuyScrips extends HttpServlet {
         out.println("<span class=\"ttitle\" style=\"580px;\">Buy Shares</span><br>");
         
         if (errorcode == 1) {
-            out.println("<font color=red><b>You are attempting to buy more " +
+            out.println("<br><font color=red><b>You are attempting to buy more " +
                     "shares than available with the Exchange, please try again." +
-                    "</b></font><br>");
+                    "</b></font><br><br>");
         }
         
         if (errorcode == 2) {
-            out.println("<font color=red><b>You are attempting to buy shares totaling value" +
+            out.println("<br><font color=red><b>You are attempting to buy shares totaling value" +
                     " greater than your cash held, please try again." +
-                    "</b></font><br>");
+                    "</b></font><br><br>");
         }
         
         if (erroredNumNull)
-            out.println("<font color=red><b>Please enter the number of scrips to buy</b></font><br>");
+            out.println("<br><font color=red><b>Please enter the number of scrips to buy</b></font><br><br>");
         if (erroredNumType)
-            out.println("<font color=red><b>Please enter a valid value for scrips</b></font><br>");
+            out.println("<br><font color=red><b>Please enter a valid value for scrips</b></font><br><br>");
         if (erroredSelect)
-            out.println("<font color=red><b>Please select a scrip to buy</b></font><br>");
+            out.println("<br><font color=red><b>Please select a scrip to buy</b></font><br><br>");
         
         out.println("<form>");
         
