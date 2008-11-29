@@ -6,6 +6,8 @@
 
 package web;
 
+import ejb.ScripsExchangeEntity;
+import ejb.ScripsExchangeEntityFacadeLocal;
 import ejb.ScripsShortedEntity;
 import ejb.ScripsShortedEntityFacadeLocal;
 import ejb.TransactionHistoryEntity;
@@ -180,14 +182,23 @@ public class ShortSellScrips extends HttpServlet {
         
         out.println("<form  action=ListScrips onSubmit=initializeRadio() >");
         out.println("<table border=1 align=center >");
-        out.println("<tr><td align =left>Name of the Scrip</td><td>Number of Shares Borrowed</td><td>Number of Shares Shorted</td><td>Number of Shares Returned</td></tr>");
+        out.println("<tr><td align =left>Name of the Scrip</td><td>Number of Shares Borrowed</td><td>Number of Shares Shorted</td><td>Number of Shares Returned</td><td>Status</td></tr>");
         Vector vec = new Vector();
+        ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityEntityFacade();
         
         int i =0;
         for (Iterator it = scrips.iterator(); it.hasNext();) {
             ScripsShortedEntity elem = (ScripsShortedEntity) it.next();
             out.println(" <tr><td align=left> <b>"+elem.getScripId()+"</td> <td align=left> "+elem.getSharesBorrowed()+
                     "</td><td align=left> "+elem.getSharesShorted()+"</td><td align=left> "+elem.getSharesReturned()+"</td></b><b/>");
+            List scrip = lookupExchangeEntityEntityFacade.findScripById(elem.getScripId());
+            if(((ScripsExchangeEntity)scrip.get(0)).getChange() == 1) {
+                out.println("<td align=center><img src=/NewsApp-war/img/market_up.gif></td>");
+            } else if(((ScripsExchangeEntity)scrip.get(0)).getChange() == 2) {
+                out.println("<td align=center><img src=/NewsApp-war/img/market_down.gif></td>");
+            } else {
+                out.println("<td align=center>Unknown</td>");
+            }
             vec.add(elem);
             out.println("<td><input type=radio name=button value="+i+" ></td></tr>" );
             i++;
@@ -196,8 +207,8 @@ public class ShortSellScrips extends HttpServlet {
         request.getSession().setAttribute("Vector",vec);
         out.println("<input type =hidden name = index >" );
         
-        out.println("<tr><td colspan=4> Number of Shares to short sell <input type =text name=number id=num size =10  ></tr> ");
-        out.println("<tr><td colspan=4><input type =submit value=Submit /></tr> ");
+        out.println("<tr><td colspan=5> Number of Shares to short sell <input type =text name=number id=num size =10  ></tr> ");
+        out.println("<tr><td colspan=5><input type =submit value=Submit /></tr> ");
         out.println("</table ");
         out.println("</form>");
         out.println("<br><input type=\"button\" value=\"Back\" onClick=\"history.back();\"/>");
@@ -252,6 +263,16 @@ public class ShortSellScrips extends HttpServlet {
         try {
             Context c = new InitialContext();
             return (ScripsShortedEntityFacadeLocal) c.lookup("NewsApp/ScripsShortedEntityFacade/local");
+        } catch(NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
+            throw new RuntimeException(ne);
+        }
+    }
+    
+    private ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade() {
+        try {
+            Context c = new InitialContext();
+            return (ScripsExchangeEntityFacadeLocal) c.lookup("NewsApp/ScripsExchangeEntityFacade/local");
         } catch(NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
             throw new RuntimeException(ne);
