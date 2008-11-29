@@ -60,15 +60,20 @@ public class SellScrips extends HttpServlet {
         int errorcode = 0;
         boolean erroredNumNull = false;
         boolean erroredNumType = false;
+        int numInt = 0;
         
         if(num != null) {
             if((num.equals(""))) {
                 erroredNumNull = true;
             } else {
-                try{int numInt = Integer.parseInt(num);} catch(NumberFormatException e) {
+                try{numInt = Integer.parseInt(num);} catch(NumberFormatException e) {
                     erroredNumType = true;
                 }
             }
+        }
+        
+        if(!erroredNumType && (numInt<0)) {
+            erroredNumType = true;
         }
         
         if ((num!=null) && (!erroredNumNull) && (!erroredNumType)) {

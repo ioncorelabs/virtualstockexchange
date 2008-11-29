@@ -53,6 +53,7 @@ public class BorrowScrips extends HttpServlet {
         int errorcode = 0;
         boolean erroredNumNull = false;
         boolean erroredNumType = false;
+        int numInt = 0;
         
         //Doing a JNDI lookup for ScripsExchangeEntityFacade
         ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade
@@ -62,10 +63,14 @@ public class BorrowScrips extends HttpServlet {
             if((num.equals(""))) {
                 erroredNumNull = true;
             } else {
-                try{int numInt = Integer.parseInt(num);} catch(NumberFormatException e) {
+                try{numInt = Integer.parseInt(num);} catch(NumberFormatException e) {
                     erroredNumType = true;
                 }
             }
+        }
+        
+        if(!erroredNumType && (numInt<0)) {
+            erroredNumType = true;
         }
         
         
