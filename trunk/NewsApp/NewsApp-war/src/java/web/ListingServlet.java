@@ -102,7 +102,7 @@ public class ListingServlet extends HttpServlet {
             }else if (change ==2 ) {
                 out.println(" <tr ><td align=left> "+ex.getScripId()+"</td> <td align=left> "+""+ex.getScripName()+"</td><td align=center><img src=/NewsApp-war/img/market_down.gif></b><b/></td>" +"<td>"+_nf.format(ex.getPricePerShare())+"</td>" );
             }else {
-                out.println(" <tr><td align=left> "+ex.getScripId()+"</td> <td align=left> "+""+ex.getScripName()+"</td><td align=left>Unchanged</td>"+"<td>"+_nf.format(ex.getPricePerShare())+"</td></tr>");
+                out.println(" <tr><td align=left> "+ex.getScripId()+"</td> <td align=left> "+""+ex.getScripName()+"</td><td align=center>Unchanged</td>"+"<td>"+_nf.format(ex.getPricePerShare())+"</td></tr>");
             }
             out.println("</table >");
             out.println("<br><input type=\"button\" value=\"Back\" onClick=\"history.back();\"/>");
