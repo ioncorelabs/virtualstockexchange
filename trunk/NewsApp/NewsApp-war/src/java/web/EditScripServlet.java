@@ -98,10 +98,10 @@ public class EditScripServlet extends HttpServlet {
         out.println(HtmlBuilder.buildHtmlHeader("Edit Scrip"));
         
         out.println("<span class=\"ttitle\" style=\"580px;\">Edit Scrip Form</span><br>");
-        out.println("Users:<br>");
+        out.println("<br>Users:<br><br>");
         out.println("<table width=680px border=1>");
         out.println("<tr><td>Scrip ID</td><td>Scrip Name</td><td>Total Shares</td><td>Total Shares Available</td>");
-        out.println("<td>Market Cap</td></tr>");
+        out.println("<td>Market Cap</td><td>&nbsp;</td></tr>");
         
         _nf.setMaximumFractionDigits(2);
         _nf.setMinimumFractionDigits(2);

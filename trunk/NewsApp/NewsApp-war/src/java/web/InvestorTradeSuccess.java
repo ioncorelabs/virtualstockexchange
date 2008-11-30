@@ -51,8 +51,8 @@ public class InvestorTradeSuccess extends HttpServlet {
         out.println("<div id=\"corp\">");
         out.println("<div class=\"main-text\">");
         //Common Ends
-        out.println("<h4>Your trade was successfully executed<br><br> Please click " +
-                "<a href=\"InvestorServlet\">here</a> to return to menu. </h4>");
+        out.println("<br><br><h4><p align=center>Your trade was successfully executed<br><br> Please click " +
+                "<a href=\"InvestorServlet\">here</a> to return to menu. </p></h4></p>");
         
                 //Common Starts
         out.println("</div></div>");

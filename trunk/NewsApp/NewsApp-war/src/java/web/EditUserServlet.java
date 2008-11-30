@@ -122,9 +122,9 @@ public class EditUserServlet extends HttpServlet {
             out.println("<br><font color=red><b>Please enter a valid value for cash held</b></font><br><br>");
         if (erroredUserName)
             out.println("<br><font color=red><b>User Name can only contain alphabets </b></font><br><br>");
-        out.println("Users:<br>");
+        out.println("<br>Users:<br><br>");
         out.println("<table width=600px border=1>");
-        out.println("<tr><td>User ID</td><td>User Name</td><td>Current Cash Held</td><td>Total Buying Power</td></tr>");
+        out.println("<tr><td>User ID</td><td>User Name</td><td>Current Cash Held</td><td>&nbsp;</td></tr>");
         
         
         _nf.setMaximumFractionDigits(2);

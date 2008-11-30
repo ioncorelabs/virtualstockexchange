@@ -53,7 +53,7 @@ public class AddScripServlet extends HttpServlet {
         parameterMap.put("scripid",             request.getParameter("scripid"));
         parameterMap.put("scripname",           request.getParameter("scripname"));
         parameterMap.put("totalshares",         request.getParameter("totalshares"));
-        parameterMap.put("pricepershare",       request.getParameter("pricepershare"));
+        parameterMap.put("marketcap",       request.getParameter("marketcap"));
         
         boolean errored = false;
         boolean erroredNumNull = false;
@@ -63,11 +63,11 @@ public class AddScripServlet extends HttpServlet {
         
         if (formSubmitted(parameterMap)) {
             
-            if((parameterMap.get("scripid").equals("")) || (parameterMap.get("scripname").equals("")) || (parameterMap.get("totalshares").equals("")) || (parameterMap.get("pricepershare").equals(""))){
+            if((parameterMap.get("scripid").equals("")) || (parameterMap.get("scripname").equals("")) || (parameterMap.get("totalshares").equals("")) || (parameterMap.get("marketcap").equals(""))){
                 erroredNumNull = true;
             }else{
                 try{numInttshare = Integer.parseInt(parameterMap.get("totalshares"));
-                    numIntpshare = Integer.parseInt(parameterMap.get("pricepershare"));
+                    numIntpshare = Integer.parseInt(parameterMap.get("marketcap"));
                 } catch(NumberFormatException e) {
                     erroredNumType = true;
                 }
@@ -82,8 +82,8 @@ public class AddScripServlet extends HttpServlet {
               
             
             int totalSharesInt              = Integer.parseInt(parameterMap.get("totalshares"));
-            double pricePerShareDbl         = Double.parseDouble(parameterMap.get("pricepershare"));
-            double marketCapDbl             = (double)totalSharesInt * (double)pricePerShareDbl;
+            double marketCapDbl             = Double.parseDouble(parameterMap.get("marketcap"));
+            double pricePerShareDbl         = marketCapDbl / (double)totalSharesInt;
             
             ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
             if (scripsEntityFacade.find(parameterMap.get("scripid")) != null) {
@@ -135,7 +135,7 @@ public class AddScripServlet extends HttpServlet {
         out.println("<tr><td width=150px>Scrip Id:</td><td><input type='text' name='scripid'></td></tr>");
         out.println("<tr><td>Scrip Name:</td><td><input type='text' name='scripname'></td></tr>");
         out.println("<tr><td>Total Shares:</td><td><input type='text' name='totalshares'></td></tr>");
-        out.println("<tr><td>Price Per Share:</td><td><input type='text' name='pricepershare'></td></tr>");
+        out.println("<tr><td>Market Cap:</td><td><input type='text' name='marketcap'></td></tr>");
         out.println("</table>");
         
         out.println("<input type='submit' value='Add Scrip'>   ");
