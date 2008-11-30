@@ -183,7 +183,7 @@ public class SellScrips extends HttpServlet {
         
         out.println("<form  action=ListScrips onSubmit=initializeRadio() >");
         out.println("<table border=1 align=center >");
-        out.println("<tr><td align =left>Name of the Scrip</td><td>Number of Shares</td><td>Status</td></tr> ");
+        out.println("<tr><td align =left>Name of the Scrip</td><td>Number of Shares</td><td>Status</td><td>&nbsp;</td></tr> ");
         Vector vec = new Vector();
         ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityEntityFacade();
         

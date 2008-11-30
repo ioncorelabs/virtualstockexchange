@@ -182,7 +182,7 @@ public class ShortSellScrips extends HttpServlet {
         
         out.println("<form  action=ListScrips onSubmit=initializeRadio() >");
         out.println("<table border=1 align=center >");
-        out.println("<tr><td align =left>Name of the Scrip</td><td>Number of Shares Borrowed</td><td>Number of Shares Shorted</td><td>Number of Shares Returned</td><td>Status</td></tr>");
+        out.println("<tr><td align =left>Name of the Scrip</td><td>Number of Shares Borrowed</td><td>Number of Shares Shorted</td><td>Number of Shares Returned</td><td>Status</td><td>&nbsp;</td></tr>");
         Vector vec = new Vector();
         ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityEntityFacade();
         
@@ -207,9 +207,9 @@ public class ShortSellScrips extends HttpServlet {
         request.getSession().setAttribute("Vector",vec);
         out.println("<input type =hidden name = index >" );
         
-        out.println("<tr><td colspan=5> Number of Shares to short sell <input type =text name=number id=num size =10  ></tr> ");
-        out.println("<tr><td colspan=5><input type =submit value=Submit /></tr> ");
-        out.println("</table ");
+        out.println("<tr><td colspan=6> Number of Shares to short sell <input type =text name=number id=num size =10  ></tr> ");
+        out.println("<tr><td colspan=6 align=center><input type =submit value=Submit /></tr> ");
+        out.println("</table>");
         out.println("</form>");
         out.println("<br><input type=\"button\" value=\"Back\" onClick=\"history.back();\"/>");
         

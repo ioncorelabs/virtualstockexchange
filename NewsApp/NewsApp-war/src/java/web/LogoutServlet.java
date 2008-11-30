@@ -50,9 +50,9 @@ public class LogoutServlet extends HttpServlet {
         out.println("<div class=\"main-text\">");
         //Common Ends
         
-        out.println("<p align=center><br><br><br><br><br><br><span class=\"ttitle\" style=\"580px\"><font size=2>You have been Logged Out</font></span><br>");
+        out.println("<p align=center><br><br><span class=\"ttitle\" style=\"580px\"><font size=2>You have been Logged Out</font></span><br>");
         
-        out.println("<br><span class=\"ttitle\" style=\"580px;\"><a href='AdminServlet'><font size=2>Click Here to Login again</font></a></span><br></p>");
+        out.println("<br><span class=\"ttitle\" style=\"580px;\"><font size=2>Please click <a href='AdminServlet'>here</a> to Login again</font></span><br></p>");
         
         //Common Starts
         out.println("</div></div>");
