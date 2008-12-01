@@ -78,71 +78,72 @@ public class SellScrips extends HttpServlet {
             erroredNumType = true;
         }
         
-        if ((num!=null) && (!erroredNumNull) && (!erroredNumType)) {
-            
+        if ((num!=null) && (!erroredNumNull) && (!erroredNumType)) {            
             
             String strButtonIndex =  request.getParameter("button");
             
-            if (strButtonIndex!=null) {
-                index =  Integer.parseInt(strButtonIndex);
-            }//TODO: Raise exception, id index not found
-            
-            Vector vec = (Vector) request.getSession().getAttribute("Vector");
-            ScripsUserEntity elem  = (ScripsUserEntity) vec.elementAt(index);
-            
-            List scrip = scripsEntityFacade.findScripForUser(userId, elem.getScripId());
-            
-            if(((ScripsUserEntity)scrip.get(0)).getSharesHeld() < Integer.parseInt(num)) {
-                errorcode = 1;
+            if (strButtonIndex==null) {
+                errorcode = 2;
             } else {
                 
-                Queue queue = null;
-                QueueConnection connection = null;
-                QueueSession session = null;
-                MessageProducer messageProducer = null;
-                try {
+                index =  Integer.parseInt(strButtonIndex);
+                
+                Vector vec = (Vector) request.getSession().getAttribute("Vector");
+                ScripsUserEntity elem  = (ScripsUserEntity) vec.elementAt(index);
+                
+                List scrip = scripsEntityFacade.findScripForUser(userId, elem.getScripId());
+                
+                if(((ScripsUserEntity)scrip.get(0)).getSharesHeld() < Integer.parseInt(num)) {
+                    errorcode = 1;
+                }  else {
                     
-                    InitialContext ctx = new InitialContext();
-                    queue = (Queue) ctx.lookup("queue/mdb2");
-                    QueueConnectionFactory factory =
-                            (QueueConnectionFactory) ctx.lookup("ConnectionFactory");
-                    connection = factory.createQueueConnection();
-                    session = connection.createQueueSession(false,
-                            QueueSession.AUTO_ACKNOWLEDGE);
-                    messageProducer = session.createProducer(queue);
-                    
-                    ObjectMessage message = session.createObjectMessage();
-                    // here we create a NewsEntity, that will be sent in JMS message
-                    TransactionHistoryEntity e = new TransactionHistoryEntity();
-                    
-                    e.setScripId(elem.getScripId());
-                    e.setUserId(userId);
-                    e.setTotalShares(Integer.parseInt(num));
-                    e.setTranType("Sell");
-                    e.setTranDate(System.currentTimeMillis());
-                    
-                    message.setObject(e);
-                    messageProducer.send(message);
-                    messageProducer.close();
-                    connection.close();
-                    
-                    //Redirecting depending on the role of the user
-                    if(appSession.getAttribute("userrole").equals("t")) {
-                        response.sendRedirect("TraderTradeSuccess");
-                    } else if(appSession.getAttribute("userrole").equals("i")) {
-                        response.sendRedirect("InvestorTradeSuccess");
-                    } else {
-                        response.sendRedirect("RoleEmptyFailure");
+                    Queue queue = null;
+                    QueueConnection connection = null;
+                    QueueSession session = null;
+                    MessageProducer messageProducer = null;
+                    try {
+                        
+                        InitialContext ctx = new InitialContext();
+                        queue = (Queue) ctx.lookup("queue/mdb2");
+                        QueueConnectionFactory factory =
+                                (QueueConnectionFactory) ctx.lookup("ConnectionFactory");
+                        connection = factory.createQueueConnection();
+                        session = connection.createQueueSession(false,
+                                QueueSession.AUTO_ACKNOWLEDGE);
+                        messageProducer = session.createProducer(queue);
+                        
+                        ObjectMessage message = session.createObjectMessage();
+                        // here we create a NewsEntity, that will be sent in JMS message
+                        TransactionHistoryEntity e = new TransactionHistoryEntity();
+                        
+                        e.setScripId(elem.getScripId());
+                        e.setUserId(userId);
+                        e.setTotalShares(Integer.parseInt(num));
+                        e.setTranType("Sell");
+                        e.setTranDate(System.currentTimeMillis());
+                        
+                        message.setObject(e);
+                        messageProducer.send(message);
+                        messageProducer.close();
+                        connection.close();
+                        
+                        //Redirecting depending on the role of the user
+                        if(appSession.getAttribute("userrole").equals("t")) {
+                            response.sendRedirect("TraderTradeSuccess");
+                        } else if(appSession.getAttribute("userrole").equals("i")) {
+                            response.sendRedirect("InvestorTradeSuccess");
+                        } else {
+                            response.sendRedirect("RoleEmptyFailure");
+                        }
+                        
+                    } catch (JMSException ex) {
+                        ex.printStackTrace();
+                    } catch (NamingException ex) {
+                        ex.printStackTrace();
                     }
-                    
-                } catch (JMSException ex) {
-                    ex.printStackTrace();
-                } catch (NamingException ex) {
-                    ex.printStackTrace();
                 }
             }
         }
-        
         
         PrintWriter out = response.getWriter();
         //TODO output your page here
@@ -173,6 +174,11 @@ public class SellScrips extends HttpServlet {
                     "</b></font><br><br>");
         }
         
+        if (errorcode == 2) {
+            out.println("<br><font color=red><b>Please select a scrip to sell. " +
+                    "</b></font><br><br>");
+        }
+        
         if (erroredNumNull)
             out.println("<br><font color=red><b>Please enter the number of scrips to sell</b></font><br><br>");
         if (erroredNumType)
@@ -194,14 +200,12 @@ public class SellScrips extends HttpServlet {
             List scrip = lookupExchangeEntityEntityFacade.findScripById(elem.getScripId());
             if(((ScripsExchangeEntity)scrip.get(0)).getChange() == 1) {
                 out.println("<td align=center><img src=/NewsApp-war/img/market_up.gif></td>");
-            }
-            else if(((ScripsExchangeEntity)scrip.get(0)).getChange() == 2) {
+            } else if(((ScripsExchangeEntity)scrip.get(0)).getChange() == 2) {
                 out.println("<td align=center><img src=/NewsApp-war/img/market_down.gif></td>");
-            }
-            else {
+            } else {
                 out.println("<td align=center>Unknown</td>");
             }
-                vec.add(elem);
+            vec.add(elem);
             out.println("<td><input type=radio name=button value="+i+" ></td></tr>" );
             i++;
         }

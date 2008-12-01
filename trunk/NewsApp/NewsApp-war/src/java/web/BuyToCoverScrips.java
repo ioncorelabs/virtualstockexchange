@@ -80,68 +80,68 @@ public class BuyToCoverScrips extends HttpServlet {
         
         if (num!=null && (!erroredNumNull) && (!erroredNumType)) {
             
-            
             String strButtonIndex =  request.getParameter("button");
-            
-            if (strButtonIndex!=null) {
-                index =  Integer.parseInt(strButtonIndex);
-            }//TODO: Raise exception, id index not found
-            
-            Vector vec = (Vector) request.getSession().getAttribute("Vector");
-            ScripsShortedEntity elem  = (ScripsShortedEntity) vec.elementAt(index);
-            
-            List scrip = scripsEntityFacade.findScripForUser(userId, elem.getScripId());
-            
-            if((((ScripsShortedEntity)scrip.get(0)).getSharesBorrowed() - ((ScripsShortedEntity)scrip.get(0)).getSharesReturned()) < Integer.parseInt(num)) {
-                errorcode = 1;
+            if (strButtonIndex==null) {
+                errorcode = 2;
             } else {
-                Queue queue = null;
-                QueueConnection connection = null;
-                QueueSession session = null;
-                MessageProducer messageProducer = null;
-                try {
-                    
-                    InitialContext ctx = new InitialContext();
-                    queue = (Queue) ctx.lookup("queue/mdb5");
-                    QueueConnectionFactory factory =
-                            (QueueConnectionFactory) ctx.lookup("ConnectionFactory");
-                    connection = factory.createQueueConnection();
-                    session = connection.createQueueSession(false,
-                            QueueSession.AUTO_ACKNOWLEDGE);
-                    messageProducer = session.createProducer(queue);
-                    
-                    ObjectMessage message = session.createObjectMessage();
-                    // here we create a NewsEntity, that will be sent in JMS message
-                    TransactionHistoryEntity e = new TransactionHistoryEntity();
-                    
-                    e.setScripId(elem.getScripId());
-                    e.setUserId(userId);
-                    e.setTotalShares(Integer.parseInt(num));
-                    e.setTranType("BuyToCover");
-                    e.setTranDate(System.currentTimeMillis());
-                    
-                    message.setObject(e);
-                    messageProducer.send(message);
-                    messageProducer.close();
-                    connection.close();
-                    
-                    //Redirecting depending on the role of the user
-                    if(appSession.getAttribute("userrole").equals("t")) {
-                        response.sendRedirect("TraderTradeSuccess");
-                    } else if(appSession.getAttribute("userrole").equals("i")) {
-                        response.sendRedirect("RoleEmptyFailure");
-                    } else {
-                        response.sendRedirect("RoleEmptyFailure");
+                
+                index =  Integer.parseInt(strButtonIndex);
+                
+                Vector vec = (Vector) request.getSession().getAttribute("Vector");
+                ScripsShortedEntity elem  = (ScripsShortedEntity) vec.elementAt(index);
+                
+                List scrip = scripsEntityFacade.findScripForUser(userId, elem.getScripId());
+                
+                if((((ScripsShortedEntity)scrip.get(0)).getSharesBorrowed() - ((ScripsShortedEntity)scrip.get(0)).getSharesReturned()) < Integer.parseInt(num)) {
+                    errorcode = 1;
+                } else {
+                    Queue queue = null;
+                    QueueConnection connection = null;
+                    QueueSession session = null;
+                    MessageProducer messageProducer = null;
+                    try {
+                        
+                        InitialContext ctx = new InitialContext();
+                        queue = (Queue) ctx.lookup("queue/mdb5");
+                        QueueConnectionFactory factory =
+                                (QueueConnectionFactory) ctx.lookup("ConnectionFactory");
+                        connection = factory.createQueueConnection();
+                        session = connection.createQueueSession(false,
+                                QueueSession.AUTO_ACKNOWLEDGE);
+                        messageProducer = session.createProducer(queue);
+                        
+                        ObjectMessage message = session.createObjectMessage();
+                        // here we create a NewsEntity, that will be sent in JMS message
+                        TransactionHistoryEntity e = new TransactionHistoryEntity();
+                        
+                        e.setScripId(elem.getScripId());
+                        e.setUserId(userId);
+                        e.setTotalShares(Integer.parseInt(num));
+                        e.setTranType("BuyToCover");
+                        e.setTranDate(System.currentTimeMillis());
+                        
+                        message.setObject(e);
+                        messageProducer.send(message);
+                        messageProducer.close();
+                        connection.close();
+                        
+                        //Redirecting depending on the role of the user
+                        if(appSession.getAttribute("userrole").equals("t")) {
+                            response.sendRedirect("TraderTradeSuccess");
+                        } else if(appSession.getAttribute("userrole").equals("i")) {
+                            response.sendRedirect("RoleEmptyFailure");
+                        } else {
+                            response.sendRedirect("RoleEmptyFailure");
+                        }
+                        
+                    } catch (JMSException ex) {
+                        ex.printStackTrace();
+                    } catch (NamingException ex) {
+                        ex.printStackTrace();
                     }
-                    
-                } catch (JMSException ex) {
-                    ex.printStackTrace();
-                } catch (NamingException ex) {
-                    ex.printStackTrace();
                 }
             }
         }
-        
         
         PrintWriter out = response.getWriter();
         //TODO output your page here
@@ -169,6 +169,11 @@ public class BuyToCoverScrips extends HttpServlet {
         if (errorcode == 1) {
             out.println("<br><font color=red><b>You are attempting to cover more " +
                     "shares than you have borrowed, please try again." +
+                    "</b></font><br><br>");
+        }
+        
+        if (errorcode == 2) {
+            out.println("<br><font color=red><b>Please select a scrip to sell. " +
                     "</b></font><br><br>");
         }
         
