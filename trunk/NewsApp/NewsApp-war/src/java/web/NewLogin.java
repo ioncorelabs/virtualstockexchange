@@ -11,6 +11,7 @@ import ejb.LoginEntityFacadeLocal;
 import ejb.UsersEntity;
 import ejb.UsersEntityFacadeLocal;
 import java.io.*;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -108,7 +109,7 @@ public class NewLogin extends HttpServlet {
                     "</b></font><br><br>");
         }
         
-        out.println("<form>");
+        out.println("<form method=post>");
         out.println("User Id:<font color=\"#FFFFFF\">______</font<input type='text' name='userid'><br/>");
         out.println("Password:<font color=\"#FFFFFF\">____</font<input type='password' name='password'><br/><br>");
         out.println("<input type='submit' value='Login'><br/>");
@@ -136,7 +137,14 @@ public class NewLogin extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("userid",        request.getParameter("userid"));
+        params.put("password",      request.getParameter("password"));
+        if (HtmlBuilder.isFormSubmitted(params))
+            response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
+        else
+            processRequest(request, response);
     }
     
     /** Handles the HTTP <code>POST</code> method.

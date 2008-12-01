@@ -23,6 +23,8 @@ public class HtmlBuilder {
     /** cannot instantiate */
     private HtmlBuilder() {}
     
+    public static final String DO_GET_REDIRECT_PAGE = "http://in.youtube.com/watch?v=Yu_moia-oVI";
+    
     public enum ERRORS
     {
         USER_EXISTS,
