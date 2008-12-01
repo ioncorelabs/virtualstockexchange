@@ -125,6 +125,7 @@
         <fail unless="build.classes.dir">Must set build.classes.dir</fail>
         <fail unless="dist.javadoc.dir">Must set dist.javadoc.dir</fail>
         <fail unless="build.test.classes.dir">Must set build.test.classes.dir</fail>
+        <fail unless="build.test.ear.classes.dir">Must set build.test.ear.classes.dir</fail>
         <fail unless="build.test.results.dir">Must set build.test.results.dir</fail>
         <fail unless="build.classes.excludes">Must set build.classes.excludes</fail>
         <fail unless="dist.war">Must set dist.war</fail>
@@ -141,6 +142,7 @@
     <target name="-init-macrodef-javac">
         <macrodef name="javac" uri="http://www.netbeans.org/ns/web-project/2">
             <attribute name="srcdir" default="${src.dir}"/>
+            <attribute name="testsrcdir" default="${test.src.dir}"/>
             <attribute name="destdir" default="${build.classes.dir.real}"/>
             <attribute name="classpath" default="${javac.classpath}:${j2ee.platform.classpath}"/>
             <attribute name="debug" default="${javac.debug}"/>
@@ -152,6 +154,13 @@
                     </classpath>
                     <compilerarg line="${javac.compilerargs}"/>
                     <customize/>
+                </javac>
+                <javac srcdir="@{testsrcdir}" destdir="@{destdir}" debug="@{debug}" deprecation="${javac.deprecation}" source="${javac.source}" target="${javac.target}" includeantruntime="false">
+		    <classpath>
+			<path path="@{classpath}"/>
+		    </classpath>
+		    <compilerarg line="${javac.compilerargs}"/>
+		    <customize/>
                 </javac>
             </sequential>
         </macrodef>
@@ -302,6 +311,10 @@
         <copy todir="${build.classes.dir.real}">
             <fileset dir="${src.dir}" excludes="${build.classes.excludes}"/>
         </copy>
+        <webproject2:javac destdir="${build.classes.dir.real}"/>
+	<copy todir="${build.classes.dir.real}">
+	    <fileset dir="${test.src.dir}" excludes="${build.classes.excludes}"/>
+        </copy>
     </target>
     <target name="-copy-manifest" if="has.custom.manifest">
         <mkdir dir="${build.meta.inf.dir}"/>
@@ -333,6 +346,14 @@
         </webproject2:javac>
         <copy todir="${build.classes.dir.real}">
             <fileset dir="${src.dir}" excludes="${build.classes.excludes}"/>
+        </copy>
+        <webproject2:javac>
+	    <customize>
+		<patternset includes="${javac.includes}"/>
+	    </customize>
+	</webproject2:javac>
+	<copy todir="${build.classes.dir.real}">
+	    <fileset dir="${test.src.dir}" excludes="${build.classes.excludes}"/>
         </copy>
     </target>
     <target name="-post-compile-single">
@@ -402,14 +423,26 @@
     <target name="library-inclusion-in-manifest" depends="init" if="dist.ear.dir">
         <basename property="included.lib.reference.NewsApp-ejb.dist" file="${reference.NewsApp-ejb.dist}"/>
         <copy-ear-war file="${reference.NewsApp-ejb.dist}" propname="included.lib.reference.NewsApp-ejb.dist.X"/>
+        <basename property="included.lib.file.reference.commons-logging-1.1.jar" file="${file.reference.commons-logging-1.1.jar}"/>
+        <copy-ear-war file="${file.reference.commons-logging-1.1.jar}" propname="included.lib.file.reference.commons-logging-1.1.jar.X"/>
+        <basename property="included.lib.file.reference.aspectjrt-1.5.3.jar" file="${file.reference.aspectjrt-1.5.3.jar}"/>
+        <copy-ear-war file="${file.reference.aspectjrt-1.5.3.jar}" propname="included.lib.file.reference.aspectjrt-1.5.3.jar.X"/>
+        <basename property="included.lib.file.reference.junit-3.8.2.jar" file="${file.reference.junit-3.8.2.jar}"/>
+        <copy-ear-war file="${file.reference.junit-3.8.2.jar}" propname="included.lib.file.reference.junit-3.8.2.jar.X"/>
+        <basename property="included.lib.file.reference.cactus.core.framework.uberjar.javaEE.14-1.8.0.jar" file="${file.reference.cactus.core.framework.uberjar.javaEE.14-1.8.0.jar}"/>
+        <copy-ear-war file="${file.reference.cactus.core.framework.uberjar.javaEE.14-1.8.0.jar}" propname="included.lib.file.reference.cactus.core.framework.uberjar.javaEE.14-1.8.0.jar.X"/>
         <mkdir dir="${build.web.dir.real}/META-INF"/>
         <manifest file="${build.web.dir.real}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${included.lib.reference.NewsApp-ejb.dist} "/>
+            <attribute name="Class-Path" value="${included.lib.reference.NewsApp-ejb.dist} ${included.lib.file.reference.commons-logging-1.1.jar} ${included.lib.file.reference.aspectjrt-1.5.3.jar} ${included.lib.file.reference.junit-3.8.2.jar} ${included.lib.file.reference.cactus.core.framework.uberjar.javaEE.14-1.8.0.jar} "/>
         </manifest>
         <delete dir="${dist.ear.dir}/temp"/>
     </target>
     <target name="library-inclusion-in-archive" depends="init" unless="dist.ear.dir">
         <copy file="${reference.NewsApp-ejb.dist}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${file.reference.commons-logging-1.1.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${file.reference.aspectjrt-1.5.3.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${file.reference.junit-3.8.2.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${file.reference.cactus.core.framework.uberjar.javaEE.14-1.8.0.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
     </target>
     <target name="do-ear-dist" depends="init,compile,compile-jsps,-pre-dist,library-inclusion-in-manifest">
         <dirname property="dist.jar.dir" file="${dist.ear.war}"/>
@@ -603,6 +636,10 @@
         <copy todir="${build.test.classes.dir}">
             <fileset dir="${test.src.dir}" excludes="**/*.java"/>
         </copy>
+        <webproject2:javac srcdir="${test.src.dir}" destdir="${build.test.ear.classes.dir}" debug="true" classpath="${javac.test.classpath}:${j2ee.platform.classpath}"/>
+	<copy todir="${build.test.ear.classes.dir}">
+	    <fileset dir="${test.src.dir}" excludes="**/*.java"/>
+        </copy>
     </target>
     <target name="-post-compile-test">
         <!-- Empty placeholder for easier customization. -->
@@ -622,6 +659,14 @@
         </webproject2:javac>
         <copy todir="${build.test.classes.dir}">
             <fileset dir="${test.src.dir}" excludes="**/*.java"/>
+        </copy>
+        <webproject2:javac srcdir="${test.src.dir}" destdir="${build.test.ear.classes.dir}" debug="true" classpath="${javac.test.classpath}:${j2ee.platform.classpath}">
+	    <customize>
+		<patternset includes="${javac.includes}"/>
+	    </customize>
+	</webproject2:javac>
+	<copy todir="${build.test.ear.classes.dir}">
+	    <fileset dir="${test.src.dir}" excludes="**/*.java"/>
         </copy>
     </target>
     <target name="-post-compile-test-single">
@@ -670,6 +715,7 @@
     <target name="debug-test" depends="init,compile-test,-debug-start-debugger-test,-debug-start-debuggee-test"/>
     <target name="-do-debug-fix-test" if="netbeans.home" depends="init,-pre-debug-fix,compile-test-single">
         <webproject1:nbjpdareload dir="${build.test.classes.dir}"/>
+        <webproject1:nbjpdareload dir="${build.test.ear.classes.dir}"/>
     </target>
     <target name="debug-fix-test" if="netbeans.home" depends="init,-pre-debug-fix,-do-debug-fix-test"/>
     <!--

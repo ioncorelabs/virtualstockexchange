@@ -46,12 +46,8 @@ public class AdminServlet extends HttpServlet {
         out.println("</div>");
         
         out.println("<div class=\"main-content\">");
-        out.println("This is mockup the main user pages. Choose from the menu options to the left to do super awesome things.");
+        out.println("Choose from the menu options at left to do super awesome things like Add, Edit, Enable people and scrips.");
         out.println("</div><br>");
-        
-        out.println("<div class=\"main-content\">");
-        out.println("John: I think I like pushing the menu table to the left and leaving this center area open for some description, instructions, etc.");
-        out.println("</div>");
         
         out.println("<div id=\"menius\">");
         out.println("<div class=\"menu-title\">Menu</div>");

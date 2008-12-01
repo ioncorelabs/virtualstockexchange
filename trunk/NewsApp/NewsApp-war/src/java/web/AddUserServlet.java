@@ -11,6 +11,7 @@ import ejb.LoginEntityFacadeLocal;
 import ejb.UsersEntity;
 import ejb.UsersEntityFacadeLocal;
 import java.io.*;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
@@ -20,7 +21,7 @@ import javax.naming.NamingException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.apache.html.dom.HTMLBuilder;
-import web.utils.HtmlBuilder;
+import web.utils.*;
 
 /**
  *
@@ -44,59 +45,78 @@ public class AddUserServlet extends HttpServlet {
         }
         
         String selfid = (String)session.getAttribute("userid");
-        System.out.println("At admin page as user '" + selfid + "'");
+        System.out.println("At add user page as user '" + selfid + "'");
         
-        String userid=request.getParameter("userid");
-        String password=request.getParameter("password");
-        String username=request.getParameter("username");
-        String usertype=request.getParameter("usertype");
-        String cashheld=request.getParameter("cashheld");
+        HashMap<String, String> parameterMap = new HashMap<String, String>();
+        parameterMap.put("userid",              request.getParameter("userid"));
+        parameterMap.put("password",            request.getParameter("password"));
+        parameterMap.put("username",            request.getParameter("username"));
+        parameterMap.put("usertype",            request.getParameter("usertype"));
+        parameterMap.put("cashheld",            request.getParameter("cashheld"));
         
-        boolean errored = false;
-        boolean erroredNumNull = false;
+        boolean erroredBlankFields = false;
         boolean erroredNumType = false;
-        boolean erroredUserName = false;
-        int numInt = 0;
+        boolean erroredUserNameText = false;
+        boolean erroredUserNameMax = false;
+        boolean erroredUserIDMin = false;
+        boolean erroredUserIDMax = false;
+        boolean erroredPasswordMin = false;
+        boolean erroredPasswordMax = false;
+        double numDouble = 0;
         
-        if((userid != null) && (password != null) && (username != null) && (usertype != null) && (cashheld != null) ) {
+        if(HtmlBuilder.isFormSubmitted(parameterMap)) {
             
-            if((userid.equals("")) || (password.equals("")) || (username.equals("")) || (cashheld.equals(""))){
-                erroredNumNull = true;
-            }else{
-                try{numInt = Integer.parseInt(cashheld);} catch(NumberFormatException e) {
-                    erroredNumType = true;
-                }
+            if(HtmlBuilder.hasBlankFields(parameterMap)) {
+                erroredBlankFields = true;
+            } else {
+                try{numDouble = Double.parseDouble(parameterMap.get("cashheld")); } 
+                catch(NumberFormatException e) { erroredNumType = true; }
             }
-            if(!erroredNumType && (numInt<0)) {
+            
+            if (!erroredNumType && (numDouble < 0.0))
                 erroredNumType = true;
-            }
+            if (parameterMap.get("username").length() > 40)
+                erroredUserNameMax = true;
             
-            if(HtmlBuilder.hasNumber(username)) {
-                erroredUserName = true;
-            }
+            if (parameterMap.get("userid").length() < 3)
+                erroredUserIDMin = true;
+            if (parameterMap.get("userid").length() > 16)
+                erroredUserIDMax = true;
+            
+            if (parameterMap.get("password").length() < 3)
+                erroredPasswordMin = true;
+            if (parameterMap.get("password").length() > 16)
+                erroredPasswordMax = true;
+            
+            
+            if (HtmlBuilder.hasNumber(parameterMap.get("username")))
+                erroredUserNameText = true;
+            
         }
         
+        boolean erroredUserExists = false;
         
-        
-        
-        if ((userid!=null) && (password!=null) && (username!=null) && (usertype!=null) && (cashheld!=null) && (!erroredNumNull) && (!erroredNumType) && (!erroredUserName)) {
-            char userRole = usertype.charAt(0);
-            double cashHeldDbl = Double.parseDouble(cashheld);
+        if (HtmlBuilder.isFormSubmitted(parameterMap) && 
+                !erroredBlankFields && !erroredNumType && !erroredUserNameText && 
+                !erroredUserNameMax && !erroredUserIDMin && !erroredUserIDMax && !erroredPasswordMin && !erroredPasswordMax) 
+        {
+            char userRole = parameterMap.get("usertype").charAt(0);
+            double cashHeldDbl = Double.parseDouble(parameterMap.get("cashheld"));
             
             LoginEntityFacadeLocal loginEntityFacade = (LoginEntityFacadeLocal) lookupLoginEntityFacade();
             UsersEntityFacadeLocal usersEntityFacade = (UsersEntityFacadeLocal) lookupUsersEntityFacade();
             
-            if (loginEntityFacade.find(userid) != null) {
-                errored = true;
+            if (loginEntityFacade.find(parameterMap.get("userid")) != null) {
+                erroredUserExists = true; // already exists
             } else {
                 
                 LoginEntity loginEntity = new LoginEntity();
                 UsersEntity usersEntity = new UsersEntity();
                 
-                usersEntity.setUserId(userid);
-                loginEntity.setUserId(userid);
-                loginEntity.setPassword(password);
-                usersEntity.setUserName(username);
+                usersEntity.setUserId(parameterMap.get("userid"));
+                loginEntity.setUserId(parameterMap.get("userid"));
+                loginEntity.setPassword(parameterMap.get("password"));
+                usersEntity.setUserName(parameterMap.get("username"));
                 loginEntity.setUserRole(userRole);
                 usersEntity.setInitialCashHeld(cashHeldDbl);
                 usersEntity.setCashHeld(cashHeldDbl);
@@ -110,24 +130,31 @@ public class AddUserServlet extends HttpServlet {
             }
         }
         
-        
-        
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Add User"));
         
         out.println("<span class=\"ttitle\" style=\"580px;\">Add User Form</span><br>");
-        if (errored)
-            out.println("<font color=red><b>That user ID already exists, please try again.</b></font><br>");
         
-        if (erroredNumNull)
-            out.println("<br><font color=red><b>All fields are required</b></font><br><br>");
+        if (erroredUserExists)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.USER_EXISTS);
+        if (erroredBlankFields)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_BLANK);
         if (erroredNumType)
-            out.println("<br><font color=red><b>Please enter a valid value for cash held</b></font><br><br>");
-        if (erroredUserName)
-            out.println("<br><font color=red><b>User Name can only contain alphabets </b></font><br><br>");
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_CASH);
+        if (erroredUserNameText)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_USERNAME_TEXT);
+        if (erroredUserNameMax)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_USERNAME_MAX);
+        if (erroredUserIDMin)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_USERID_MIN);
+        if (erroredUserIDMax)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_USERID_MAX);
+        if (erroredPasswordMin)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_PASSWORD_MIN);
+        if (erroredPasswordMax)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_PASSWORD_MAX);
         
-        out.println("<form>");
-        
+        out.println("<br/><form>");
         out.println("<table width=350px cellpadding=4px>");
         out.println("<tr><td width=150px>User Id:</td><td><input type='text' name='userid'></td></tr>");
         out.println("<tr><td>Password:</td><td><input type='password' name='password'></td></tr>");
