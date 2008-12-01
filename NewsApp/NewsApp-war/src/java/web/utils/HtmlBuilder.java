@@ -9,14 +9,38 @@
 
 package web.utils;
 
+import java.io.PrintWriter;
+import java.util.HashMap;
+
 /**
  *
  * @author jmoral
  */
+
+
 public class HtmlBuilder {
     
     /** cannot instantiate */
-    protected HtmlBuilder() {}
+    private HtmlBuilder() {}
+    
+    public enum ERRORS
+    {
+        USER_EXISTS,
+        SCRIP_EXISTS,
+        INVALID_BLANK,
+        INVALID_CASH,
+        INVALID_USERNAME_TEXT,
+        INVALID_USERNAME_MAX,
+        INVALID_SCRIPNAME_MAX,
+        INVALID_SCRIPID_MIN,
+        INVALID_SCRIPID_MAX,
+        INVALID_USERID_MIN,
+        INVALID_USERID_MAX,
+        INVALID_PASSWORD_MIN,
+        INVALID_PASSWORD_MAX,
+        INVALID_TOTAL_SHARES,
+        INVALID_MARKET_CAP
+    }
     
     public static String buildHtmlHeader(final String pageTitle) {
         StringBuffer header = new StringBuffer();
@@ -50,8 +74,8 @@ public class HtmlBuilder {
         return footer.toString();
     }
     
-public static boolean hasNumber(String s) {
-        for (int j = 0;j < s.length();j++) {
+    public static boolean hasNumber(String s) {
+        for (int j = 0; j < s.length(); j++) {
             if (Character.isDigit(s.charAt(j))) {
                 return true;
             }
@@ -59,5 +83,100 @@ public static boolean hasNumber(String s) {
         return false;
     }
     
+    /**
+     * Takes a hashtable of HTML Form input name/value pairs and checks if any 
+     * are null (i.e., that the form hasn't been submitted.)x
+     * @param params hashtable of HTML Form input name/value pairs.
+     * @return true if form submitted, false otherwise.
+     */
+    public static boolean isFormSubmitted(final HashMap<String, String> params)
+    {
+        for (String value : params.values())
+            if (value == null)
+                return false;
+        
+        return true;
+    }
     
+    /**
+     * Takes a hashtable of HTML Form input name/value pairs and checks if any 
+     * any are blank. Assumes already checked that none are null using isFormSubmitted
+     * @param params hashtable of HTML Form input name/value pairs.
+     * @return true if form submitted, false otherwise.
+     */
+    public static boolean hasBlankFields(final HashMap<String, String> params)
+    {
+        for (String value : params.values())
+            if (value.equals(""))
+                return true;
+        
+        return false;
+    }
+
+    public static void printErrorMessage(final PrintWriter out, final HtmlBuilder.ERRORS error)
+    {
+        switch (error)
+        {
+            case INVALID_BLANK:         
+                out.println("<font color=red><b>All fields are required</b></font><br/>");
+                break;
+                
+            case INVALID_CASH:
+                out.println("<font color=red><b>Please enter a valid value for cash held</b></font><br/>");
+                break;
+                
+            case INVALID_USERNAME_TEXT:
+                out.println("<font color=red><b>User Name can only contain alphabets</b></font><br/>");
+                break;
+            
+            case INVALID_USERNAME_MAX:
+                out.println("<font color=red><b>User Name must be shorter than 40 characters</b></font><br/>");
+                break;
+            
+            case INVALID_TOTAL_SHARES:
+                out.println("<font color=red><b>Please enter a valid value for total shares</b></font><br/>");
+                break;
+                
+            case INVALID_MARKET_CAP:
+                out.println("<font color=red><b>Please enter a valid value for market cap</b></font><br/>");
+                break;
+                
+            case USER_EXISTS:
+                out.println("<font color=red><b>That user ID already exists, please try again with another user id.</b></font><br/>");
+                break;
+                
+            case SCRIP_EXISTS:
+                out.println("<font color=red><b>That scrip ID already exists, please try again with another scrip id!</b></font><br/>");
+                break;
+                
+            case INVALID_USERID_MIN:
+                out.println("<font color=red><b>User IDs must be at least 3 characters long</b></font><br/>");
+                break;
+            
+            case INVALID_USERID_MAX:
+                out.println("<font color=red><b>User IDs must be shorter than 16 characters</b></font><br/>");
+                break;
+                
+            case INVALID_SCRIPNAME_MAX:
+                out.println("<font color=red><b>Scrip names must be shorter than 40 characters</b></font><br/>");
+                break;
+                
+            case INVALID_SCRIPID_MIN:
+                out.println("<font color=red><b>Scrip IDs must be at least 3 characters long</b></font><br/>");
+                break;
+            
+            case INVALID_SCRIPID_MAX:
+                out.println("<font color=red><b>Scrip IDs must be shorter than 16 characters</b></font><br/>");
+                break;
+                
+            case INVALID_PASSWORD_MIN:
+                out.println("<font color=red><b>Passwords must be at least 3 characters long</b></font><br/>");
+                break;
+            
+            case INVALID_PASSWORD_MAX:
+                out.println("<font color=red><b>Passwords must be shorter than 16 characters</b></font><br/>");
+                break;
+            
+        }
+    }
 }

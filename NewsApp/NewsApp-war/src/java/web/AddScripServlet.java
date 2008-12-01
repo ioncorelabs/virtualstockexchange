@@ -53,56 +53,68 @@ public class AddScripServlet extends HttpServlet {
         parameterMap.put("scripid",             request.getParameter("scripid"));
         parameterMap.put("scripname",           request.getParameter("scripname"));
         parameterMap.put("totalshares",         request.getParameter("totalshares"));
-        parameterMap.put("marketcap",       request.getParameter("marketcap"));
+        parameterMap.put("marketcap",           request.getParameter("marketcap"));
         
-        boolean errored = false;
-        boolean erroredNumNull = false;
-        boolean erroredNumType = false;
+        boolean erroredScripExists = false;
+        boolean erroredScripNameMax = false;
+        boolean erroredBlankFields = false;
+        boolean erroredNumTotalShares = false;
+        boolean erroredNumMarketCap = false;
+        boolean erroredScripIDMin = false;
+        boolean erroredScripIDMax = false;
         int numInttshare = 0;
         int numIntpshare = 0;
         
-        if (formSubmitted(parameterMap)) {
+        if (HtmlBuilder.isFormSubmitted(parameterMap)) {
             
-            if((parameterMap.get("scripid").equals("")) || (parameterMap.get("scripname").equals("")) || (parameterMap.get("totalshares").equals("")) || (parameterMap.get("marketcap").equals(""))){
-                erroredNumNull = true;
+            if(HtmlBuilder.hasBlankFields(parameterMap)) {
+                erroredBlankFields = true;
             }else{
-                try{numInttshare = Integer.parseInt(parameterMap.get("totalshares"));
-                    numIntpshare = Integer.parseInt(parameterMap.get("marketcap"));
-                } catch(NumberFormatException e) {
-                    erroredNumType = true;
+                try{ numInttshare = Integer.parseInt(parameterMap.get("totalshares")); } 
+                catch(NumberFormatException e) { erroredNumTotalShares = true; }
+                
+                try { numIntpshare = Integer.parseInt(parameterMap.get("marketcap")); }
+                catch(NumberFormatException e) { erroredNumMarketCap = true; }
+            }
+            if(!erroredNumTotalShares && numInttshare<0) {
+                erroredNumTotalShares = true;
+            }
+            if(!erroredNumMarketCap && numIntpshare<0) {
+                erroredNumMarketCap = true;
+            }
+            
+            // check field lengths for overflow attacks.
+            if (parameterMap.get("scripname").length() > 40)
+                erroredScripNameMax = true;
+            if (parameterMap.get("scripid").length() < 3)
+                erroredScripIDMin = true;
+            if (parameterMap.get("scripid").length() > 16)
+                erroredScripIDMax = true;
+            
+            if (!erroredBlankFields && !erroredNumTotalShares && !erroredNumMarketCap && 
+                !erroredScripNameMax && !erroredScripIDMin && !erroredScripIDMax)
+            {
+                int totalSharesInt              = Integer.parseInt(parameterMap.get("totalshares"));
+                double marketCapDbl             = Double.parseDouble(parameterMap.get("marketcap"));
+                double pricePerShareDbl         = marketCapDbl / (double)totalSharesInt;
+
+                ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
+                if (scripsEntityFacade.find(parameterMap.get("scripid")) != null) {
+                    erroredScripExists = true;
+                } else {
+                    ScripsExchangeEntity scripsEntity =  new ScripsExchangeEntity(parameterMap.get("scripid"), parameterMap.get("scripname"),
+                            totalSharesInt, totalSharesInt, marketCapDbl, pricePerShareDbl);
+
+                    scripsEntityFacade.create(scripsEntity);
+                    response.sendRedirect("AdminServlet");
+                    return;
                 }
             }
-            if(!erroredNumType && ((numInttshare<0) || (numIntpshare<0))) {
-                erroredNumType = true;
-            }
-            
-            if(!erroredNumNull && !erroredNumType)
-            {
-               
-              
-            
-            int totalSharesInt              = Integer.parseInt(parameterMap.get("totalshares"));
-            double marketCapDbl             = Double.parseDouble(parameterMap.get("marketcap"));
-            double pricePerShareDbl         = marketCapDbl / (double)totalSharesInt;
-            
-            ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
-            if (scripsEntityFacade.find(parameterMap.get("scripid")) != null) {
-                errored = true;
-            } else {
-                ScripsExchangeEntity scripsEntity =  new ScripsExchangeEntity(parameterMap.get("scripid"), parameterMap.get("scripname"),
-                        totalSharesInt, totalSharesInt, marketCapDbl, pricePerShareDbl);
-                
-                scripsEntityFacade.create(scripsEntity);
-                response.sendRedirect("AdminServlet");
-                return;
-            }
-            }
-            
-            
-            
         }
         
-        printForm(out, request, response, errored, erroredNumNull, erroredNumType);
+        printForm(out, request, response, 
+                    erroredScripExists, erroredBlankFields, erroredNumTotalShares, erroredNumMarketCap, 
+                    erroredScripNameMax, erroredScripIDMin, erroredScripIDMax);
     }
     
     private boolean isInvalidSession(final HttpSession session) {
@@ -112,23 +124,33 @@ public class AddScripServlet extends HttpServlet {
                 !((String)session.getAttribute("userrole")).equals("a");
     }
     
-    private boolean formSubmitted(HashMap<String, String> parameterMap) {
-        for (String value : parameterMap.values())
-            if (value == null)
-                return false;
-        
-        return true;
-    }
-    
-    private void printForm(PrintWriter out, final HttpServletRequest request, final HttpServletResponse response, final boolean errored, final  boolean erroredNumNull, final  boolean erroredNumType) throws IOException {
+    private void printForm(PrintWriter out, final HttpServletRequest request, final HttpServletResponse response, 
+                    final boolean erroredScripExists, 
+                    final boolean erroredNumNull, 
+                    final boolean erroredNumTotalShares, 
+                    final boolean erroredNumMarketCap,
+                    final boolean erroredScripNameMax, 
+                    final boolean erroredScripIDMin, 
+                    final boolean erroredScripIDMax) throws IOException 
+    {
         out.println(HtmlBuilder.buildHtmlHeader("Add Scrip"));
         out.println("<span class=\"ttitle\" style=\"580px;\">Add Scrip Form</span><br>");
-        if (errored)
-            out.println("<font color=red><b>That scrip ID already exists, stupid head!</b></font><br>");
+        
+        if (erroredScripExists)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.SCRIP_EXISTS);
         if (erroredNumNull)
-            out.println("<br><font color=red><b>All fields are required</b></font><br><br>");
-        if (erroredNumType)
-            out.println("<br><font color=red><b>Error in fields related to shares</b></font><br><br>");
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_BLANK);
+        if (erroredNumTotalShares)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_TOTAL_SHARES);
+        if (erroredNumMarketCap)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_MARKET_CAP);
+        if (erroredScripNameMax)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_SCRIPNAME_MAX);
+        if (erroredScripIDMin)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_SCRIPID_MIN);
+        if (erroredScripIDMax)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_SCRIPID_MAX);
+        
         out.println("<form>");
         
         out.println("<table width=350px cellpadding=4px>");

@@ -8,14 +8,10 @@ package web;
 
 import ejb.ScripsExchangeEntity;
 import ejb.ScripsExchangeEntityFacadeLocal;
-import ejb.ScripsUserEntityFacadeLocal;
 import ejb.TransactionHistoryEntity;
 import ejb.UsersEntity;
-import ejb.UsersEntityFacade;
 import ejb.UsersEntityFacadeLocal;
-import ejb.VSEGenericException;
 import java.io.*;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;

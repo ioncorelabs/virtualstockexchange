@@ -102,6 +102,17 @@
         <servlet-name>ReUserServlet</servlet-name>
         <servlet-class>web.ReUserServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+	    <servlet-name>ServletRedirector</servlet-name>
+	    <servlet-class>org.apache.cactus.server.ServletTestRedirector</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+	    <servlet-name>ServletRedirector</servlet-name>
+	    <url-pattern>/ServletRedirector</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>ListNews</servlet-name>
         <url-pattern>/ListNews</url-pattern>
