@@ -83,13 +83,15 @@ public class BuyToCoverTransactionMessage implements MessageListener {
             int lent = see.getTotalSharesLent();
             see.setTotalSharesLent(lent-num);
             
+            the.setPricePerShare(see.getPricePerShare());
+            
             //Share price value reset, using marketcap/totalshares
             double newprice = (see.getMarketCap())/(see.getTotalAvailable() - num + see.getTotalSharesLent());
             see.setPricePerShare(newprice);
-                
-            seef.edit(see); 
+            see.setChange(1);
             
-            the.setPricePerShare(see.getPricePerShare());
+            seef.edit(see);             
+            
         } else{//TODO: Raise exception, Scrip not found
             
         }

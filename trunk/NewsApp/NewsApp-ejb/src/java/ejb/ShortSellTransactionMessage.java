@@ -83,13 +83,15 @@ public class ShortSellTransactionMessage implements MessageListener {
             int avail = see.getTotalAvailable();
             see.setTotalAvailable(avail+num);
             
+            the.setPricePerShare(see.getPricePerShare());
+             
             //Share price value reset, using marketcap/totalshares
             double newprice = (see.getMarketCap())/(avail + num + see.getTotalSharesLent());
             see.setPricePerShare(newprice);            
-                
-            seef.edit(see); 
+            see.setChange(2);
             
-            the.setPricePerShare(see.getPricePerShare());
+            seef.edit(see); 
+                       
         } else{//TODO: Raise exception, Scrip not found
             
         }
