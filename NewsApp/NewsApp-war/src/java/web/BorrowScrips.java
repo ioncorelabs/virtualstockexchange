@@ -78,7 +78,7 @@ public class BorrowScrips extends HttpServlet {
             
             List scrip = lookupExchangeEntityEntityFacade.findScripById(scripId);
             
-            if((((ScripsExchangeEntity)scrip.get(0)).getTotalAvailable() - ((ScripsExchangeEntity)scrip.get(0)).getTotalSharesLent()) < Integer.parseInt(num)) {
+             if((((ScripsExchangeEntity)scrip.get(0)).getTotalAvailable() - ((ScripsExchangeEntity)scrip.get(0)).getTotalSharesLent() - Integer.parseInt(num)) <= ((int)(((ScripsExchangeEntity)scrip.get(0)).getTotalShares()*.2))) {
                 errorcode = 1;
             }
             //Cannot borrow more than 10% of initial release of shares
@@ -114,6 +114,9 @@ public class BorrowScrips extends HttpServlet {
                     messageProducer.send(message);
                     messageProducer.close();
                     connection.close();
+                    
+                    appSession.setAttribute("message", num+" shares " +
+                            "of "+((ScripsExchangeEntity)scrip.get(0)).getScripName()+" were successfully borrowed");                    
                     
                     //Redirecting depending on the role of the user
                     if(appSession.getAttribute("userrole").equals("t")) {
@@ -158,7 +161,7 @@ public class BorrowScrips extends HttpServlet {
         
         if (errorcode == 1) {
             out.println("<br><font color=red><b>You are attempting to borrow more " +
-                    "shares than available with the Exchange, please try again." +
+                    "shares than curently available for transactions, please try again." +
                     "</b></font><br><br>");
         }
         

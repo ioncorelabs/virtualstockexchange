@@ -54,7 +54,7 @@ public class TraderTradeSuccess extends HttpServlet {
         //Common Ends
         
         
-        out.println("<br><br><h4><p align=center>Your trade was successfully executed<br><br> Please click " +
+        out.println("<br><br><h4><p align=center><br>"+session.getAttribute("message")+ "<br><br>Please click " +
                 "<a href=\"TraderHome\">here</a> to return to menu.</p> </h4>");
         
                        //Common Starts
