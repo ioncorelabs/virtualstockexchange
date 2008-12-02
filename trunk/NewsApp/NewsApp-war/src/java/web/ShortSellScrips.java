@@ -126,6 +126,9 @@ public class ShortSellScrips extends HttpServlet {
                         messageProducer.close();
                         connection.close();
                         
+                        appSession.setAttribute("message", num+" shares " +
+                                "of "+elem.getScripId()+" were successfully short sold");
+                                                
                         //Redirecting depending on the role of the user
                         if(appSession.getAttribute("userrole").equals("t")) {
                             response.sendRedirect("TraderTradeSuccess");

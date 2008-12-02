@@ -105,7 +105,7 @@ public class BuyScrips extends HttpServlet {
             
             double pricePerShare = ((ScripsExchangeEntity)scrip.get(0)).getPricePerShare();
             
-            if((((ScripsExchangeEntity)scrip.get(0)).getTotalAvailable() - ((ScripsExchangeEntity)scrip.get(0)).getTotalSharesLent()) < Integer.parseInt(num)) {
+            if((((ScripsExchangeEntity)scrip.get(0)).getTotalAvailable() - ((ScripsExchangeEntity)scrip.get(0)).getTotalSharesLent() - Integer.parseInt(num)) <= ((int)(((ScripsExchangeEntity)scrip.get(0)).getTotalShares()*.2))){
                 errorcode = 1;
             } else if(((UsersEntity)user.get(0)).getCashHeld() < (pricePerShare*(Integer.parseInt(num)))) {
                 errorcode = 2;
@@ -147,6 +147,8 @@ public class BuyScrips extends HttpServlet {
                     messageProducer.close();
                     connection.close();
                     
+                    appSession.setAttribute("message", num+" shares " +
+                            "of "+((ScripsExchangeEntity)scrip.get(0)).getScripName()+" were successfully purchased");
                     //Redirecting depending on the role of the user
                     if(appSession.getAttribute("userrole").equals("t")) {
                         response.sendRedirect("TraderTradeSuccess");
@@ -174,7 +176,7 @@ public class BuyScrips extends HttpServlet {
         
         if (errorcode == 1) {
             out.println("<br><font color=red><b>You are attempting to buy more " +
-                    "shares than available with the Exchange, please try again." +
+                    "shares than curently available for transactions, please try again." +
                     "</b></font><br><br>");
         }
         

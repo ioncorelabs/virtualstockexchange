@@ -106,8 +106,10 @@ public class AddScripServlet extends HttpServlet {
                             totalSharesInt, totalSharesInt, marketCapDbl, pricePerShareDbl);
 
                     scripsEntityFacade.create(scripsEntity);
-                    response.sendRedirect("AdminServlet");
-                    return;
+                    
+                    session.setAttribute("message", parameterMap.get("scripid")+" was successfully added to the exchange");
+                   
+                    response.sendRedirect("AdminSuccessServlet");
                 }
             }
         }

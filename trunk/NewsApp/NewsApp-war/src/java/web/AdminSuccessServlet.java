@@ -1,5 +1,5 @@
 /*
- * InvestorTradeSuccess.java
+ * AdminSuccessServlet.java
  *
  * Created on November 1, 2008, 2:02 PM
  */
@@ -17,7 +17,7 @@ import javax.servlet.http.*;
  * @author Vaibhav
  * @version
  */
-public class InvestorTradeSuccess extends HttpServlet {
+public class AdminSuccessServlet extends HttpServlet {
     
     /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -37,7 +37,7 @@ public class InvestorTradeSuccess extends HttpServlet {
         PrintWriter out = response.getWriter();        
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Virtual Stock Exchance: Trade Successful</title>");
+        out.println("<title>Virtual Stock Exchance: Admin Activity Successful</title>");
         out.println("</head>");
         out.println("<body>");
                 //Common Styling Code
@@ -52,9 +52,9 @@ public class InvestorTradeSuccess extends HttpServlet {
         out.println("<div class=\"main-text\">");
         //Common Ends
         out.println("<br><br><h4><p align=center><br>"+session.getAttribute("message")+ "<br><br>Please click " +
-                "<a href=\"TraderHome\">here</a> to return to menu.</p> </h4>");
+                "<a href=\"AdminServlet\">here</a> to return to menu.</p> </h4>");
         
-                //Common Starts
+        //Common Starts
         out.println("</div></div>");
         out.println("<div class=\"clear\"></div>");        
         out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
@@ -71,7 +71,7 @@ public class InvestorTradeSuccess extends HttpServlet {
         return  session.isNew() || 
                 session.getAttribute("userid") == null || 
                 session.getAttribute("userrole") == null || 
-                !((String)session.getAttribute("userrole")).equals("i");
+                !((String)session.getAttribute("userrole")).equals("a");
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

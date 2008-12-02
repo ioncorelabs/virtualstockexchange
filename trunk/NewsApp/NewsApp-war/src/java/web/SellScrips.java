@@ -78,7 +78,7 @@ public class SellScrips extends HttpServlet {
             erroredNumType = true;
         }
         
-        if ((num!=null) && (!erroredNumNull) && (!erroredNumType)) {            
+        if ((num!=null) && (!erroredNumNull) && (!erroredNumType)) {
             
             String strButtonIndex =  request.getParameter("button");
             
@@ -126,6 +126,9 @@ public class SellScrips extends HttpServlet {
                         messageProducer.send(message);
                         messageProducer.close();
                         connection.close();
+                        
+                        appSession.setAttribute("message", num+" shares " +
+                                "of "+elem.getScripId()+" were successfully sold");
                         
                         //Redirecting depending on the role of the user
                         if(appSession.getAttribute("userrole").equals("t")) {
