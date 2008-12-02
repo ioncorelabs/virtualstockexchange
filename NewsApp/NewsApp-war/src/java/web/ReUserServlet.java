@@ -9,6 +9,7 @@ package web;
 import ejb.*;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -44,6 +45,7 @@ public class ReUserServlet extends HttpServlet {
         }
         
         String selfid = (String)session.getAttribute("userid");
+        System.out.println("At admin page as user '" + selfid + "'");
         
         String userid = request.getParameter("userid");
         UsersEntityFacadeLocal usersEntityFacade = (UsersEntityFacadeLocal) lookupUsersEntityFacade();
@@ -53,9 +55,7 @@ public class ReUserServlet extends HttpServlet {
             UsersEntity user = usersEntityFacade.find(userid);
             user.setActive('y');                        
             usersEntityFacade.edit(user);
-            
-            session.setAttribute("message", user.getUserName()+" was successfully reactivated");
-            response.sendRedirect("AdminSuccessServlet"); 
+            response.sendRedirect("AdminServlet"); 
         }
         
         List users = usersEntityFacade.findAllInActive();
@@ -65,9 +65,9 @@ public class ReUserServlet extends HttpServlet {
     private void printForm(final List users, final HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Reactivate User"));
-        out.println("<span class=\"ttitle\" style=\"580px;\">Reactivate User Form</span><br>");
+        out.println("<span class=\"ttitle\" style=\"580px;\">Deactivate User Form</span><br>");
         
-        out.println("<form>");
+        out.println("<form method=post>");
         out.println("User Id: <select name='userid'>");
                 
         for (Iterator it = users.iterator(); it.hasNext();)
@@ -98,10 +98,14 @@ public class ReUserServlet extends HttpServlet {
      * @param request servlet request
      * @param response servlet response
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        if (request.getQueryString() != null)
+            response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
+        else
+            processRequest(request, response);
     }
+    
     
     /** Handles the HTTP <code>POST</code> method.
      * @param request servlet request
@@ -130,3 +134,4 @@ public class ReUserServlet extends HttpServlet {
     }
     
 }
+

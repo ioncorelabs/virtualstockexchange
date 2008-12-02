@@ -122,7 +122,7 @@ public class EditUserServlet extends HttpServlet {
         
         for (Iterator it = users.iterator(); it.hasNext();) {
             UsersEntity user = (UsersEntity)it.next();
-            out.println("<form>");
+            out.println("<form method=post>");
             out.println("<tr><td>" + user.getUserId() + "<input type='hidden' name='userid' value='" + user.getUserId() + "'></td>");
             out.println("<td><input type='text' name='username' value='" + user.getUserName() + "'></td>");
             out.println("<td><input type='text' name='cashheld' value='" + _nf.format(user.getCashHeld())+ "'></td>");
@@ -154,7 +154,10 @@ public class EditUserServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        if (request.getQueryString() != null)
+            response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
+        else
+            processRequest(request, response);
     }
     
     /** Handles the HTTP <code>POST</code> method.

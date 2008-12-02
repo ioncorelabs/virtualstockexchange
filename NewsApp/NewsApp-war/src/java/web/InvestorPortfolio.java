@@ -18,6 +18,7 @@ import java.io.*;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,6 +29,7 @@ import javax.naming.NamingException;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+import web.utils.HtmlBuilder;
 
 /**
  *
@@ -134,9 +136,9 @@ public class InvestorPortfolio extends HttpServlet {
             final List userscrips) {
         
         out.println("All of My Scrips:<br/>");
-        out.println("<table width=750px border=1>");
-        out.println("<tr><td width=70px><b>Scrip ID</b></td><td><b>Current Value</b></td><td><b>Net income/loss</b></td><td><b>Shares Held</b></td><td><b>Total Shares</b></td>");
-        out.println("<td><b>Total Shares Available</b></td><td><b>Market Cap</b></td><td><b>Price Per Share</b></td></tr>");
+        out.println("<table width=685px border=1>");
+        out.println("<tr><td width=70px><b>Scrip ID</b></td><td><b>Current Value</b></td><td><b>Net income/loss</b></td><td><b>Shares Held</b></td>");
+        out.println("<td><b>Price Per Share</b></td></tr>");
         
         _portfolioTotal = 0.0;
         _portfolioDifference = 0.0;
@@ -172,9 +174,6 @@ public class InvestorPortfolio extends HttpServlet {
             out.println("<td>" + _numberFormat.format(currentValue) + "</td>");
             out.println("<td>" + _numberFormat.format(changeValue) + "</td>");
             out.println("<td>" + scripuser.getSharesHeld() + "</td>");
-            out.println("<td>" + myscripsEntity.getTotalShares()+ "</td>");
-            out.println("<td>" + myscripsEntity.getTotalAvailable()+ "</td>");
-            out.println("<td>" + _numberFormat.format(myscripsEntity.getMarketCap()) + "</td>");
             out.println("<td>" + _numberFormat.format(myscripsEntity.getPricePerShare()) + "</td>");
             out.println("</tr>");
         }
@@ -185,7 +184,7 @@ public class InvestorPortfolio extends HttpServlet {
         
         
         out.println("All of My Transactions:<br/>");
-        out.println("<table width=700px border=1>");
+        out.println("<table width=685px border=1>");
         out.println("<tr><td width=70px><b>Scrip ID</b></td><td><b>Transaction Type</b></td><td><b>Total Shares Bought/Sold</b></td>");
         out.println("<td><b>Price when Bought/Sold</b></td><td><b>Date of Transaction</b></td></tr>");
         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
@@ -249,10 +248,17 @@ public class InvestorPortfolio extends HttpServlet {
      * @param request servlet request
      * @param response servlet response
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    
+     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
+       
+          if (request.getQueryString() != null)
+            response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
+        else
+            processRequest(request, response);
     }
+    
     
     /** Handles the HTTP <code>POST</code> method.
      * @param request servlet request
@@ -270,3 +276,4 @@ public class InvestorPortfolio extends HttpServlet {
     }
     // </editor-fold>
 }
+

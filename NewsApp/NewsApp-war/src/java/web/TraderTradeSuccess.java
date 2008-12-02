@@ -8,9 +8,11 @@ package web;
 
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+import web.utils.HtmlBuilder;
 
 /**
  *
@@ -54,7 +56,7 @@ public class TraderTradeSuccess extends HttpServlet {
         //Common Ends
         
         
-        out.println("<br><br><h4><p align=center><br>"+session.getAttribute("message")+ "<br><br>Please click " +
+        out.println("<br><br><h4><p align=center>Your trade was successfully executed<br><br> Please click " +
                 "<a href=\"TraderHome\">here</a> to return to menu.</p> </h4>");
         
                        //Common Starts
@@ -84,8 +86,12 @@ public class TraderTradeSuccess extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+         if (request.getQueryString() != null)
+            response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
+        else
+            processRequest(request, response);
     }
+    
     
     /** Handles the HTTP <code>POST</code> method.
      * @param request servlet request
@@ -103,3 +109,4 @@ public class TraderTradeSuccess extends HttpServlet {
     }
     // </editor-fold>
 }
+

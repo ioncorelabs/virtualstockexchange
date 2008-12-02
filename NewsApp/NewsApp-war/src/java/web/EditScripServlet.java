@@ -133,7 +133,7 @@ public class EditScripServlet extends HttpServlet {
         for (Iterator it = scrips.iterator(); it.hasNext();)
         {
             ScripsExchangeEntity scrip = (ScripsExchangeEntity)it.next();
-            out.println("<form>");
+            out.println("<form method=post>");
             out.println("<tr><td>" + scrip.getScripId() + "<input type='hidden' name='scripid' value='" + scrip.getScripId() + "'></td>");
             out.println("<td><input type='text' name='scripname' value='" + scrip.getScripName() + "' size=10 maxlength=20></td>");
             out.println("<td><input type='text' name='totalshares' value='" + scrip.getTotalShares()+ "' size=10 maxlength=20></td>");
@@ -166,7 +166,10 @@ public class EditScripServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        if (request.getQueryString() != null)
+            response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
+        else
+            processRequest(request, response);
     }
     
     /** Handles the HTTP <code>POST</code> method.

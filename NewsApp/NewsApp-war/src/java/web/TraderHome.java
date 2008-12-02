@@ -8,6 +8,7 @@ package web;
 
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -86,8 +87,13 @@ public class TraderHome extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
+      if (request.getQueryString() != null)
+            response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
+        else
+            processRequest(request, response);
     }
+    
     
     /** Handles the HTTP <code>POST</code> method.
      * @param request servlet request
@@ -105,3 +111,4 @@ public class TraderHome extends HttpServlet {
     }
     // </editor-fold>
 }
+

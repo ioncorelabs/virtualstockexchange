@@ -12,6 +12,7 @@ import ejb.ScripsShortedEntity;
 import ejb.ScripsShortedEntityFacadeLocal;
 import ejb.TransactionHistoryEntity;
 import java.io.*;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -30,6 +31,7 @@ import javax.naming.NamingException;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+import web.utils.HtmlBuilder;
 
 /**
  *
@@ -125,9 +127,6 @@ public class BuyToCoverScrips extends HttpServlet {
                         messageProducer.close();
                         connection.close();
                         
-                        appSession.setAttribute("message", num+" shares " +
-                                "of "+elem.getScripId()+" were successfully covered");
-                        
                         //Redirecting depending on the role of the user
                         if(appSession.getAttribute("userrole").equals("t")) {
                             response.sendRedirect("TraderTradeSuccess");
@@ -186,9 +185,9 @@ public class BuyToCoverScrips extends HttpServlet {
             out.println("<br><font color=red><b>Please enter a valid value for number of scrips to short sell</b></font><br><br>");
         
         
-        out.println("<form>");
         
-        out.println("<form  action=ListScrips onSubmit=initializeRadio() >");
+        
+        out.println("<form  action=ListScrips onSubmit=initializeRadio() method=post >");
         out.println("<br><table border=1 align=center>");
         out.println("<tr><td align =left>Name of the Scrip</td><td>Number of Shares Borrowed</td><td>Number of Shares Shorted</td><td>Number of Shares Returned</td><td>Status</td><td>&nbsp;</td></tr>");
         Vector vec = new Vector();
@@ -249,10 +248,16 @@ public class BuyToCoverScrips extends HttpServlet {
      * @param request servlet request
      * @param response servlet response
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
+        
+          if (request.getQueryString() != null)
+            response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
+        else
+            processRequest(request, response);
     }
+    
     
     /** Handles the HTTP <code>POST</code> method.
      * @param request servlet request
@@ -290,3 +295,4 @@ public class BuyToCoverScrips extends HttpServlet {
         }
     }
 }
+
