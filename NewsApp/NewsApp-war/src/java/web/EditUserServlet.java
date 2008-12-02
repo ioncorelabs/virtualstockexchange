@@ -37,7 +37,8 @@ public class EditUserServlet extends HttpServlet {
      * @param response servlet response
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+    throws ServletException, IOException 
+    {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession(true);
@@ -56,44 +57,37 @@ public class EditUserServlet extends HttpServlet {
         
         UsersEntityFacadeLocal usersEntityFacade = (UsersEntityFacadeLocal) lookupUsersEntityFacade();
         
-        boolean erroredNumNull = false;
+        boolean erroredBlankFields = false;
         boolean erroredNumType = false;
         boolean erroredUserName = false;
-        int numInt = 0;
+        double numDbl = 0;
         
-        if (formSubmitted(parameterMap)) {
-            
-            if((parameterMap.get("userid").equals("")) || (parameterMap.get("username").equals("")) || (parameterMap.get("cashheld").equals(""))){
-                erroredNumNull = true;
-            }else{
-                try{numInt = Integer.parseInt( parameterMap.get("cashheld").replace(".","") );} catch(NumberFormatException e) {
-                    erroredNumType = true;
-                }
+        if (HtmlBuilder.isFormSubmitted(parameterMap))
+        {
+            if (HtmlBuilder.hasBlankFields(parameterMap)) {
+                erroredBlankFields = true;
+            } else {
+                try{numDbl = Double.parseDouble(parameterMap.get("cashheld")); } 
+                catch(NumberFormatException e) { erroredNumType = true; }
             }
-            if(!erroredNumType && (numInt<0)) {
+            if (!erroredNumType && (numDbl <= 0.0))
                 erroredNumType = true;
-            }
-            if(HtmlBuilder.hasNumber(parameterMap.get("username"))) {
+            if(HtmlBuilder.hasNumber(parameterMap.get("username")))
                 erroredUserName = true;
-            }
             
-            
-            
-            if((!erroredNumNull) && (!erroredNumType) && (!erroredUserName)) {
-                
-                
+            if((!erroredBlankFields) && (!erroredNumType) && (!erroredUserName)) 
+            {
                 UsersEntity user = usersEntityFacade.find(parameterMap.get("userid"));
                 user.setUserName(parameterMap.get("username"));
                 user.setCashHeld(Double.parseDouble(parameterMap.get("cashheld")));
                 
                 usersEntityFacade.edit(user);
                 response.sendRedirect("AdminServlet");
-                
             }
         }
         
         List users = usersEntityFacade.findAllActive();
-        printForm(request, response, users, erroredNumNull, erroredNumType, erroredUserName);
+        printForm(request, response, users, erroredBlankFields, erroredNumType, erroredUserName);
     }
     
     private boolean isInvalidSession(final HttpSession session) {
@@ -103,20 +97,12 @@ public class EditUserServlet extends HttpServlet {
                 !((String)session.getAttribute("userrole")).equals("a");
     }
     
-    private boolean formSubmitted(HashMap<String, String> pm) {
-        for (String value : pm.values())
-            if (value == null)
-                return false;
-        
-        return true;
-    }
-    
-    private void printForm(final HttpServletRequest request, final HttpServletResponse response, List users, final boolean erroredNumNull, final boolean erroredNumType, final boolean erroredUserName) throws IOException {
+    private void printForm(final HttpServletRequest request, final HttpServletResponse response, List users, final boolean erroredBlankFields, final boolean erroredNumType, final boolean erroredUserName) throws IOException {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Edit User"));
         
         out.println("<span class=\"ttitle\" style=\"580px;\">Edit User Form</span><br>");
-        if (erroredNumNull)
+        if (erroredBlankFields)
             out.println("<br><font color=red><b>All fields are required</b></font><br><br>");
         if (erroredNumType)
             out.println("<br><font color=red><b>Please enter a valid value for cash held</b></font><br><br>");

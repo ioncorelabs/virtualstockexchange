@@ -59,17 +59,44 @@ public class EditScripServlet extends HttpServlet {
         
         ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
             
-        if (formSubmitted(parameterMap))
+        if (HtmlBuilder.isFormSubmitted(parameterMap))
         {   
-            ScripsExchangeEntity scrip = scripsEntityFacade.find(parameterMap.get("scripid"));
+            boolean erroredBlankFields = false;
+            boolean erroredNumType = false;
+            boolean erroredUserName = false;
+            int intTotalShares = 0;
+            int intTotalSharesAvail = 0;
+            double dblTotalShares = 0;
             
-            scrip.setScripName(parameterMap.get("scripname"));
-            scrip.setTotalShares(Integer.parseInt(parameterMap.get("totalshares")));
-            scrip.setTotalAvailable(Integer.parseInt(parameterMap.get("totalsharesavailable")));
-            scrip.setMarketCap(Double.parseDouble(parameterMap.get("marketcap")));          
+            if (HtmlBuilder.hasBlankFields(parameterMap)) {
+                erroredBlankFields = true;
+            } else {
+                try{intTotalShares = Integer.parseInt(parameterMap.get("totalshares")); } 
+                catch(NumberFormatException e) { erroredNumType = true; }
+                
+                try{intTotalSharesAvail = Integer.parseInt(parameterMap.get("totalsharesavailable")); } 
+                catch(NumberFormatException e) { erroredNumType = true; }
+                
+                try{dblTotalShares = Double.parseDouble(parameterMap.get("marketcap")); } 
+                catch(NumberFormatException e) { erroredNumType = true; }
+            }
+            if (!erroredNumType && (intTotalShares <= 0 || intTotalSharesAvail <= 0 || dblTotalShares <= 0.0))
+                erroredNumType = true;
+            if(HtmlBuilder.hasNumber(parameterMap.get("username")))
+                erroredUserName = true;
             
-            scripsEntityFacade.edit(scrip);
-            response.sendRedirect("AdminServlet"); 
+            if((!erroredBlankFields) && (!erroredNumType) && (!erroredUserName)) 
+            {
+                ScripsExchangeEntity scrip = scripsEntityFacade.find(parameterMap.get("scripid"));
+
+                scrip.setScripName(parameterMap.get("scripname"));
+                scrip.setTotalShares(Integer.parseInt(parameterMap.get("totalshares")));
+                scrip.setTotalAvailable(Integer.parseInt(parameterMap.get("totalsharesavailable")));
+                scrip.setMarketCap(Double.parseDouble(parameterMap.get("marketcap")));          
+
+                scripsEntityFacade.edit(scrip);
+                response.sendRedirect("AdminServlet"); 
+            }
         }
         
         List scrips = scripsEntityFacade.findAll();
