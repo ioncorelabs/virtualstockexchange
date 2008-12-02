@@ -134,7 +134,7 @@ public class AddScripServlet extends HttpServlet {
                     final boolean erroredScripIDMax) throws IOException 
     {
         out.println(HtmlBuilder.buildHtmlHeader("Add Scrip"));
-        out.println("<span class=\"ttitle\" style=\"580px;\">Add Scrip Form</span><br>");
+        out.println("<span class=\"ttitle\" style=\"580px;\"><center><br>Add Scrip Form</span><br><br>");
         
         if (erroredScripExists)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.SCRIP_EXISTS);
@@ -153,7 +153,7 @@ public class AddScripServlet extends HttpServlet {
         
         out.println("<form method=post>");
         
-        out.println("<table width=350px cellpadding=4px>");
+        out.println("<table width=350px cellpadding=4px border=1>");
         out.println("<tr><td width=150px>Scrip Id:</td><td><input type='text' name='scripid'></td></tr>");
         out.println("<tr><td>Scrip Name:</td><td><input type='text' name='scripname'></td></tr>");
         out.println("<tr><td>Total Shares:</td><td><input type='text' name='totalshares'></td></tr>");
@@ -162,7 +162,7 @@ public class AddScripServlet extends HttpServlet {
         
         out.println("<input type='submit' value='Add Scrip'>   ");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
-        out.println("</form>");
+        out.println("</form></center>");
         
         out.println(HtmlBuilder.buildHtmlFooter());
         out.close();

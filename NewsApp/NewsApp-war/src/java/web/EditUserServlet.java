@@ -104,7 +104,7 @@ public class EditUserServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Edit User"));
         
-        out.println("<span class=\"ttitle\" style=\"580px;\">Edit User Form</span><br><br>");
+        out.println("<span class=\"ttitle\" style=\"580px;\"><center>Edit User Form</span><br><br>");
         if (erroredBlankFields)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_BLANK);
         if (erroredNumType)
@@ -130,8 +130,8 @@ public class EditUserServlet extends HttpServlet {
             out.println("</form>");
         }
         
-        out.println("</table><br>");
-        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
+        out.println("</table>");
+        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/></center>");
         
         out.println(HtmlBuilder.buildHtmlFooter());
         out.close();

@@ -46,7 +46,7 @@ public class AdminServlet extends HttpServlet {
         out.println("</div>");
         
         out.println("<div class=\"main-content\">");
-        out.println("Choose from the menu options at left to do super awesome things like Add, Edit, Enable people and scrips.");
+        out.println("The administrative menu on the left gives you full control over the Virtual Stock Exchange. Choose from the menu options to do super awesome things like Add, Edit, Enable people and scrips. ");
         out.println("</div><br>");
         
         out.println("<div id=\"menius\">");

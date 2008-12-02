@@ -132,7 +132,7 @@ public class AddUserServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Add User"));
         
-        out.println("<span class=\"ttitle\" style=\"580px;\">Add User Form</span><br>");
+        out.println("<span class=\"ttitle\" style=\"580px;\"><center><br>Add User Form</span><br><br>");
         
         if (erroredUserExists)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.USER_EXISTS);
@@ -154,7 +154,7 @@ public class AddUserServlet extends HttpServlet {
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_PASSWORD_MAX);
         
         out.println("<br/><form method=post>");
-        out.println("<table width=350px cellpadding=4px>");
+        out.println("<table width=350px cellpadding=4px border=1>");
         out.println("<tr><td width=150px>User Id:</td><td><input type='text' name='userid'></td></tr>");
         out.println("<tr><td>Password:</td><td><input type='password' name='password'></td></tr>");
         out.println("<tr><td>User Name:</td><td><input type='text' name='username'></td></tr>");
@@ -165,9 +165,9 @@ public class AddUserServlet extends HttpServlet {
         out.println("</select></td></tr>");
         out.println("<tr><td>Cash Held:</td><td><input type='text' name='cashheld'></td></tr>");
         out.println("</table>");
-        out.println("<input type='submit' value='Add User'>   ");
+        out.println("<input type='submit' value='Submit'>   ");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
-        out.println("</form>");
+        out.println("</form></center>");
         
         out.println(HtmlBuilder.buildHtmlFooter());
         out.close();

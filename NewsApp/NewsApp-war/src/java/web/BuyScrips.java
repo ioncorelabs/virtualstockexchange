@@ -89,7 +89,7 @@ public class BuyScrips extends HttpServlet {
                     System.out.println("check4");
                 }
             }
-            if(!erroredNumType && (numInt<0)) {
+            if(!erroredNumType && (numInt<=0)) {
                 erroredNumType = true;
             }
             if((scripId.equals("--SELECT--"))) {
@@ -211,6 +211,13 @@ public class BuyScrips extends HttpServlet {
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/></td></tr></table></p>");
         out.println("</form></p>");
         
+        if(((String)appSession.getAttribute("userrole")).equals("t")) {
+            out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='TraderHome'\"/>");}
+        
+        if(((String)appSession.getAttribute("userrole")).equals("i")) {
+            out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='InvestorServlet'\"/>");}
+        
+        out.println("</p>");
         
         //Common Starts
         out.println(HtmlBuilder.buildHtmlFooter());

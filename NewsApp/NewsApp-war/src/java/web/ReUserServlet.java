@@ -65,7 +65,7 @@ public class ReUserServlet extends HttpServlet {
     private void printForm(final List users, final HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Reactivate User"));
-        out.println("<span class=\"ttitle\" style=\"580px;\">Deactivate User Form</span><br>");
+        out.println("<span class=\"ttitle\" style=\"580px;\"><center><br>Reactivate User Form</span><br><br>");
         
         out.println("<form method=post>");
         out.println("User Id: <select name='userid'>");
@@ -76,10 +76,10 @@ public class ReUserServlet extends HttpServlet {
             out.println("<option value='" + user.getUserId() + "'>" + user.getUserId() + "</option><br/>");
         }
         
-        out.println("</select><br>");
-        out.println("<input type='submit' value='Reactivate User'>   ");
+        out.println("</select><br><br>");
+        out.println("<input type='submit' value='Submit'>   ");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
-        out.println("</form>");  
+        out.println("</form><center>");  
                 
         out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
