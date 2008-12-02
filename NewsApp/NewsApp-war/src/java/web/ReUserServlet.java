@@ -44,7 +44,6 @@ public class ReUserServlet extends HttpServlet {
         }
         
         String selfid = (String)session.getAttribute("userid");
-        System.out.println("At admin page as user '" + selfid + "'");
         
         String userid = request.getParameter("userid");
         UsersEntityFacadeLocal usersEntityFacade = (UsersEntityFacadeLocal) lookupUsersEntityFacade();
@@ -66,7 +65,7 @@ public class ReUserServlet extends HttpServlet {
     private void printForm(final List users, final HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Reactivate User"));
-        out.println("<span class=\"ttitle\" style=\"580px;\">Deactivate User Form</span><br>");
+        out.println("<span class=\"ttitle\" style=\"580px;\">Reactivate User Form</span><br>");
         
         out.println("<form>");
         out.println("User Id: <select name='userid'>");

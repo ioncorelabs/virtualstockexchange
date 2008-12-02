@@ -41,7 +41,10 @@ public class HtmlBuilder {
         INVALID_PASSWORD_MIN,
         INVALID_PASSWORD_MAX,
         INVALID_TOTAL_SHARES,
-        INVALID_MARKET_CAP
+        INVALID_MARKET_CAP,
+        INVALID_NUMBER_GENERIC,
+        INVALID_LOGIN,
+        ACCOUNT_DEACTIVATED
     }
     
     public static String buildHtmlHeader(final String pageTitle) {
@@ -119,6 +122,15 @@ public class HtmlBuilder {
     {
         switch (error)
         {
+            case ACCOUNT_DEACTIVATED:
+                out.println("<font color=red><b>Your account has been deactivated. Please contact the administrator or try a different login." +
+                    "</b></font><br/>");
+                break;
+            
+            case INVALID_LOGIN:
+                out.println("<font color=red><b>Invalid Username or Password. Please try again.</b></font><br/>");
+                break;
+                
             case INVALID_BLANK:         
                 out.println("<font color=red><b>All fields are required</b></font><br/>");
                 break;
@@ -179,6 +191,9 @@ public class HtmlBuilder {
                 out.println("<font color=red><b>Passwords must be shorter than 16 characters</b></font><br/>");
                 break;
             
+            case INVALID_NUMBER_GENERIC:
+                out.println("<font color=red><b>Invalid number values. Please make sure values are sane</b></font><br/>");
+                break;
         }
     }
 }

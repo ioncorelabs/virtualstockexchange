@@ -46,7 +46,6 @@ public class AddScripServlet extends HttpServlet {
         }
         
         String userid = (String)session.getAttribute("userid");
-        System.out.println("At admin page as user '" + userid + "'");
         
         PrintWriter out = response.getWriter();
         HashMap<String, String> parameterMap = new HashMap<String, String>();
@@ -86,7 +85,7 @@ public class AddScripServlet extends HttpServlet {
             // check field lengths for overflow attacks.
             if (parameterMap.get("scripname").length() > 40)
                 erroredScripNameMax = true;
-            if (parameterMap.get("scripid").length() < 3)
+            if (parameterMap.get("scripid").length() < 2)
                 erroredScripIDMin = true;
             if (parameterMap.get("scripid").length() > 16)
                 erroredScripIDMax = true;

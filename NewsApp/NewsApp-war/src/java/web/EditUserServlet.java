@@ -21,6 +21,7 @@ import javax.naming.NamingException;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+import org.apache.html.dom.HTMLBuilder;
 import web.utils.HtmlBuilder;
 
 /**
@@ -48,7 +49,6 @@ public class EditUserServlet extends HttpServlet {
         }
         
         String userid = (String)session.getAttribute("userid");
-        System.out.println("At admin page as user '" + userid + "'");
         
         HashMap<String, String> parameterMap = new HashMap<String, String>();
         parameterMap.put("userid",              request.getParameter("userid"));
@@ -70,7 +70,7 @@ public class EditUserServlet extends HttpServlet {
                 try{numDbl = Double.parseDouble(parameterMap.get("cashheld")); } 
                 catch(NumberFormatException e) { erroredNumType = true; }
             }
-            if (!erroredNumType && (numDbl <= 0.0))
+            if (!erroredNumType && (numDbl < 0.0))
                 erroredNumType = true;
             if(HtmlBuilder.hasNumber(parameterMap.get("username")))
                 erroredUserName = true;
@@ -99,18 +99,19 @@ public class EditUserServlet extends HttpServlet {
                 !((String)session.getAttribute("userrole")).equals("a");
     }
     
-    private void printForm(final HttpServletRequest request, final HttpServletResponse response, List users, final boolean erroredBlankFields, final boolean erroredNumType, final boolean erroredUserName) throws IOException {
+    private void printForm(final HttpServletRequest request, final HttpServletResponse response, List users, 
+                        final boolean erroredBlankFields, final boolean erroredNumType, final boolean erroredUserName) throws IOException {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Edit User"));
         
-        out.println("<span class=\"ttitle\" style=\"580px;\">Edit User Form</span><br>");
+        out.println("<span class=\"ttitle\" style=\"580px;\">Edit User Form</span><br><br>");
         if (erroredBlankFields)
-            out.println("<br><font color=red><b>All fields are required</b></font><br><br>");
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_BLANK);
         if (erroredNumType)
-            out.println("<br><font color=red><b>Please enter a valid value for cash held</b></font><br><br>");
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_CASH);
         if (erroredUserName)
-            out.println("<br><font color=red><b>User Name can only contain alphabets </b></font><br><br>");
-        out.println("<br>Users:<br><br>");
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_USERNAME_TEXT);
+        out.println("<br><br>Users:<br><br>");
         out.println("<table width=600px border=1>");
         out.println("<tr><td>User ID</td><td>User Name</td><td>Current Cash Held</td><td>&nbsp;</td></tr>");
         
