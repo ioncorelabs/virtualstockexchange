@@ -169,7 +169,7 @@ public class ShortSellScrips extends HttpServlet {
         //Common Ends
         
         
-        out.println("<span class=\"ttitle\" style=\"580px;\">Short Sell Form</span><br>");
+        out.println("<p align=center><br><span class=\"ttitle\" style=\"580px;\">Short Sell Form</span><br>");
         
         if (errorcode == 1) {
             out.println("<br><font color=red><b>You are attempting to short more " +
@@ -191,7 +191,7 @@ public class ShortSellScrips extends HttpServlet {
         out.println("<form>");
         
         out.println("<form  action=ListScrips onSubmit=initializeRadio() >");
-        out.println("<table border=1 align=center >");
+        out.println("<br><table border=1 align=center >");
         out.println("<tr><td align =left>Name of the Scrip</td><td>Number of Shares Borrowed</td><td>Number of Shares Shorted</td><td>Number of Shares Returned</td><td>Status</td><td>&nbsp;</td></tr>");
         Vector vec = new Vector();
         ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityEntityFacade();
@@ -218,10 +218,11 @@ public class ShortSellScrips extends HttpServlet {
         out.println("<input type =hidden name = index >" );
         
         out.println("<tr><td colspan=6> Number of Shares to short sell <input type =text name=number id=num size =10  ></tr> ");
-        out.println("<tr><td colspan=6 align=center><input type =submit value=Submit /></tr> ");
-        out.println("</table>");
+        out.println("<tr><td colspan=6 align=center><input type =submit value=Submit /> ");
+        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/></td></tr>");
+        out.println("</table></p>");
         out.println("</form>");
-        out.println("<br><input type=\"button\" value=\"Back\" onClick=\"history.back();\"/>");
+       
         
         //Common Starts
         out.println("</div></div>");

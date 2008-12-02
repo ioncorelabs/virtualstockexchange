@@ -54,7 +54,7 @@ public class ShortSellHome extends HttpServlet {
         //Common Ends
         
         
-        out.println("<span class=\"ttitle\" style=\"580px;\">Short Sell</span><br>");
+        out.println("<p align=center><br><span class=\"ttitle\" style=\"580px;\">Short Sell Homepage</span><br>");
         
         
         out.println("<div id=\"menius\">");
@@ -64,7 +64,7 @@ public class ShortSellHome extends HttpServlet {
         out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"BuyToCoverScrips\">Buy to Cover</a></div>");
         out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"TraderHome\">Cancel</a></div>");
         
-        out.println("</div>");
+        out.println("</div></p>");
         
         
         //out.println("<input type=\"button\" value=\"Back\" onClick=\"history.back();\"/>");

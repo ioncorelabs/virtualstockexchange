@@ -42,7 +42,7 @@ public class TraderHome extends HttpServlet {
         
         //main HTML content
         out.println("<div id=\"head\" align=\"center\"");
-        out.println("<span class=\"ttitle\" style=\"580px;\">Trader Homepage</span><br><br>");       
+        out.println("<span class=\"ttitle\" style=\"580px;\"><br>Trader Homepage</span><br><br>");       
         out.println("</div>");
         out.println("<br><br><br>");
         
