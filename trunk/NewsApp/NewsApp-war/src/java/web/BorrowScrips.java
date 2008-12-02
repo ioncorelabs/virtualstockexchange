@@ -157,7 +157,7 @@ public class BorrowScrips extends HttpServlet {
         //Common Ends
         
         
-        out.println("<p align=center><br><span class=\"ttitle\" style=\"580px;\">Borrow Shares Form</span><br>");
+        out.println("<p align=center><br><span class=\"ttitle\" style=\"580px;\">Borrow Shares Form</span>");
         
         if (errorcode == 1) {
             out.println("<br><font color=red><b>You are attempting to borrow more " +

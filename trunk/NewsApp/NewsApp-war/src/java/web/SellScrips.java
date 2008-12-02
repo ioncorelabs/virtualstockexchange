@@ -186,11 +186,9 @@ public class SellScrips extends HttpServlet {
             out.println("<br><font color=red><b>Please enter the number of scrips to sell</b></font><br><br>");
         if (erroredNumType)
             out.println("<br><font color=red><b>Please enter a valid value for number of scrips to sell</b></font><br><br>");
+                
         
-        
-        out.println("<form>");
-        
-        out.println("<form  action=ListScrips onSubmit=initializeRadio() >");
+        out.println("<form onSubmit=initializeRadio() >");
         out.println("<br><table border=1 align=center >");
         out.println("<tr><td align =left>Name of the Scrip</td><td>Number of Shares</td><td>Status</td><td>&nbsp;</td></tr> ");
         Vector vec = new Vector();
