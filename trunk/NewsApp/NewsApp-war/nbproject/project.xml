@@ -13,19 +13,19 @@
                     <file>${reference.NewsApp-ejb.dist}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library files="1">
+                <library>
                     <file>${file.reference.commons-logging-1.1.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library files="1">
+                <library>
                     <file>${file.reference.aspectjrt-1.5.3.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library files="1">
+                <library>
                     <file>${file.reference.junit-3.8.2.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library files="1">
+                <library>
                     <file>${file.reference.cactus.core.framework.uberjar.javaEE.14-1.8.0.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>

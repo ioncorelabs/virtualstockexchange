@@ -115,7 +115,7 @@ public class EditScripServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Edit Scrip"));
         
-        out.println("<span class=\"ttitle\" style=\"580px;\">Edit Scrip Form</span><br><br>");
+        out.println("<span class=\"ttitle\" style=\"580px;\"><center><br>Edit Scrip Form</span><br><br>");
         if (erroredBlankFields)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_BLANK);
         if (erroredNumType)
@@ -140,11 +140,11 @@ public class EditScripServlet extends HttpServlet {
             out.println("<td><input type='text' name='totalsharesavailable' value='" + scrip.getTotalAvailable()+ "' size=10 maxlength=20></td>");
             out.println("<td><input type='text' name='marketcap' value='" + _nf.format(scrip.getMarketCap())+ "' size=10 maxlength=20></td>");            
             out.println("<td><input type='submit' value='Edit'></td></tr>");
-            out.println("</form>");
+            out.println("</form></center>");
         }
         
         out.println("</table><br>");
-        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
+        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/></center>");
         out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
     }
