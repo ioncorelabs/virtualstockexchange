@@ -54,7 +54,9 @@ public class ReUserServlet extends HttpServlet {
             UsersEntity user = usersEntityFacade.find(userid);
             user.setActive('y');                        
             usersEntityFacade.edit(user);
-            response.sendRedirect("AdminServlet"); 
+            
+            session.setAttribute("message", user.getUserName()+" was successfully reactivated");
+            response.sendRedirect("AdminSuccessServlet"); 
         }
         
         List users = usersEntityFacade.findAllInActive();

@@ -54,7 +54,9 @@ public class DelUserServlet extends HttpServlet {
             UsersEntity user = usersEntityFacade.find(userid);
             user.setActive('n');                        
             usersEntityFacade.edit(user);
-            response.sendRedirect("AdminServlet"); 
+            
+            session.setAttribute("message", user.getUserName()+" was successfully deactivated");
+            response.sendRedirect("AdminSuccessServlet"); 
         }
         
         List users = usersEntityFacade.findAllActive();
@@ -63,7 +65,7 @@ public class DelUserServlet extends HttpServlet {
 
     private void printForm(final List users, final HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
-        out.println(HtmlBuilder.buildHtmlHeader("Delete User"));
+        out.println(HtmlBuilder.buildHtmlHeader("Deactivate User"));
         out.println("<span class=\"ttitle\" style=\"580px;\">Deactivate User Form</span><br>");
         
         out.println("<form>");

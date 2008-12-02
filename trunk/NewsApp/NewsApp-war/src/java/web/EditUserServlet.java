@@ -82,7 +82,9 @@ public class EditUserServlet extends HttpServlet {
                 user.setCashHeld(Double.parseDouble(parameterMap.get("cashheld")));
                 
                 usersEntityFacade.edit(user);
-                response.sendRedirect("AdminServlet");
+                
+                session.setAttribute("message", parameterMap.get("username")+" was successfully edited");
+                response.sendRedirect("AdminSuccessServlet");
             }
         }
         

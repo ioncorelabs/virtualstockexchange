@@ -107,8 +107,7 @@ public class AddScripServlet extends HttpServlet {
 
                     scripsEntityFacade.create(scripsEntity);
                     
-                    session.setAttribute("message", parameterMap.get("scripid")+" was successfully added to the exchange");
-                   
+                    session.setAttribute("message", parameterMap.get("scripname")+" was successfully added to the exchange");                   
                     response.sendRedirect("AdminSuccessServlet");
                 }
             }

@@ -125,8 +125,8 @@ public class AddUserServlet extends HttpServlet {
                 loginEntityFacade.create(loginEntity);
                 usersEntityFacade.create(usersEntity);
                 
-                response.sendRedirect("AdminServlet");
-                return;
+                session.setAttribute("message", parameterMap.get("username")+" was successfully added to the exchange");
+                response.sendRedirect("AdminSuccessServlet");                
             }
         }
         

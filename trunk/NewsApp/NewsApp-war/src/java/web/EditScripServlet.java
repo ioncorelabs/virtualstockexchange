@@ -95,7 +95,9 @@ public class EditScripServlet extends HttpServlet {
                 scrip.setMarketCap(Double.parseDouble(parameterMap.get("marketcap")));          
 
                 scripsEntityFacade.edit(scrip);
-                response.sendRedirect("AdminServlet"); 
+                
+                session.setAttribute("message", parameterMap.get("scripname")+" was successfully edited");
+                response.sendRedirect("AdminSuccessServlet"); 
             }
         }
         
