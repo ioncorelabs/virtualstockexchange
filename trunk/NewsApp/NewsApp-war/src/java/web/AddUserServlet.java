@@ -153,7 +153,7 @@ public class AddUserServlet extends HttpServlet {
         if (erroredPasswordMax)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_PASSWORD_MAX);
         
-        out.println("<br/><form>");
+        out.println("<br/><form method=post>");
         out.println("<table width=350px cellpadding=4px>");
         out.println("<tr><td width=150px>User Id:</td><td><input type='text' name='userid'></td></tr>");
         out.println("<tr><td>Password:</td><td><input type='password' name='password'></td></tr>");
@@ -187,7 +187,10 @@ public class AddUserServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        if (request.getQueryString() != null)
+            response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
+        else
+            processRequest(request, response);
     }
     
     /** Handles the HTTP <code>POST</code> method.

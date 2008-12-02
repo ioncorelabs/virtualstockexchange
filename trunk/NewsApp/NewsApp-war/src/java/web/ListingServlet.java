@@ -17,6 +17,7 @@ import ejb.ScripsUserEntityFacadeLocal;
 import java.io.*;
 import java.text.NumberFormat;
 import java.net.*;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -28,6 +29,7 @@ import javax.naming.NamingException;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+import web.utils.HtmlBuilder;
 
 /**
  *
@@ -117,7 +119,7 @@ public class ListingServlet extends HttpServlet {
             ScripsUserEntityFacadeLocal scripsEntityFacade = (ScripsUserEntityFacadeLocal) lookupScripsUserEntityFacade();
             
             
-            out.println("<form action=ListingServlet >");
+            out.println("<form method =post action=ListingServlet >");
             out.println("<table border=1 align=center >");
             
             List  changes = lookupExchangeEntityEntityFacade.findAll();
@@ -167,8 +169,12 @@ public class ListingServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+      if (request.getQueryString() != null)
+            response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
+        else
+            processRequest(request, response);
     }
+    
     
     /** Handles the HTTP <code>POST</code> method.
      * @param request servlet request
@@ -217,3 +223,4 @@ public class ListingServlet extends HttpServlet {
     }
     
 }
+

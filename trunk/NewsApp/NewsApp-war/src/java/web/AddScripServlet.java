@@ -151,7 +151,7 @@ public class AddScripServlet extends HttpServlet {
         if (erroredScripIDMax)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_SCRIPID_MAX);
         
-        out.println("<form>");
+        out.println("<form method=post>");
         
         out.println("<table width=350px cellpadding=4px>");
         out.println("<tr><td width=150px>Scrip Id:</td><td><input type='text' name='scripid'></td></tr>");
@@ -185,7 +185,10 @@ public class AddScripServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        if (request.getQueryString() != null)
+            response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
+        else
+            processRequest(request, response);
     }
     
     /** Handles the HTTP <code>POST</code> method.

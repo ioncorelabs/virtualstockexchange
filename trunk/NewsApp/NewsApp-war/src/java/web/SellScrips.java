@@ -12,6 +12,7 @@ import ejb.ScripsUserEntity;
 import ejb.ScripsUserEntityFacadeLocal;
 import ejb.TransactionHistoryEntity;
 import java.io.*;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -30,6 +31,7 @@ import javax.naming.NamingException;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+import web.utils.HtmlBuilder;
 
 /**
  *
@@ -78,7 +80,7 @@ public class SellScrips extends HttpServlet {
             erroredNumType = true;
         }
         
-        if ((num!=null) && (!erroredNumNull) && (!erroredNumType)) {
+        if ((num!=null) && (!erroredNumNull) && (!erroredNumType)) {            
             
             String strButtonIndex =  request.getParameter("button");
             
@@ -126,9 +128,6 @@ public class SellScrips extends HttpServlet {
                         messageProducer.send(message);
                         messageProducer.close();
                         connection.close();
-                        
-                        appSession.setAttribute("message", num+" shares " +
-                                "of "+elem.getScripId()+" were successfully sold");
                         
                         //Redirecting depending on the role of the user
                         if(appSession.getAttribute("userrole").equals("t")) {
@@ -187,9 +186,9 @@ public class SellScrips extends HttpServlet {
         if (erroredNumType)
             out.println("<br><font color=red><b>Please enter a valid value for number of scrips to sell</b></font><br><br>");
                 
-        
-        out.println("<form onSubmit=initializeRadio() >");
-        out.println("<br><table border=1 align=center >");
+        out.println("<form method=post onSubmit=initializeRadio() >");
+        out.println("<table border=1 align=center >");
+
         out.println("<tr><td align =left>Name of the Scrip</td><td>Number of Shares</td><td>Status</td><td>&nbsp;</td></tr> ");
         Vector vec = new Vector();
         ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityEntityFacade();
@@ -216,7 +215,7 @@ public class SellScrips extends HttpServlet {
         
         out.println("<tr><td colspan=4> Number of Shares to Sell <input type =text name=number id=num size =10  ></tr> ");
         out.println("<tr><td colspan=4 align=center><input type =submit value=submit />");
-         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/></td></tr>");
+        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/></td></tr>");
         out.println("</table></p>");
         out.println("</form>");
        
@@ -248,8 +247,13 @@ public class SellScrips extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
+        if (request.getQueryString() != null)
+            response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
+        else
+            processRequest(request, response);
     }
+    
     
     /** Handles the HTTP <code>POST</code> method.
      * @param request servlet request
@@ -287,3 +291,4 @@ public class SellScrips extends HttpServlet {
         }
     }
 }
+

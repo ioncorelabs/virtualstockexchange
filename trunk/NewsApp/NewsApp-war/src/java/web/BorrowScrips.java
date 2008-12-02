@@ -10,6 +10,7 @@ import ejb.ScripsExchangeEntity;
 import ejb.ScripsExchangeEntityFacadeLocal;
 import ejb.TransactionHistoryEntity;
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +27,7 @@ import javax.naming.NamingException;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+import web.utils.HtmlBuilder;
 
 /**
  *
@@ -78,7 +80,7 @@ public class BorrowScrips extends HttpServlet {
             
             List scrip = lookupExchangeEntityEntityFacade.findScripById(scripId);
             
-             if((((ScripsExchangeEntity)scrip.get(0)).getTotalAvailable() - ((ScripsExchangeEntity)scrip.get(0)).getTotalSharesLent() - Integer.parseInt(num)) <= ((int)(((ScripsExchangeEntity)scrip.get(0)).getTotalShares()*.2))) {
+            if((((ScripsExchangeEntity)scrip.get(0)).getTotalAvailable() - ((ScripsExchangeEntity)scrip.get(0)).getTotalSharesLent()) < Integer.parseInt(num)) {
                 errorcode = 1;
             }
             //Cannot borrow more than 10% of initial release of shares
@@ -114,9 +116,6 @@ public class BorrowScrips extends HttpServlet {
                     messageProducer.send(message);
                     messageProducer.close();
                     connection.close();
-                    
-                    appSession.setAttribute("message", num+" shares " +
-                            "of "+((ScripsExchangeEntity)scrip.get(0)).getScripName()+" were successfully borrowed");                    
                     
                     //Redirecting depending on the role of the user
                     if(appSession.getAttribute("userrole").equals("t")) {
@@ -161,7 +160,7 @@ public class BorrowScrips extends HttpServlet {
         
         if (errorcode == 1) {
             out.println("<br><font color=red><b>You are attempting to borrow more " +
-                    "shares than curently available for transactions, please try again." +
+                    "shares than available with the Exchange, please try again." +
                     "</b></font><br><br>");
         }
         
@@ -177,7 +176,7 @@ public class BorrowScrips extends HttpServlet {
             out.println("<br><font color=red><b>Please enter a valid value for number of scrips to borrow</b></font><br><br>");
         
         
-        out.println("<form>");
+        out.println("<form method=post>");
         
         List scrips = lookupExchangeEntityEntityFacade.findAll();
         out.println("<br><table border=1 align=center><tr><td>Scrip Name:</td><td><select name='scripId'>");
@@ -219,9 +218,12 @@ public class BorrowScrips extends HttpServlet {
      * @param request servlet request
      * @param response servlet response
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        if (request.getQueryString() != null)
+            response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
+        else
+            processRequest(request, response);
     }
     
     /** Handles the HTTP <code>POST</code> method.
@@ -250,3 +252,4 @@ public class BorrowScrips extends HttpServlet {
         }
     }
 }
+

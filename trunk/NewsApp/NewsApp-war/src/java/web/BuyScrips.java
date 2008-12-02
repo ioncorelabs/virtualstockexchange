@@ -12,6 +12,7 @@ import ejb.TransactionHistoryEntity;
 import ejb.UsersEntity;
 import ejb.UsersEntityFacadeLocal;
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -105,7 +106,7 @@ public class BuyScrips extends HttpServlet {
             
             double pricePerShare = ((ScripsExchangeEntity)scrip.get(0)).getPricePerShare();
             
-            if((((ScripsExchangeEntity)scrip.get(0)).getTotalAvailable() - ((ScripsExchangeEntity)scrip.get(0)).getTotalSharesLent() - Integer.parseInt(num)) <= ((int)(((ScripsExchangeEntity)scrip.get(0)).getTotalShares()*.2))){
+            if((((ScripsExchangeEntity)scrip.get(0)).getTotalAvailable() - ((ScripsExchangeEntity)scrip.get(0)).getTotalSharesLent()) < Integer.parseInt(num)) {
                 errorcode = 1;
             } else if(((UsersEntity)user.get(0)).getCashHeld() < (pricePerShare*(Integer.parseInt(num)))) {
                 errorcode = 2;
@@ -147,8 +148,6 @@ public class BuyScrips extends HttpServlet {
                     messageProducer.close();
                     connection.close();
                     
-                    appSession.setAttribute("message", num+" shares " +
-                            "of "+((ScripsExchangeEntity)scrip.get(0)).getScripName()+" were successfully purchased");
                     //Redirecting depending on the role of the user
                     if(appSession.getAttribute("userrole").equals("t")) {
                         response.sendRedirect("TraderTradeSuccess");
@@ -176,7 +175,7 @@ public class BuyScrips extends HttpServlet {
         
         if (errorcode == 1) {
             out.println("<br><font color=red><b>You are attempting to buy more " +
-                    "shares than curently available for transactions, please try again." +
+                    "shares than available with the Exchange, please try again." +
                     "</b></font><br><br>");
         }
         
@@ -193,7 +192,7 @@ public class BuyScrips extends HttpServlet {
         if (erroredSelect)
             out.println("<br><font color=red><b>Please select a scrip to buy</b></font><br><br>");
         
-        out.println("<form>");
+        out.println("<form method=post>");
         
         List scrips = lookupExchangeEntityEntityFacade.findAll();
         
@@ -236,9 +235,14 @@ public class BuyScrips extends HttpServlet {
      * @param request servlet request
      * @param response servlet response
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
+               
+          if (request.getQueryString() != null)
+            response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
+        else
+            processRequest(request, response);
     }
     
     /** Handles the HTTP <code>POST</code> method.
@@ -281,3 +285,4 @@ public class BuyScrips extends HttpServlet {
         }
     }
 }
+

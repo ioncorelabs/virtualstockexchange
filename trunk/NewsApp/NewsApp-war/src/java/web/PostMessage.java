@@ -8,6 +8,7 @@ package web;
 
 import ejb.NewsEntity;
 import java.io.*;
+import java.util.HashMap;
 import javax.jms.Queue;
 import javax.jms.JMSException;
 import javax.jms.MessageProducer;
@@ -20,6 +21,7 @@ import javax.naming.NamingException;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+import web.utils.HtmlBuilder;
 
 /**
  *
@@ -85,7 +87,7 @@ public class PostMessage extends HttpServlet {
         out.println("</head>");
         out.println("<body>");
         out.println("<h1>Servlet NewServlet at " + request.getContextPath() + "</h1>");
-        out.println("<form>");
+        out.println("<form method=post>");
         out.println("Title: <input type='text' name='title'><br/>");
         out.println("Message: <textarea name='body'></textarea><br/>");
         out.println("<input type='submit'><br/>");
@@ -102,10 +104,14 @@ public class PostMessage extends HttpServlet {
      * @param request servlet request
      * @param response servlet response
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        if (request.getQueryString() != null)
+            response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
+        else
+            processRequest(request, response);
     }
+    
     
     /** Handles the HTTP <code>POST</code> method.
      * @param request servlet request
@@ -123,3 +129,4 @@ public class PostMessage extends HttpServlet {
     }
     // </editor-fold>
 }
+

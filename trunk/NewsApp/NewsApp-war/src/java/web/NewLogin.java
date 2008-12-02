@@ -101,11 +101,15 @@ public class NewLogin extends HttpServlet {
         out.println("<span class=\"ttitle\">Sign In</span><br><br>");
         
         if (invalidCredentials)
-            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_LOGIN);
-        if (errorcode == 1)
-            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.ACCOUNT_DEACTIVATED);
+            out.println("<br><font color=red><b>Invalid Username or Password. Please try again.</b></font><br><br>");
         
-        out.println("<br/><form method=post>");
+        if (errorcode == 1) {
+            out.println("<br><font color=red><b>Your account has been deactivated. " +
+                    "Please contact the administrator or try a different login." +
+                    "</b></font><br><br>");
+        }
+        
+        out.println("<form method=post>");
         out.println("User Id:<font color=\"#FFFFFF\">______</font<input type='text' name='userid'><br/>");
         out.println("Password:<font color=\"#FFFFFF\">____</font<input type='password' name='password'><br/><br>");
         out.println("<input type='submit' value='Login'><br/>");
@@ -133,7 +137,7 @@ public class NewLogin extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        if (request.getQueryString() != null)
+       if (request.getQueryString() != null)
             response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
         else
             processRequest(request, response);
@@ -179,3 +183,4 @@ public class NewLogin extends HttpServlet {
         }
     }
 }
+

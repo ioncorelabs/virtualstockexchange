@@ -68,7 +68,7 @@ public class DelUserServlet extends HttpServlet {
         out.println(HtmlBuilder.buildHtmlHeader("Deactivate User"));
         out.println("<span class=\"ttitle\" style=\"580px;\">Deactivate User Form</span><br>");
         
-        out.println("<form>");
+        out.println("<form method=post>");
         out.println("User Id: <select name='userid'>");
                 
         for (Iterator it = users.iterator(); it.hasNext();)
@@ -101,7 +101,10 @@ public class DelUserServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        if (request.getQueryString() != null)
+            response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
+        else
+            processRequest(request, response);
     }
     
     /** Handles the HTTP <code>POST</code> method.
