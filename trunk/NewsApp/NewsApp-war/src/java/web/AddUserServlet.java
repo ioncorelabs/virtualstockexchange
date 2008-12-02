@@ -45,7 +45,6 @@ public class AddUserServlet extends HttpServlet {
         }
         
         String selfid = (String)session.getAttribute("userid");
-        System.out.println("At add user page as user '" + selfid + "'");
         
         HashMap<String, String> parameterMap = new HashMap<String, String>();
         parameterMap.put("userid",              request.getParameter("userid"));
@@ -62,18 +61,18 @@ public class AddUserServlet extends HttpServlet {
         boolean erroredUserIDMax = false;
         boolean erroredPasswordMin = false;
         boolean erroredPasswordMax = false;
-        double numDouble = 0;
+        double dblCashHeld = 0;
         
         if(HtmlBuilder.isFormSubmitted(parameterMap)) {
             
             if(HtmlBuilder.hasBlankFields(parameterMap)) {
                 erroredBlankFields = true;
             } else {
-                try{numDouble = Double.parseDouble(parameterMap.get("cashheld")); } 
+                try{dblCashHeld = Double.parseDouble(parameterMap.get("cashheld")); } 
                 catch(NumberFormatException e) { erroredNumType = true; }
             }
             
-            if (!erroredNumType && (numDouble < 0.0))
+            if (!erroredNumType && (dblCashHeld < 0.0))
                 erroredNumType = true;
             if (parameterMap.get("username").length() > 40)
                 erroredUserNameMax = true;

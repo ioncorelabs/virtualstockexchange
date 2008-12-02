@@ -48,7 +48,6 @@ public class EditScripServlet extends HttpServlet {
         }
         
         String userid = (String)session.getAttribute("userid");
-        System.out.println("At admin page as user '" + userid + "'");
         
         HashMap<String, String> parameterMap = new HashMap<String, String>();
         parameterMap.put("scripid",                 request.getParameter("scripid"));
@@ -58,12 +57,12 @@ public class EditScripServlet extends HttpServlet {
         parameterMap.put("marketcap",               request.getParameter("marketcap"));        
         
         ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
+        
+        boolean erroredBlankFields = false;
+        boolean erroredNumType = false;
             
         if (HtmlBuilder.isFormSubmitted(parameterMap))
         {   
-            boolean erroredBlankFields = false;
-            boolean erroredNumType = false;
-            boolean erroredUserName = false;
             int intTotalShares = 0;
             int intTotalSharesAvail = 0;
             double dblTotalShares = 0;
@@ -82,10 +81,8 @@ public class EditScripServlet extends HttpServlet {
             }
             if (!erroredNumType && (intTotalShares <= 0 || intTotalSharesAvail <= 0 || dblTotalShares <= 0.0))
                 erroredNumType = true;
-            if(HtmlBuilder.hasNumber(parameterMap.get("username")))
-                erroredUserName = true;
             
-            if((!erroredBlankFields) && (!erroredNumType) && (!erroredUserName)) 
+            if((!erroredBlankFields) && (!erroredNumType)) 
             {
                 ScripsExchangeEntity scrip = scripsEntityFacade.find(parameterMap.get("scripid"));
 
@@ -102,7 +99,7 @@ public class EditScripServlet extends HttpServlet {
         }
         
         List scrips = scripsEntityFacade.findAll();
-        printForm(request, response, scrips);
+        printForm(request, response, scrips, erroredNumType, erroredBlankFields);
     }
     
     private boolean isInvalidSession(final HttpSession session)
@@ -113,21 +110,18 @@ public class EditScripServlet extends HttpServlet {
                 !((String)session.getAttribute("userrole")).equals("a");
     }
     
-    private boolean formSubmitted(HashMap<String, String> pm)
-    {
-        for (String value : pm.values())
-            if (value == null)
-                return false;
-        
-        return true;
-    }
-    
-    private void printForm(final HttpServletRequest request, final HttpServletResponse response, List scrips) throws IOException {
+    private void printForm(final HttpServletRequest request, final HttpServletResponse response, List scrips, 
+                            final boolean erroredNumType, final boolean erroredBlankFields) throws IOException {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Edit Scrip"));
         
-        out.println("<span class=\"ttitle\" style=\"580px;\">Edit Scrip Form</span><br>");
-        out.println("<br>Users:<br><br>");
+        out.println("<span class=\"ttitle\" style=\"580px;\">Edit Scrip Form</span><br><br>");
+        if (erroredBlankFields)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_BLANK);
+        if (erroredNumType)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_NUMBER_GENERIC);
+        
+        out.println("<br><br>Users:<br><br>");
         out.println("<table width=680px border=1>");
         out.println("<tr><td>Scrip ID</td><td>Scrip Name</td><td>Total Shares</td><td>Total Shares Available</td>");
         out.println("<td>Market Cap</td><td>&nbsp;</td></tr>");
