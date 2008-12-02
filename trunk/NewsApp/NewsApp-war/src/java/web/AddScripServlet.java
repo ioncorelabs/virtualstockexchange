@@ -76,10 +76,10 @@ public class AddScripServlet extends HttpServlet {
                 try { numIntpshare = Integer.parseInt(parameterMap.get("marketcap")); }
                 catch(NumberFormatException e) { erroredNumMarketCap = true; }
             }
-            if(!erroredNumTotalShares && numInttshare<0) {
+            if(!erroredNumTotalShares && numInttshare <= 0) {
                 erroredNumTotalShares = true;
             }
-            if(!erroredNumMarketCap && numIntpshare<0) {
+            if(!erroredNumMarketCap && numIntpshare <= 0) {
                 erroredNumMarketCap = true;
             }
             
