@@ -58,9 +58,9 @@ public class ListingServlet extends HttpServlet {
         
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Virtual Stock Exchance: Listing</title>");
+        out.println("<title>Virtual Stock Exchance : Scrip lookup</title>");
         out.println("</head>");
-        //Common Styling Code
+        //Common Styling Code        
         out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
         out.println("</head>");
         out.println("<body>");
@@ -71,6 +71,8 @@ public class ListingServlet extends HttpServlet {
         out.println("<div id=\"corp\">");
         out.println("<div class=\"main-text\">");
         //Common Ends
+        
+        out.println("<p align=center><span class=\"ttitle\" style=\"580px;\"><br>Scrip Lookup</span><br><br>");
         
         if (request.getParameter("scripSelected")!=null ){
             int change=0;
@@ -128,10 +130,11 @@ public class ListingServlet extends HttpServlet {
                 out.println( "<option  name=scripSelected value"+ elem.getScripId() +">"+elem.getScripId());
             }
             out.println("</select></td></tr>");
-            out.println("<tr  ><td colspan=2> Submit <input type =submit value=Submit /></tr> ");
-            out.println("</table ");
+            out.println("<tr><td colspan=2> Submit <input type =submit value=Submit /> ");
+            out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/></td></tr>");
+            out.println("</table></p>");
             out.println("</form>");
-            out.println("<br><input type=\"button\" value=\"Back\" onClick=\"history.back();\"/>");
+            
             
             
             //Common Starts

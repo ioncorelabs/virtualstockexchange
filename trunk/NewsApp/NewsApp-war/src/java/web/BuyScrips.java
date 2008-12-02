@@ -172,7 +172,7 @@ public class BuyScrips extends HttpServlet {
         out.println(HtmlBuilder.buildHtmlHeader("Buy Shares"));
         
         //main HTML content
-        out.println("<span class=\"ttitle\" style=\"580px;\">Buy Shares</span><br>");
+        out.println("<p align=center><span class=\"ttitle\" style=\"580px;\"><br>Buy Shares</span><br><br>");
         
         if (errorcode == 1) {
             out.println("<br><font color=red><b>You are attempting to buy more " +
@@ -198,19 +198,20 @@ public class BuyScrips extends HttpServlet {
         List scrips = lookupExchangeEntityEntityFacade.findAll();
         
         //Showingall the Scrips in the system in a Select box
-        out.println("<br> Scrip Name:");
-        out.println("<select name='scripId'>");
+        out.println("<p align=center><table border=1><tr><td> Scrip Name:</td>");
+        out.println("<td><select name='scripId'>");
         out.println("<option value =\"--SELECT--\")>--SELECT--</option>");
         for (Object obj : scrips) {
             ScripsExchangeEntity elem = (ScripsExchangeEntity) obj;
             out.println("<option value =" +elem.getScripId()+">"+elem.getScripName() +" </option>");
         }
-        out.println("</select><br><br>");
+        out.println("</select></td></tr>");
         
-        out.println("Number of shares: <input type='text' name='num'><br><br>");
-        out.println("<input type='submit' value = 'Submit'>  ");
-        out.println("</form>");
-        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/>");
+        out.println("<tr><td>Number of shares:</td><td> <input type='text' name='num'></td></tr>");
+        out.println("<tr><td colspan=2 align=center><input type='submit' value = 'Submit'>&nbsp;");
+        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/></td></tr></table></p>");
+        out.println("</form></p>");
+        
         
         //Common Starts
         out.println(HtmlBuilder.buildHtmlFooter());

@@ -157,7 +157,7 @@ public class BorrowScrips extends HttpServlet {
         //Common Ends
         
         
-        out.println("<span class=\"ttitle\" style=\"580px;\">Borrow Shares Form</span><br>");
+        out.println("<p align=center><br><span class=\"ttitle\" style=\"580px;\">Borrow Shares Form</span><br>");
         
         if (errorcode == 1) {
             out.println("<br><font color=red><b>You are attempting to borrow more " +
@@ -180,17 +180,18 @@ public class BorrowScrips extends HttpServlet {
         out.println("<form>");
         
         List scrips = lookupExchangeEntityEntityFacade.findAll();
-        out.println("<select name='scripId'>");
+        out.println("<br><table border=1 align=center><tr><td>Scrip Name:</td><td><select name='scripId'>");
         for (Object obj : scrips) {
             ScripsExchangeEntity elem = (ScripsExchangeEntity) obj;
             out.println("<option value =" +elem.getScripId()+">"+elem.getScripName() +" </option>");
         }
-        out.println("</select><br><br>");
+        out.println("</select></td>");
         
-        out.println("Number of shares: <input type='text' name='num'><br><br>");
-        out.println("<input type='submit' value='Submit'>  ");
-        out.println("</form>");
-        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/>");
+        out.println("<tr><td>Number of shares: </td><td><input type='text' name='num'></td></tr>");
+        out.println("<tr><td colspan=2 align=center><input type='submit' value='Submit'>");
+        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/></td></tr>");
+        out.println("</form></p>");
+        
         
         //Common Starts
         out.println("</div></div>");
