@@ -141,9 +141,10 @@ public class EditScripServlet extends HttpServlet {
             out.println("<td><input type='submit' value='Edit'></td></tr>");
             out.println("</form></center>");
         }
+        out.println("<tr><td align=center colspan=6><input type=\"button\" value=\"Cancel\" " +
+                "onClick=\"window.location='AdminServlet'\"/></td></tr>");
+        out.println("</table><br><br></center>");
         
-        out.println("</table><br>");
-        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/></center>");
         out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
     }

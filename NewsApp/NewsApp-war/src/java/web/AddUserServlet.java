@@ -159,19 +159,19 @@ public class AddUserServlet extends HttpServlet {
         
         out.println("<br/><form method=post>");
         out.println("<table width=350px cellpadding=4px border=1>");
-        out.println("<tr><td width=150px>User Id:</td><td><input type='text' name='userid'></td></tr>");
-        out.println("<tr><td>Password:</td><td><input type='password' name='password'></td></tr>");
-        out.println("<tr><td>User Name:</td><td><input type='text' name='username'></td></tr>");
+        out.println("<tr><td width=150px>User Id:</td><td><input type='text' name='userid' maxlength=6></td></tr>");
+        out.println("<tr><td>Password:</td><td><input type='password' name='password' maxlength=8></td></tr>");
+        out.println("<tr><td>User Name:</td><td><input type='text' name='username' maxlength=40></td></tr>");
         out.println("<tr><td>User Type:</td><td><select name='usertype'>");
         out.println("<option value='admin'>Admin</option>");
         out.println("<option value='trader'>Trader</option>");
         out.println("<option value='investor'>Investor</option>");
         out.println("</select></td></tr>");
-        out.println("<tr><td>Cash Held:</td><td><input type='text' name='cashheld'></td></tr>");
+        out.println("<tr><td>Cash Held:</td><td><input type='text' name='cashheld' maxlength=8></td></tr>");        
+        out.println("<tr><td align=center colspan=2><input type='submit' value='Submit'> &nbsp;");
+        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/></td></tr>");
         out.println("</table>");
-        out.println("<input type='submit' value='Submit'>   ");
-        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
-        out.println("</form></center>");
+        out.println("</form></center><br><br>");
         
         out.println(HtmlBuilder.buildHtmlFooter());
         out.close();

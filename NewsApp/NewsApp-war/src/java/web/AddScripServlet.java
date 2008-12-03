@@ -161,14 +161,13 @@ public class AddScripServlet extends HttpServlet {
         out.println("<br/><form method=post>");
         
         out.println("<table width=350px cellpadding=4px border=1>");
-        out.println("<tr><td width=150px>Scrip Id:</td><td><input type='text' name='scripid'></td></tr>");
-        out.println("<tr><td>Scrip Name:</td><td><input type='text' name='scripname'></td></tr>");
-        out.println("<tr><td>Total Shares:</td><td><input type='text' name='totalshares'></td></tr>");
-        out.println("<tr><td>Market Cap:</td><td><input type='text' name='marketcap'></td></tr>");
+        out.println("<tr><td width=150px>Scrip Id:</td><td><input type='text' name='scripid' maxlength=6></td></tr>");
+        out.println("<tr><td>Scrip Name:</td><td><input type='text' name='scripname' maxlength=40></td></tr>");
+        out.println("<tr><td>Total Shares:</td><td><input type='text' name='totalshares' maxlength=12></td></tr>");
+        out.println("<tr><td>Market Cap:</td><td><input type='text' name='marketcap' maxlength=12></td></tr>");
+        out.println("<tr><td align=center colspan=2><input type='submit' value='Submit'>&nbsp; ");
+        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/></td></tr>");
         out.println("</table>");
-        
-        out.println("<input type='submit' value='Add Scrip'>   ");
-        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
         out.println("</form></center>");
         
         out.println(HtmlBuilder.buildHtmlFooter());

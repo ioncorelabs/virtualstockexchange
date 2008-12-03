@@ -68,7 +68,7 @@ public class ReUserServlet extends HttpServlet {
         out.println("<span class=\"ttitle\" style=\"580px;\"><center><br>Reactivate User Form</span><br><br>");
         
         out.println("<form method=post>");
-        out.println("User Id: <select name='userid'>");
+        out.println("<font size=4>User Id:</font> <select name='userid'>");
                 
         for (Iterator it = users.iterator(); it.hasNext();)
         {
