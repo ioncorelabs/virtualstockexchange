@@ -58,7 +58,7 @@ public class InvestorServlet extends HttpServlet {
         //Common Ends
         
         out.println("<div id=\"head\" align=\"center\"");
-        out.println("<span class=\"ttitle\" style=\"580px;\">Investor Homepage</span><br>");
+        out.println("<br><span class=\"ttitle\" style=\"580px;\">Investor Homepage</span><br>");
         out.println("<br><br>");
         out.println("</div>");
         out.println("<br><br><br><br><br>");
