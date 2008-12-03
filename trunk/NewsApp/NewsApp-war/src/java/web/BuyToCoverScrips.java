@@ -184,9 +184,6 @@ public class BuyToCoverScrips extends HttpServlet {
         if (erroredNumType)
             out.println("<br><font color=red><b>Please enter a valid value for number of scrips to short sell</b></font><br><br>");
         
-        
-        
-        
         out.println("<form onSubmit=initializeRadio() method=post>");
         out.println("<br><table border=1 align=center>");
         out.println("<tr><td align =left>Name of the Scrip</td><td>Number of Shares Borrowed</td><td>Number of Shares Shorted</td><td>Number of Shares Returned</td><td>Status</td><td>&nbsp;</td></tr>");

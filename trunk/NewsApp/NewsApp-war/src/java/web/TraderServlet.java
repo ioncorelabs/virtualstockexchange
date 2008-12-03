@@ -218,21 +218,26 @@ public class TraderServlet extends HttpServlet {
             double currentValue = (double)(scripshorted.getSharesBorrowed() - scripshorted.getSharesShorted())* (double)myscripsEntity.getPricePerShare();
             double changeValue = currentValue - totalBorrowingSpent;
             
-            // NOTE: want value to be lower than what I borrowed it for 
-            //       so I can buy-to-cover and return for a net profit.
-            if (changeValue > 0.0)
-                out.println("<tr bgcolor='#E37676'>"); // red
-            else
-                out.println("<tr bgcolor='#67FD67'>"); // green
-            
-            out.println("<td>" + myscripsEntity.getScripId() + "</td>");
-            out.println("<td>" + _numberFormat.format(currentValue) + "</td>");
-            out.println("<td>" + _numberFormat.format(changeValue) + "</td>");
-            out.println("<td>" + scripshorted.getSharesBorrowed() + "</td>");
-            out.println("<td>" + scripshorted.getSharesShorted() + "</td>");
-            out.println("<td>" + scripshorted.getSharesReturned() + "</td>");
-            out.println("<td>" + _numberFormat.format(myscripsEntity.getPricePerShare())+ "</td>");
-            out.println("</tr>");
+            if (!(scripshorted.getSharesBorrowed() == scripshorted.getSharesShorted() && 
+                scripshorted.getSharesBorrowed() == scripshorted.getSharesReturned()))
+            {
+                // NOTE: want value to be lower than what I borrowed it for 
+                //       so I can buy-to-cover and return for a net profit.
+                //       Only print the scrip if we haven't already returned all the scrips
+                if (changeValue > 0.0)
+                    out.println("<tr bgcolor='#E37676'>"); // red
+                else
+                    out.println("<tr bgcolor='#67FD67'>"); // green
+
+                out.println("<td>" + myscripsEntity.getScripId() + "</td>");
+                out.println("<td>" + _numberFormat.format(currentValue) + "</td>");
+                out.println("<td>" + _numberFormat.format(changeValue) + "</td>");
+                out.println("<td>" + scripshorted.getSharesBorrowed() + "</td>");
+                out.println("<td>" + scripshorted.getSharesShorted() + "</td>");
+                out.println("<td>" + scripshorted.getSharesReturned() + "</td>");
+                out.println("<td>" + _numberFormat.format(myscripsEntity.getPricePerShare())+ "</td>");
+                out.println("</tr>");
+            }
         }
         out.println("</table><br/>");
     }
