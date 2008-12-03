@@ -96,7 +96,7 @@ public class NewLogin extends HttpServlet {
         
         //Main Content
         out.println("<div id=\"head\" align=\"center\">");
-        out.println("<span class=\"ttitle\" style=\"580px;\">COMS 4156: Advanced Software Engineering</span>");
+        out.println("<br><span class=\"ttitle\" style=\"580px;\">COMS 4156: Advanced Software Engineering</span>");
         out.println("<br><br><br><br>");
         //out.println("<span class=\"ttitle\">Sign In</span><br><br>");
         

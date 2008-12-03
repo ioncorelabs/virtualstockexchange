@@ -209,7 +209,7 @@ public class BuyScrips extends HttpServlet {
         }
         out.println("</select></td></tr>");
         
-        out.println("<tr><td>Number of shares:</td><td> <input type='text' name='num'></td></tr>");
+        out.println("<tr><td>Number of shares:</td><td> <input type='text' name='num' maxlength=6></td></tr>");
         out.println("<tr><td colspan=2 align=center><input type='submit' value = 'Submit'>&nbsp;");           
         
         if(((String)appSession.getAttribute("userrole")).equals("t")) {

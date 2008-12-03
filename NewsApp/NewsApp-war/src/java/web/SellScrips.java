@@ -80,7 +80,7 @@ public class SellScrips extends HttpServlet {
             erroredNumType = true;
         }
         
-        if ((num!=null) && (!erroredNumNull) && (!erroredNumType)) {            
+        if ((num!=null) && (!erroredNumNull) && (!erroredNumType)) {
             
             String strButtonIndex =  request.getParameter("button");
             
@@ -188,10 +188,10 @@ public class SellScrips extends HttpServlet {
             out.println("<br><font color=red><b>Please enter the number of scrips to sell</b></font><br><br>");
         if (erroredNumType)
             out.println("<br><font color=red><b>Please enter a valid value for number of scrips to sell</b></font><br><br>");
-                
+        
         out.println("<form method=post onSubmit=initializeRadio() >");
         out.println("<table border=1 align=center >");
-
+        
         out.println("<tr><td align =left>Name of the Scrip</td><td>Number of Shares</td><td>Status</td><td>&nbsp;</td></tr> ");
         Vector vec = new Vector();
         ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityEntityFacade();
@@ -216,12 +216,19 @@ public class SellScrips extends HttpServlet {
         request.getSession().setAttribute("Vector",vec);
         out.println("<input type =hidden name = index >" );
         
-        out.println("<tr><td colspan=4> Number of Shares to Sell <input type =text name=number id=num size =10  ></tr> ");
+        out.println("<tr><td colspan=4> Number of Shares to Sell <input type =text name=number id=num size =10 maxlength=6></tr> ");
         out.println("<tr><td colspan=4 align=center><input type =submit value=Submit />");
-        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/></td></tr>");
-        out.println("</table></p>");
-        out.println("</form>");
-       
+        if(((String)appSession.getAttribute("userrole")).equals("t")) {
+            out.println("<input type=\"button\" value=\"Cancel\" " +
+                    "onClick=\"window.location='TraderHome'\"/></td></tr></table></p>");
+        }
+        
+        if(((String)appSession.getAttribute("userrole")).equals("i")) {
+            out.println("<input type=\"button\" value=\"Cancel\" " +
+                    "onClick=\"window.location='InvestorServlet'\"/></td></tr></table></p>");
+        }        
+        out.println("</form><br>");
+        
         
         //Common Starts
         out.println("</div></div>");

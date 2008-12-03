@@ -80,7 +80,7 @@ public class BorrowScrips extends HttpServlet {
             
             List scrip = lookupExchangeEntityEntityFacade.findScripById(scripId);
             
-           if((((ScripsExchangeEntity)scrip.get(0)).getTotalAvailable() - ((ScripsExchangeEntity)scrip.get(0)).getTotalSharesLent() - Integer.parseInt(num)) <= ((int)(((ScripsExchangeEntity)scrip.get(0)).getTotalShares()*.2))) {
+            if((((ScripsExchangeEntity)scrip.get(0)).getTotalAvailable() - ((ScripsExchangeEntity)scrip.get(0)).getTotalSharesLent() - Integer.parseInt(num)) <= ((int)(((ScripsExchangeEntity)scrip.get(0)).getTotalShares()*.2))) {
                 errorcode = 1;
             }
             //Cannot borrow more than 10% of initial release of shares
@@ -159,7 +159,7 @@ public class BorrowScrips extends HttpServlet {
         //Common Ends
         
         
-        out.println("<p align=center><br><span class=\"ttitle\" style=\"580px;\">Borrow Shares Form</span>");
+        out.println("<p align=center><br><span class=\"ttitle\" style=\"580px;\">Borrow Shares Form</span><br>");
         
         if (errorcode == 1) {
             out.println("<br><font color=red><b>You are attempting to borrow more " +
@@ -182,17 +182,25 @@ public class BorrowScrips extends HttpServlet {
         out.println("<form method=post>");
         
         List scrips = lookupExchangeEntityEntityFacade.findAll();
-        out.println("<br><table border=1 align=center><tr><td>Scrip Name:</td><td><select name='scripId'>");
+        out.println("<table border=1 align=center><tr><td>Scrip Name:</td><td><select name='scripId'>");
         for (Object obj : scrips) {
             ScripsExchangeEntity elem = (ScripsExchangeEntity) obj;
             out.println("<option value =" +elem.getScripId()+">"+elem.getScripName() +" </option>");
         }
         out.println("</select></td>");
         
-        out.println("<tr><td>Number of shares: </td><td><input type='text' name='num'></td></tr>");
+        out.println("<tr><td>Number of shares: </td><td><input type='text' name='num' maxlength=6></td></tr>");
         out.println("<tr><td colspan=2 align=center><input type='submit' value='Submit'>");
-        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/></td></tr>");
-        out.println("</form></p>");
+        if(((String)appSession.getAttribute("userrole")).equals("t")) {
+            out.println("<input type=\"button\" value=\"Cancel\" " +
+                    "onClick=\"window.location='TraderHome'\"/></td></tr></table></p>");
+        }
+        
+        if(((String)appSession.getAttribute("userrole")).equals("i")) {
+            out.println("<input type=\"button\" value=\"Cancel\" " +
+                    "onClick=\"window.location='InvestorServlet'\"/></td></tr></table></p>");
+        }
+        out.println("</form></p><br>");
         
         
         //Common Starts
@@ -221,7 +229,7 @@ public class BorrowScrips extends HttpServlet {
      * @param request servlet request
      * @param response servlet response
      */
-   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         if (request.getQueryString() != null)
             response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);

@@ -41,12 +41,11 @@ public class AdminServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Administrator Homepage"));
         out.println("<div id=\"head\" align=\"center\"");
-        out.println("<span class=\"ttitle\" style=\"580px;\">Administrator</span><br>");
-        out.println("<span class=\"ttitle\"><b>Welcome back, " + userid + "!</b></span><br><br><br>");
+        out.println("<br><span class=\"ttitle\" style=\"580px;\">Administrator Homepage</span><br>");        
         out.println("</div>");
         
         out.println("<div class=\"main-content\">");
-        out.println("The administrative menu on the left gives you full control over the Virtual Stock Exchange. Choose from the menu options to do super awesome things like Add, Edit, Enable people and scrips. ");
+        out.println("<br><br><br>The administrative menu on the left gives you full control over the Virtual Stock Exchange. Choose from the menu options to perform operations like Add, Edit, Enable on both Users and Scrips. ");
         out.println("</div><br>");
         
         out.println("<div id=\"menius\">");
