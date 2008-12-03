@@ -187,7 +187,7 @@ public class BuyToCoverScrips extends HttpServlet {
         
         
         
-        out.println("<form  action=ListScrips onSubmit=initializeRadio() method=post >");
+        out.println("<form onSubmit=initializeRadio() method=post>");
         out.println("<br><table border=1 align=center>");
         out.println("<tr><td align =left>Name of the Scrip</td><td>Number of Shares Borrowed</td><td>Number of Shares Shorted</td><td>Number of Shares Returned</td><td>Status</td><td>&nbsp;</td></tr>");
         Vector vec = new Vector();
