@@ -112,7 +112,7 @@ public class EditUserServlet extends HttpServlet {
         if (erroredUserName)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_USERNAME_TEXT);
         
-        out.println("<table width=600px border=1>");
+        out.println("<br/><table width=600px border=1>");
         out.println("<tr><td>User ID</td><td>User Name</td><td>Current Cash Held</td><td>&nbsp;</td></tr>");
         
         

@@ -97,8 +97,8 @@ public class NewLogin extends HttpServlet {
         //Main Content
         out.println("<div id=\"head\" align=\"center\">");
         out.println("<span class=\"ttitle\" style=\"580px;\">COMS 4156: Advanced Software Engineering</span>");
-        out.println("<br><br><br><br><br><br>");
-        out.println("<span class=\"ttitle\">Sign In</span><br><br>");
+        out.println("<br><br><br><br>");
+        //out.println("<span class=\"ttitle\">Sign In</span><br><br>");
         
         if (invalidCredentials)
             out.println("<br><font color=red><b>Invalid Username or Password. Please try again.</b></font><br><br>");
@@ -109,11 +109,15 @@ public class NewLogin extends HttpServlet {
                     "</b></font><br><br>");
         }
         
-        out.println("<form method=post>");
-        out.println("User Id:<font color=\"#FFFFFF\">______</font<input type='text' name='userid'><br/>");
-        out.println("Password:<font color=\"#FFFFFF\">____</font<input type='password' name='password'><br/><br>");
-        out.println("<input type='submit' value='Login'><br/>");
+        out.println("<table border=0 width=85%><tr><td>");
+        out.println("<span class=\"ttitle\">Sign In</span><br><br>");
+        out.println("<form method=\"post\">");
+        out.println("<table>");
+        out.println("<tr><td>User Id:</td><td><input name=\"userid\" type=\"text\" maxlength=16></td></tr>");
+        out.println("<tr><td>Password:</td><td><input name=\"password\" type=\"password\" maxlength=16></td></tr>");
+        out.println("</table><br/><input value=\"Login\" type=\"submit\"><br>");
         out.println("</form>");
+        out.println("</td><td align=center><img src=img/wall_street_effect.jpg width=75% height=75%></td></tr></table>");
         out.println("</div>");
         
         //Common HTML Footer

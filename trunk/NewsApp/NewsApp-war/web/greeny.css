@@ -186,3 +186,7 @@ body {
 	padding: 25px 0;
 	font-weight:bold
 }
+
+input[type=submit] {
+	font-weight:bold
+}

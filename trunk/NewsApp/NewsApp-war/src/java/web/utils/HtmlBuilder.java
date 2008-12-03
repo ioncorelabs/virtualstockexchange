@@ -40,6 +40,7 @@ public class HtmlBuilder {
         INVALID_SCRIPID_MAX,
         INVALID_USERID_MIN,
         INVALID_USERID_MAX,
+        INVALID_ID_TEXT,
         INVALID_PASSWORD_MIN,
         INVALID_PASSWORD_MAX,
         INVALID_TOTAL_SHARES,
@@ -173,6 +174,10 @@ public class HtmlBuilder {
                 out.println("<font color=red><b>User IDs must be shorter than 16 characters</b></font><br/>");
                 break;
                 
+            case INVALID_ID_TEXT:
+                out.println("<font color=red><b>User/Scrip IDs must only contain characters or numbers</b></font><br/>");
+                break;
+                
             case INVALID_SCRIPNAME_MAX:
                 out.println("<font color=red><b>Scrip names must be shorter than 40 characters</b></font><br/>");
                 break;
@@ -202,6 +207,13 @@ public class HtmlBuilder {
     public static boolean isValidName(String name)
     {
         Pattern p = Pattern.compile("[^A-Za-z ]");
+        Matcher m = p.matcher(name);
+        return !m.find();
+    }
+    
+    public static boolean isValidID(String name)
+    {
+        Pattern p = Pattern.compile("[^A-Za-z0-9]");
         Matcher m = p.matcher(name);
         return !m.find();
     }
