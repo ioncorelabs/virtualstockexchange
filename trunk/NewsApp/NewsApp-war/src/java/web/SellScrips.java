@@ -129,6 +129,9 @@ public class SellScrips extends HttpServlet {
                         messageProducer.close();
                         connection.close();
                         
+                        appSession.setAttribute("message", num+" shares " +
+                                "of "+elem.getScripId()+" were successfully sold");
+                        
                         //Redirecting depending on the role of the user
                         if(appSession.getAttribute("userrole").equals("t")) {
                             response.sendRedirect("TraderTradeSuccess");

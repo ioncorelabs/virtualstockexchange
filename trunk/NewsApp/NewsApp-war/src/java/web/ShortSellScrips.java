@@ -117,6 +117,9 @@ public class ShortSellScrips extends HttpServlet {
                         // here we create a NewsEntity, that will be sent in JMS message
                         TransactionHistoryEntity e = new TransactionHistoryEntity();
                         
+                        appSession.setAttribute("message", num+" shares " +
+                                "of "+elem.getScripId()+" were successfully short sold");
+                        
                         e.setScripId(elem.getScripId());
                         e.setUserId(userId);
                         e.setTotalShares(Integer.parseInt(num));
