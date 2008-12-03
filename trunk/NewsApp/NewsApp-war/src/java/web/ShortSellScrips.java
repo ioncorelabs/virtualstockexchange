@@ -188,7 +188,7 @@ public class ShortSellScrips extends HttpServlet {
         
         
         
-        out.println("<form  method=post action=ListScrips onSubmit=initializeRadio() >");
+        out.println("<form method=post onSubmit=initializeRadio() >");
         out.println("<br><table border=1 align=center >");
         out.println("<tr><td align =left>Name of the Scrip</td><td>Number of Shares Borrowed</td><td>Number of Shares Shorted</td><td>Number of Shares Returned</td><td>Status</td><td>&nbsp;</td></tr>");
         Vector vec = new Vector();

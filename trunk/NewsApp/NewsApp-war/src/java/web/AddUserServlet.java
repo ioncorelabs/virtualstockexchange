@@ -63,8 +63,8 @@ public class AddUserServlet extends HttpServlet {
         boolean erroredPasswordMax = false;
         double dblCashHeld = 0;
         
-        if(HtmlBuilder.isFormSubmitted(parameterMap)) {
-            
+        if(HtmlBuilder.isFormSubmitted(parameterMap)) 
+        {    
             if(HtmlBuilder.hasBlankFields(parameterMap)) {
                 erroredBlankFields = true;
             } else {
@@ -87,10 +87,8 @@ public class AddUserServlet extends HttpServlet {
             if (parameterMap.get("password").length() > 16)
                 erroredPasswordMax = true;
             
-            
             if (HtmlBuilder.hasNumber(parameterMap.get("username")))
                 erroredUserNameText = true;
-            
         }
         
         boolean erroredUserExists = false;
@@ -132,8 +130,9 @@ public class AddUserServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Add User"));
         
-        out.println("<span class=\"ttitle\" style=\"580px;\"><center><br>Add User Form</span><br><br>");
+        out.println("<center><span class=\"ttitle\" style=\"580px;\"><br>Add User Form</span><br><br>");
         
+        //out.println("<center>");
         if (erroredUserExists)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.USER_EXISTS);
         if (erroredBlankFields)
