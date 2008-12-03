@@ -134,7 +134,7 @@ public class AddScripServlet extends HttpServlet {
                     final boolean erroredScripIDMax) throws IOException 
     {
         out.println(HtmlBuilder.buildHtmlHeader("Add Scrip"));
-        out.println("<span class=\"ttitle\" style=\"580px;\"><center><br>Add Scrip Form</span><br><br>");
+        out.println("<center><span class=\"ttitle\" style=\"580px;\"><br>Add Scrip Form</span><br><br>");
         
         if (erroredScripExists)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.SCRIP_EXISTS);

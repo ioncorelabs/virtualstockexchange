@@ -72,7 +72,7 @@ public class EditUserServlet extends HttpServlet {
             }
             if (!erroredNumType && (numDbl < 0.0))
                 erroredNumType = true;
-            if(HtmlBuilder.hasNumber(parameterMap.get("username")))
+            if(!HtmlBuilder.isValidName(parameterMap.get("username")))
                 erroredUserName = true;
             
             if((!erroredBlankFields) && (!erroredNumType) && (!erroredUserName)) 
@@ -104,14 +104,14 @@ public class EditUserServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Edit User"));
         
-        out.println("<span class=\"ttitle\" style=\"580px;\"><center>Edit User Form</span><br><br>");
+        out.println("<center><span class=\"ttitle\" style=\"580px;\"><br/>Edit User Form</span><br><br>");
         if (erroredBlankFields)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_BLANK);
         if (erroredNumType)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_CASH);
         if (erroredUserName)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_USERNAME_TEXT);
-        out.println("<br><br>Users:<br><br>");
+        
         out.println("<table width=600px border=1>");
         out.println("<tr><td>User ID</td><td>User Name</td><td>Current Cash Held</td><td>&nbsp;</td></tr>");
         

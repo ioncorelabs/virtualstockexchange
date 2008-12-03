@@ -115,13 +115,12 @@ public class EditScripServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Edit Scrip"));
         
-        out.println("<span class=\"ttitle\" style=\"580px;\"><center><br>Edit Scrip Form</span><br><br>");
+        out.println("<center><span class=\"ttitle\" style=\"580px;\"><br>Edit Scrip Form</span><br><br>");
         if (erroredBlankFields)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_BLANK);
         if (erroredNumType)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_NUMBER_GENERIC);
         
-        out.println("<br><br>Users:<br><br>");
         out.println("<table width=680px border=1>");
         out.println("<tr><td>Scrip ID</td><td>Scrip Name</td><td>Total Shares</td><td>Total Shares Available</td>");
         out.println("<td>Market Cap</td><td>&nbsp;</td></tr>");

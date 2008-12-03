@@ -87,7 +87,7 @@ public class AddUserServlet extends HttpServlet {
             if (parameterMap.get("password").length() > 16)
                 erroredPasswordMax = true;
             
-            if (HtmlBuilder.hasNumber(parameterMap.get("username")))
+            if(!HtmlBuilder.isValidName(parameterMap.get("username")))
                 erroredUserNameText = true;
         }
         

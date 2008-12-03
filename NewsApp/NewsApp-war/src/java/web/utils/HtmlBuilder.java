@@ -11,6 +11,8 @@ package web.utils;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -195,5 +197,12 @@ public class HtmlBuilder {
                 out.println("<font color=red><b>Invalid number values. Please make sure values are sane</b></font><br/>");
                 break;
         }
+    }
+    
+    public static boolean isValidName(String name)
+    {
+        Pattern p = Pattern.compile("[^A-Za-z ]");
+        Matcher m = p.matcher(name);
+        return !m.find();
     }
 }
