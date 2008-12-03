@@ -61,6 +61,7 @@ public class AddScripServlet extends HttpServlet {
         boolean erroredNumMarketCap = false;
         boolean erroredScripIDMin = false;
         boolean erroredScripIDMax = false;
+        boolean erroredScripIDText = false;
         int numInttshare = 0;
         int numIntpshare = 0;
         
@@ -90,8 +91,11 @@ public class AddScripServlet extends HttpServlet {
             if (parameterMap.get("scripid").length() > 16)
                 erroredScripIDMax = true;
             
+            if (!HtmlBuilder.isValidID(parameterMap.get("scripid")))
+                erroredScripIDText = true;
+            
             if (!erroredBlankFields && !erroredNumTotalShares && !erroredNumMarketCap && 
-                !erroredScripNameMax && !erroredScripIDMin && !erroredScripIDMax)
+                !erroredScripNameMax && !erroredScripIDMin && !erroredScripIDMax && !erroredScripIDText)
             {
                 int totalSharesInt              = Integer.parseInt(parameterMap.get("totalshares"));
                 double marketCapDbl             = Double.parseDouble(parameterMap.get("marketcap"));
@@ -114,7 +118,7 @@ public class AddScripServlet extends HttpServlet {
         
         printForm(out, request, response, 
                     erroredScripExists, erroredBlankFields, erroredNumTotalShares, erroredNumMarketCap, 
-                    erroredScripNameMax, erroredScripIDMin, erroredScripIDMax);
+                    erroredScripNameMax, erroredScripIDMin, erroredScripIDMax, erroredScripIDText);
     }
     
     private boolean isInvalidSession(final HttpSession session) {
@@ -131,7 +135,8 @@ public class AddScripServlet extends HttpServlet {
                     final boolean erroredNumMarketCap,
                     final boolean erroredScripNameMax, 
                     final boolean erroredScripIDMin, 
-                    final boolean erroredScripIDMax) throws IOException 
+                    final boolean erroredScripIDMax,
+                    final boolean erroredScripIDText) throws IOException 
     {
         out.println(HtmlBuilder.buildHtmlHeader("Add Scrip"));
         out.println("<center><span class=\"ttitle\" style=\"580px;\"><br>Add Scrip Form</span><br><br>");
@@ -150,8 +155,10 @@ public class AddScripServlet extends HttpServlet {
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_SCRIPID_MIN);
         if (erroredScripIDMax)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_SCRIPID_MAX);
+        if (erroredScripIDText)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_ID_TEXT);
         
-        out.println("<form method=post>");
+        out.println("<br/><form method=post>");
         
         out.println("<table width=350px cellpadding=4px border=1>");
         out.println("<tr><td width=150px>Scrip Id:</td><td><input type='text' name='scripid'></td></tr>");

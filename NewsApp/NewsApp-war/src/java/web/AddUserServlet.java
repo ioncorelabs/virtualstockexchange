@@ -53,14 +53,15 @@ public class AddUserServlet extends HttpServlet {
         parameterMap.put("usertype",            request.getParameter("usertype"));
         parameterMap.put("cashheld",            request.getParameter("cashheld"));
         
-        boolean erroredBlankFields = false;
-        boolean erroredNumType = false;
+        boolean erroredBlankFields  = false;
+        boolean erroredNumType      = false;
+        boolean erroredUserIDText   = false;
         boolean erroredUserNameText = false;
-        boolean erroredUserNameMax = false;
-        boolean erroredUserIDMin = false;
-        boolean erroredUserIDMax = false;
-        boolean erroredPasswordMin = false;
-        boolean erroredPasswordMax = false;
+        boolean erroredUserNameMax  = false;
+        boolean erroredUserIDMin    = false;
+        boolean erroredUserIDMax    = false;
+        boolean erroredPasswordMin  = false;
+        boolean erroredPasswordMax  = false;
         double dblCashHeld = 0;
         
         if(HtmlBuilder.isFormSubmitted(parameterMap)) 
@@ -89,13 +90,15 @@ public class AddUserServlet extends HttpServlet {
             
             if(!HtmlBuilder.isValidName(parameterMap.get("username")))
                 erroredUserNameText = true;
+            if (!HtmlBuilder.isValidID(parameterMap.get("userid")))
+                erroredUserIDText = true;
         }
         
         boolean erroredUserExists = false;
         
         if (HtmlBuilder.isFormSubmitted(parameterMap) && 
                 !erroredBlankFields && !erroredNumType && !erroredUserNameText && 
-                !erroredUserNameMax && !erroredUserIDMin && !erroredUserIDMax && !erroredPasswordMin && !erroredPasswordMax) 
+                !erroredUserNameMax && !erroredUserIDMin && !erroredUserIDMax && !erroredPasswordMin && !erroredPasswordMax && !erroredUserIDText) 
         {
             char userRole = parameterMap.get("usertype").charAt(0);
             double cashHeldDbl = Double.parseDouble(parameterMap.get("cashheld"));
@@ -147,6 +150,8 @@ public class AddUserServlet extends HttpServlet {
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_USERID_MIN);
         if (erroredUserIDMax)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_USERID_MAX);
+        if (erroredUserIDText)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_ID_TEXT);
         if (erroredPasswordMin)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_PASSWORD_MIN);
         if (erroredPasswordMax)

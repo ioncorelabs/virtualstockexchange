@@ -121,7 +121,7 @@ public class EditScripServlet extends HttpServlet {
         if (erroredNumType)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_NUMBER_GENERIC);
         
-        out.println("<table width=680px border=1>");
+        out.println("<br/><table width=680px border=1>");
         out.println("<tr><td>Scrip ID</td><td>Scrip Name</td><td>Total Shares</td><td>Total Shares Available</td>");
         out.println("<td>Market Cap</td><td>&nbsp;</td></tr>");
         
