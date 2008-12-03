@@ -218,12 +218,19 @@ public class ShortSellScrips extends HttpServlet {
         request.getSession().setAttribute("Vector",vec);
         out.println("<input type =hidden name = index >" );
         
-        out.println("<tr><td colspan=6> Number of Shares to short sell <input type =text name=number id=num size =10  ></tr> ");
+        out.println("<tr><td colspan=6> Number of Shares to short sell <input type =text name=number id=num size =10 maxlength=6></tr> ");
         out.println("<tr><td colspan=6 align=center><input type =submit value=Submit /> ");
-        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/></td></tr>");
-        out.println("</table></p>");
-        out.println("</form>");
-       
+        if(((String)appSession.getAttribute("userrole")).equals("t")) {
+            out.println("<input type=\"button\" value=\"Cancel\" " +
+                    "onClick=\"window.location='TraderHome'\"/></td></tr></table></p>");
+        }
+        
+        if(((String)appSession.getAttribute("userrole")).equals("i")) {
+            out.println("<input type=\"button\" value=\"Cancel\" " +
+                    "onClick=\"window.location='InvestorServlet'\"/></td></tr></table></p>");
+        }       
+        out.println("</form><br>");
+        
         
         //Common Starts
         out.println("</div></div>");
@@ -250,10 +257,10 @@ public class ShortSellScrips extends HttpServlet {
      * @param request servlet request
      * @param response servlet response
      */
-     protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         //processRequest(request, response);
-     if (request.getQueryString() != null)
+        if (request.getQueryString() != null)
             response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
         else
             processRequest(request, response);

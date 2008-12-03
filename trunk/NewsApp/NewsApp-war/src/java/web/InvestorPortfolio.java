@@ -106,10 +106,10 @@ public class InvestorPortfolio extends HttpServlet {
         out.println("Net Income/Loss: " + _numberFormat.format(self.getCashHeld() + _portfolioTotal - self.getInitialCashHeld()) + "<br/>");
         out.println("Total Assets: " + _numberFormat.format(_portfolioTotal) + "<br/>");
         out.println("Total Buying Power: " + _numberFormat.format(self.getCashHeld() + _portfolioTotal) + "<br/></b>");
-        out.println("<input type=\"button\" value=\"Back\" onClick=\"history.back();\"/>");
+        out.println("<br><input type=\"button\" value=\"Back\" onClick=\"history.back();\"/><br><br>");
         
         //Common Starts
-        out.println("</div></div>");
+        out.println("</div></div><br>");
         out.println("<div class=\"clear\"></div>");
         out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
         out.println("</div>");
@@ -135,7 +135,7 @@ public class InvestorPortfolio extends HttpServlet {
             final PrintWriter out,
             final List userscrips) {
         
-        out.println("All of My Scrips:<br/>");
+        out.println("<br><h2>All of My Scrips:</h2>");
         out.println("<table width=685px border=1>");
         out.println("<tr><td width=70px><b>Scrip ID</b></td><td><b>Current Value</b></td><td><b>Net income/loss</b></td><td><b>Shares Held</b></td>");
         out.println("<td><b>Price Per Share</b></td></tr>");
