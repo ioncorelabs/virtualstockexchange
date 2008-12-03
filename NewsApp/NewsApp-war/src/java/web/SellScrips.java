@@ -171,7 +171,7 @@ public class SellScrips extends HttpServlet {
         //Common Ends
         
         
-        out.println("<p align=center><br><span class=\"ttitle\" style=\"580px;\">Sell Scrips Form</span><br>");
+        out.println("<p align=center><br><span class=\"ttitle\" style=\"580px;\">Sell Scrips Form</span><br><br>");
         
         if (errorcode == 1) {
             out.println("<br><font color=red><b>You are attempting to sell more " +
@@ -217,7 +217,7 @@ public class SellScrips extends HttpServlet {
         out.println("<input type =hidden name = index >" );
         
         out.println("<tr><td colspan=4> Number of Shares to Sell <input type =text name=number id=num size =10  ></tr> ");
-        out.println("<tr><td colspan=4 align=center><input type =submit value=submit />");
+        out.println("<tr><td colspan=4 align=center><input type =submit value=Submit />");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/></td></tr>");
         out.println("</table></p>");
         out.println("</form>");

@@ -210,15 +210,19 @@ public class BuyScrips extends HttpServlet {
         out.println("</select></td></tr>");
         
         out.println("<tr><td>Number of shares:</td><td> <input type='text' name='num'></td></tr>");
-        out.println("<tr><td colspan=2 align=center><input type='submit' value = 'Submit'>&nbsp;");
-        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/></td></tr></table></p>");
-        out.println("</form></p>");
+        out.println("<tr><td colspan=2 align=center><input type='submit' value = 'Submit'>&nbsp;");           
         
         if(((String)appSession.getAttribute("userrole")).equals("t")) {
-            out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='TraderHome'\"/>");}
+            out.println("<input type=\"button\" value=\"Cancel\" " +
+                    "onClick=\"window.location='TraderHome'\"/></td></tr></table></p>");            
+        }
         
-        if(((String)appSession.getAttribute("userrole")).equals("i")) {
-            out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='InvestorServlet'\"/>");}
+        if(((String)appSession.getAttribute("userrole")).equals("i")) {            
+            out.println("<input type=\"button\" value=\"Cancel\" " +
+                    "onClick=\"window.location='InvestorServlet'\"/></td></tr></table></p>");            
+        }
+        
+        out.println("</form></p>");
         
         out.println("</p>");
         
