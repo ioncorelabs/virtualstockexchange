@@ -134,10 +134,10 @@ public class EditScripServlet extends HttpServlet {
             ScripsExchangeEntity scrip = (ScripsExchangeEntity)it.next();
             out.println("<form method=post>");
             out.println("<tr><td>" + scrip.getScripId() + "<input type='hidden' name='scripid' value='" + scrip.getScripId() + "'></td>");
-            out.println("<td><input type='text' name='scripname' value='" + scrip.getScripName() + "' size=10 maxlength=20></td>");
-            out.println("<td><input type='text' name='totalshares' value='" + scrip.getTotalShares()+ "' size=10 maxlength=20></td>");
-            out.println("<td><input type='text' name='totalsharesavailable' value='" + scrip.getTotalAvailable()+ "' size=10 maxlength=20></td>");
-            out.println("<td><input type='text' name='marketcap' value='" + _nf.format(scrip.getMarketCap())+ "' size=10 maxlength=20></td>");            
+            out.println("<td><input type='text' name='scripname' value='" + scrip.getScripName() + "' size=10 maxlength=40></td>");
+            out.println("<td><input type='text' name='totalshares' value='" + scrip.getTotalShares()+ "' size=10 maxlength=16></td>");
+            out.println("<td><input type='text' name='totalsharesavailable' value='" + scrip.getTotalAvailable()+ "' size=10 maxlength=16></td>");
+            out.println("<td><input type='text' name='marketcap' value='" + _nf.format(scrip.getMarketCap())+ "' size=10 maxlength=16></td>");            
             out.println("<td><input type='submit' value='Edit'></td></tr>");
             out.println("</form></center>");
         }

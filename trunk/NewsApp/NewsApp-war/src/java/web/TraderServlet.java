@@ -102,16 +102,18 @@ public class TraderServlet extends HttpServlet {
         
         out.println("<body>");
         
+        out.println("<br><center><span class=\"ttitle\" style=\"580px;\">Trader Portfolio</span></center><br><br>");
+        
         printOwnedScripsTable(userid, scripsEntityFacade, transactionHistoryEntityFacade, out, userscrips);
         printBorrowedScripsTable(userid, scripsEntityFacade, transactionHistoryEntityFacade, out, borrowedscrips);
         printTransactionsTable(out, usertransactions);
         
-        out.println("<h3>Summary:</h3><b>");
+        out.println("<center><h3>Summary:</h3><font size=2><b>");
         out.println("Current Cash Held: " + _numberFormat.format(self.getCashHeld()) + "<br/>");
         out.println("Net Income/Loss: " + _numberFormat.format(self.getCashHeld() + _portfolioTotal - self.getInitialCashHeld()) + "<br/>");
         out.println("Total Assets: " + _numberFormat.format(_portfolioTotal) + "<br/>");
         out.println("Total Buying Power: " + _numberFormat.format(self.getCashHeld() + _portfolioTotal) + "<br/></b>");
-        out.println("<br><input type=\"button\" value=\"Back\" onClick=\"history.back();\"/><br/>");
+        out.println("<br><input type=\"button\" value=\"Back\" onClick=\"history.back();\"/><br/></font></center><br><br>");
         
         //Common Starts
         out.println("</div></div>");
@@ -140,7 +142,7 @@ public class TraderServlet extends HttpServlet {
                                         final PrintWriter out, 
                                         final List userscrips) {
         
-        out.println("All of My Scrips:<br/>");
+        out.println("<center><span class=\"ttitle\" style=\"font-size=2;\"><font size=4>Bought Scrips<br/></center>");
         out.println("<table width=685px border=1>");
         out.println("<tr><td width=70px><b>Scrip ID</b></td><td><b>Current Value</b></td><td><b>Net income/loss</b></td><td><b>Shares Held</b></td>");
         out.println("<td><b>Price Per Share</b></td></tr>");
@@ -193,7 +195,7 @@ public class TraderServlet extends HttpServlet {
                                             final PrintWriter out, 
                                             final List borrowedscrips) {
         
-        out.println("All of My Borrowed Scrips:<br/>");
+        out.println("<center><span class=\"ttitle\" style=\"font-size=2;\"><font size=4>Borrowed Scrips<br/></center>");        
         out.println("<table width=685px border=1>");
         out.println("<tr><td width=70px><b>Scrip ID</b></td><td><b>Current Value</b></td><td><b>Net income/loss</b></td>");
         out.println("<td><b>Borrowed</b></td><td><b>Shorted</b></td><td><b>Returned</b></td><td><b>Price Per Share</b></td></tr>");
@@ -244,8 +246,7 @@ public class TraderServlet extends HttpServlet {
     
     private void printTransactionsTable(final PrintWriter out, final List usertransactions) {
         
-        
-        out.println("All of My Transactions:<br/>");
+        out.println("<center><span class=\"ttitle\" style=\"font-size=2;\"><font size=4>Transaction History<br/></center>");                
         out.println("<table width=685px border=1>");
         out.println("<tr><td width=70px><b>Scrip ID</b></td><td><b>Transaction Type</b></td><td><b>Total Shares Bought/Sold</b></td>");
         out.println("<td><b>Price when Bought/Sold</b></td><td><b>Date of Transaction</b></td></tr>");

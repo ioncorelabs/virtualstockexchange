@@ -190,3 +190,12 @@ body {
 input[type=submit] {
 	font-weight:bold
 }
+
+.btn {
+        background-color: #1F4D7A; height:28px;
+        border-color: efefef;
+        color:#ffffff;
+        font-family: verdana, arial, ms sans serif;
+        font-weight: bold;
+        font-size: 12px;
+}
