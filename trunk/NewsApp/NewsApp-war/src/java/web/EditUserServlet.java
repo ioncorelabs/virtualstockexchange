@@ -129,9 +129,11 @@ public class EditUserServlet extends HttpServlet {
             out.println("<td><input type='submit' value='Edit'></td></tr>");
             out.println("</form>");
         }
+                
+        out.println("<tr><td align=center colspan=4><input " +
+                "type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/></center></td></tr>");
         
-        out.println("</table>");
-        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/></center>");
+        out.println("</table><br><br>");
         
         out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
