@@ -188,11 +188,23 @@ body {
 }
 
 input[type=submit] {
-	font-weight:bold
+	background-color: #1F4D7A; height:28px;
+        border-color: efefef;
+        color:#ffffff;
+        font-family: verdana, arial, ms sans serif;
+        font-weight: bold;
+        font-size: 12px;
 }
 
+input[type=button] {
+	background-color: #1F4D7A; height:28px;
+        border-color: efefef;
+        color:#ffffff;
+        font-family: verdana, arial, ms sans serif;        
+        font-size: 12px;
+}
 .btn {
-        background-color: #1F4D7A; height:28px;
+	background-color: #1F4D7A; height:28px;
         border-color: efefef;
         color:#ffffff;
         font-family: verdana, arial, ms sans serif;
