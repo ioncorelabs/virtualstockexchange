@@ -6,7 +6,6 @@
 
 package web;
 
-import com.sun.org.apache.xml.internal.utils.SystemIDResolver;
 import ejb.LoginEntity;
 import ejb.LoginEntityFacadeLocal;
 import ejb.UsersEntity;

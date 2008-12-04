@@ -15,11 +15,10 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <meta HTTP-EQUIV="REFRESH" content="0; url=NewLogin">
+        <title>Redirect</title>
     </head>
     <body>
-
-    <h1>JSP Page</h1>
     
     <%--
     This example uses JSTL, uncomment the taglib directive above.
