@@ -102,7 +102,10 @@ public class InvestorPortfolio extends HttpServlet {
         
         out.println("<center><h3>Summary:</h3><b><font size=2>");
         out.println("Current Cash Held: " + _numberFormat.format(self.getCashHeld()) + "<br/>");
-        out.println("Net Income/Loss: " + _numberFormat.format(self.getCashHeld() + _portfolioTotal - self.getInitialCashHeld()) + "<br/>");
+        if (self.getCashHeld() + _portfolioTotal - self.getInitialCashHeld() < 0.0)
+            out.println("Net Loss: " + _numberFormat.format(self.getCashHeld() + _portfolioTotal - self.getInitialCashHeld()) + "<br/>");
+        else
+            out.println("Net Income: " + _numberFormat.format(self.getCashHeld() + _portfolioTotal - self.getInitialCashHeld()) + "<br/>");
         out.println("Total Assets: " + _numberFormat.format(_portfolioTotal) + "<br/>");
         out.println("Total Buying Power: " + _numberFormat.format(self.getCashHeld() + _portfolioTotal) + "<br/></b>");
         out.println("<br><input type=\"button\" value=\"Back\" onClick=\"history.back();\"/><br><br></center>");

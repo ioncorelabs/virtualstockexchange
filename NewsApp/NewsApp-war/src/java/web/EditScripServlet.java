@@ -60,6 +60,8 @@ public class EditScripServlet extends HttpServlet {
         
         boolean erroredBlankFields = false;
         boolean erroredNumType = false;
+        boolean erroredScripNameMax = false;
+        boolean erroredScripNameText = false;
             
         if (HtmlBuilder.isFormSubmitted(parameterMap))
         {   
@@ -82,7 +84,12 @@ public class EditScripServlet extends HttpServlet {
             if (!erroredNumType && (intTotalShares <= 0 || intTotalSharesAvail <= 0 || dblTotalShares <= 0.0))
                 erroredNumType = true;
             
-            if((!erroredBlankFields) && (!erroredNumType)) 
+            if (parameterMap.get("scripname").length() > 40)
+                erroredScripNameMax = true;
+            if (!HtmlBuilder.isValidScripName(parameterMap.get("scripname")))
+                erroredScripNameText = true;
+            
+            if((!erroredBlankFields) && (!erroredNumType) && !erroredScripNameMax && !erroredScripNameText) 
             {
                 ScripsExchangeEntity scrip = scripsEntityFacade.find(parameterMap.get("scripid"));
 
@@ -99,7 +106,7 @@ public class EditScripServlet extends HttpServlet {
         }
         
         List scrips = scripsEntityFacade.findAll();
-        printForm(request, response, scrips, erroredNumType, erroredBlankFields);
+        printForm(request, response, scrips, erroredNumType, erroredBlankFields, erroredScripNameMax, erroredScripNameText);
     }
     
     private boolean isInvalidSession(final HttpSession session)
@@ -111,7 +118,10 @@ public class EditScripServlet extends HttpServlet {
     }
     
     private void printForm(final HttpServletRequest request, final HttpServletResponse response, List scrips, 
-                            final boolean erroredNumType, final boolean erroredBlankFields) throws IOException {
+                            final boolean erroredNumType, 
+                            final boolean erroredBlankFields,
+                            final boolean erroredScripNameMax,
+                            final boolean erroredScripNameText) throws IOException {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Edit Scrip"));
         
@@ -120,6 +130,10 @@ public class EditScripServlet extends HttpServlet {
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_BLANK);
         if (erroredNumType)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_NUMBER_GENERIC);
+        if (erroredScripNameMax)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_SCRIPNAME_MAX);
+        if (erroredScripNameText)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_SCRIPNAME_TEXT);
         
         out.println("<br/><table width=680px border=1>");
         out.println("<tr><td>Scrip ID</td><td>Scrip Name</td><td>Total Shares</td><td>Total Shares Available</td>");
@@ -135,9 +149,9 @@ public class EditScripServlet extends HttpServlet {
             out.println("<form method=post>");
             out.println("<tr><td>" + scrip.getScripId() + "<input type='hidden' name='scripid' value='" + scrip.getScripId() + "'></td>");
             out.println("<td><input type='text' name='scripname' value='" + scrip.getScripName() + "' size=10 maxlength=40></td>");
-            out.println("<td><input type='text' name='totalshares' value='" + scrip.getTotalShares()+ "' size=10 maxlength=16></td>");
-            out.println("<td><input type='text' name='totalsharesavailable' value='" + scrip.getTotalAvailable()+ "' size=10 maxlength=16></td>");
-            out.println("<td><input type='text' name='marketcap' value='" + _nf.format(scrip.getMarketCap())+ "' size=10 maxlength=16></td>");            
+            out.println("<td><input type='text' name='totalshares' value='" + scrip.getTotalShares()+ "' size=10 maxlength=9></td>");
+            out.println("<td><input type='text' name='totalsharesavailable' value='" + scrip.getTotalAvailable()+ "' size=10 maxlength=9></td>");
+            out.println("<td><input type='text' name='marketcap' value='" + _nf.format(scrip.getMarketCap())+ "' size=10 maxlength=9></td>");            
             out.println("<td><input type='submit' value='Edit'></td></tr>");
             out.println("</form></center>");
         }
