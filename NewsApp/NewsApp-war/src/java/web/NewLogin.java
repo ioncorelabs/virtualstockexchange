@@ -115,7 +115,8 @@ public class NewLogin extends HttpServlet {
         out.println("<table>");
         out.println("<tr><td>User Id:</td><td><input name=\"userid\" type=\"text\" maxlength=16></td></tr>");
         out.println("<tr><td>Password:</td><td><input name=\"password\" type=\"password\" maxlength=16></td></tr>");
-        out.println("</table><br/><input value=\"Login\" type=\"submit\"><br>");
+        out.println("</table><br/><input value=\"Login\" class=btn type=\"submit\"><br><br>" +
+                "<font size=2>Not a member? <a href='RegistrationServlet'>Register</a></font>");
         out.println("</form>");
         out.println("</td><td align=center><img src=img/wall_street_effect.jpg width=75% height=75%></td></tr></table>");
         out.println("</div>");
