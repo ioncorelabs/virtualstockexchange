@@ -52,14 +52,14 @@ public class EditScripServlet extends HttpServlet {
         HashMap<String, String> parameterMap = new HashMap<String, String>();
         parameterMap.put("scripid",                 request.getParameter("scripid"));
         parameterMap.put("scripname",               request.getParameter("scripname"));
-        parameterMap.put("totalshares",             request.getParameter("totalshares"));
-        parameterMap.put("totalsharesavailable",    request.getParameter("totalsharesavailable"));
-        parameterMap.put("marketcap",               request.getParameter("marketcap"));        
+//        parameterMap.put("totalshares",             request.getParameter("totalshares"));
+//        parameterMap.put("totalsharesavailable",    request.getParameter("totalsharesavailable"));
+//        parameterMap.put("marketcap",               request.getParameter("marketcap"));        
         
         ScripsExchangeEntityFacadeLocal scripsEntityFacade = (ScripsExchangeEntityFacadeLocal) lookupScripsEntityFacade();
         
         boolean erroredBlankFields = false;
-        boolean erroredNumType = false;
+//        boolean erroredNumType = false;
         boolean erroredScripNameMax = false;
         boolean erroredScripNameText = false;
             
@@ -72,31 +72,31 @@ public class EditScripServlet extends HttpServlet {
             if (HtmlBuilder.hasBlankFields(parameterMap)) {
                 erroredBlankFields = true;
             } else {
-                try{intTotalShares = Integer.parseInt(parameterMap.get("totalshares")); } 
-                catch(NumberFormatException e) { erroredNumType = true; }
-                
-                try{intTotalSharesAvail = Integer.parseInt(parameterMap.get("totalsharesavailable")); } 
-                catch(NumberFormatException e) { erroredNumType = true; }
-                
-                try{dblTotalShares = Double.parseDouble(parameterMap.get("marketcap")); } 
-                catch(NumberFormatException e) { erroredNumType = true; }
+//                try{intTotalShares = Integer.parseInt(parameterMap.get("totalshares")); } 
+//                catch(NumberFormatException e) { erroredNumType = true; }
+//                
+//                try{intTotalSharesAvail = Integer.parseInt(parameterMap.get("totalsharesavailable")); } 
+//                catch(NumberFormatException e) { erroredNumType = true; }
+//                
+//                try{dblTotalShares = Double.parseDouble(parameterMap.get("marketcap")); } 
+//                catch(NumberFormatException e) { erroredNumType = true; }
             }
-            if (!erroredNumType && (intTotalShares <= 0 || intTotalSharesAvail <= 0 || dblTotalShares <= 0.0))
-                erroredNumType = true;
+//            if (!erroredNumType && (intTotalShares <= 0 || intTotalSharesAvail <= 0 || dblTotalShares <= 0.0))
+//                erroredNumType = true;
             
             if (parameterMap.get("scripname").length() > 40)
                 erroredScripNameMax = true;
             if (!HtmlBuilder.isValidScripName(parameterMap.get("scripname")))
                 erroredScripNameText = true;
             
-            if((!erroredBlankFields) && (!erroredNumType) && !erroredScripNameMax && !erroredScripNameText) 
+            if((!erroredBlankFields) && /*(!erroredNumType) &&*/ !erroredScripNameMax && !erroredScripNameText) 
             {
                 ScripsExchangeEntity scrip = scripsEntityFacade.find(parameterMap.get("scripid"));
 
                 scrip.setScripName(parameterMap.get("scripname"));
-                scrip.setTotalShares(Integer.parseInt(parameterMap.get("totalshares")));
-                scrip.setTotalAvailable(Integer.parseInt(parameterMap.get("totalsharesavailable")));
-                scrip.setMarketCap(Double.parseDouble(parameterMap.get("marketcap")));          
+//                scrip.setTotalShares(Integer.parseInt(parameterMap.get("totalshares")));
+//                scrip.setTotalAvailable(Integer.parseInt(parameterMap.get("totalsharesavailable")));
+//                scrip.setMarketCap(Double.parseDouble(parameterMap.get("marketcap")));          
 
                 scripsEntityFacade.edit(scrip);
                 
@@ -106,7 +106,7 @@ public class EditScripServlet extends HttpServlet {
         }
         
         List scrips = scripsEntityFacade.findAll();
-        printForm(request, response, scrips, erroredNumType, erroredBlankFields, erroredScripNameMax, erroredScripNameText);
+        printForm(request, response, scrips, /*erroredNumType, */erroredBlankFields, erroredScripNameMax, erroredScripNameText);
     }
     
     private boolean isInvalidSession(final HttpSession session)
@@ -118,7 +118,7 @@ public class EditScripServlet extends HttpServlet {
     }
     
     private void printForm(final HttpServletRequest request, final HttpServletResponse response, List scrips, 
-                            final boolean erroredNumType, 
+//                            final boolean erroredNumType, 
                             final boolean erroredBlankFields,
                             final boolean erroredScripNameMax,
                             final boolean erroredScripNameText) throws IOException {
@@ -128,16 +128,17 @@ public class EditScripServlet extends HttpServlet {
         out.println("<center><span class=\"ttitle\" style=\"580px;\"><br>Edit Scrip Form</span><br><br>");
         if (erroredBlankFields)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_BLANK);
-        if (erroredNumType)
-            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_NUMBER_GENERIC);
+//        if (erroredNumType)
+//            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_NUMBER_GENERIC);
         if (erroredScripNameMax)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_SCRIPNAME_MAX);
         if (erroredScripNameText)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_SCRIPNAME_TEXT);
         
-        out.println("<br/><table width=680px border=1>");
-        out.println("<tr><td>Scrip ID</td><td>Scrip Name</td><td>Total Shares</td><td>Total Shares Available</td>");
-        out.println("<td>Market Cap</td><td>&nbsp;</td></tr>");
+        out.println("<br/><table width=430px border=1>");
+        out.println("<tr><td>Scrip ID</td><td>Scrip Name</td>");
+        //out.println("<td>Total Shares</td><td>Total Shares Available</td><td>Market Cap</td>");
+        out.println("<td>&nbsp;</td></tr>");
         
         _nf.setMaximumFractionDigits(2);
         _nf.setMinimumFractionDigits(2);
@@ -148,14 +149,14 @@ public class EditScripServlet extends HttpServlet {
             ScripsExchangeEntity scrip = (ScripsExchangeEntity)it.next();
             out.println("<form method=post>");
             out.println("<tr><td>" + scrip.getScripId() + "<input type='hidden' name='scripid' value='" + scrip.getScripId() + "'></td>");
-            out.println("<td><input type='text' name='scripname' value='" + scrip.getScripName() + "' size=10 maxlength=40></td>");
-            out.println("<td><input type='text' name='totalshares' value='" + scrip.getTotalShares()+ "' size=10 maxlength=9></td>");
-            out.println("<td><input type='text' name='totalsharesavailable' value='" + scrip.getTotalAvailable()+ "' size=10 maxlength=9></td>");
-            out.println("<td><input type='text' name='marketcap' value='" + _nf.format(scrip.getMarketCap())+ "' size=10 maxlength=9></td>");            
+            out.println("<td><input type='text' name='scripname' value='" + scrip.getScripName() + "' maxlength=40></td>");
+//            out.println("<td><input type='text' name='totalshares' value='" + scrip.getTotalShares()+ "' size=10 maxlength=9></td>");
+//            out.println("<td><input type='text' name='totalsharesavailable' value='" + scrip.getTotalAvailable()+ "' size=10 maxlength=9></td>");
+//            out.println("<td><input type='text' name='marketcap' value='" + _nf.format(scrip.getMarketCap())+ "' size=10 maxlength=9></td>");            
             out.println("<td><input type='submit' value='Edit'></td></tr>");
             out.println("</form></center>");
         }
-        out.println("<tr><td align=center colspan=6><input type=\"button\" value=\"Cancel\" " +
+        out.println("<tr><td align=center colspan=3><input type=\"button\" value=\"Cancel\" " +
                 "onClick=\"window.location='AdminServlet'\"/></td></tr>");
         out.println("</table><br><br></center>");
         
