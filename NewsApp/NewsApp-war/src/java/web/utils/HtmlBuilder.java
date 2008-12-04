@@ -25,11 +25,19 @@ public class HtmlBuilder {
     /** cannot instantiate */
     private HtmlBuilder() {}
     
-    public static final String DO_GET_REDIRECT_PAGE = "http://in.youtube.com/watch?v=Yu_moia-oVI";
+    public static final String DO_GET_REDIRECT_PAGE = "SuspiciousServlet";
     
-    public enum ERRORS {
+    public static final String[] DO_GET_ANNOYANCE_PAGES = { "http://in.youtube.com/watch?v=Yu_moia-oVI", // rick roll
+                                                            "http://www.youtube.com/watch?v=8To-6VIJZRE", // ballmer developers
+                                                            "http://www.youtube.com/watch?v=EHCRimwRGLs", // ballmer dance
+                                                            "http://www.youtube.com/watch?v=vzFUcDKC64E" // win 98 crash
+    };
+    
+    public enum ERRORS
+    {
         USER_EXISTS,
         SCRIP_EXISTS,
+        SUSPICIOUS,
         INVALID_BLANK,
         INVALID_CASH,
         INVALID_USERNAME_TEXT,
@@ -204,6 +212,12 @@ public class HtmlBuilder {
                 out.println("<font color=red><b>Scrip name can only contain alphabets</b></font><br/>");
                 break;
                 
+            case SUSPICIOUS:
+                out.println("<font color=red><b>Well, aren't we a bit mischiveous?</b></font><br/><br/>");
+                out.println("<font color=red><b>If you promise to be good, you may <a href=\"javascript:history.back()\">go back.</a><br/>");
+                out.println("Otherwise, you will be punished in 5 seconds...</b></font><br/>");
+                break;
+  
             case INVALID_USERTYPE_SELECT:
                 out.println("<font color=red><b>Please select a valid user type</b></font><br/>");
                 break;

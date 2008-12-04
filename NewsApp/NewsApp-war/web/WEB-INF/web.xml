@@ -107,6 +107,10 @@
         <servlet-class>web.AdminSuccessServlet</servlet-class>
     </servlet>
     <servlet>
+    	<servlet-name>SuspiciousServlet</servlet-name>
+    	<servlet-class>web.SuspiciousServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>RegistrationServlet</servlet-name>
         <servlet-class>web.RegistrationServlet</servlet-class>
     </servlet>
@@ -219,6 +223,10 @@
     <servlet-mapping>
         <servlet-name>AdminSuccessServlet</servlet-name>
         <url-pattern>/AdminSuccessServlet</url-pattern>
+    </servlet-mapping>
+        <servlet-mapping>
+            <servlet-name>SuspiciousServlet</servlet-name>
+            <url-pattern>/SuspiciousServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping><servlet-name>RegistrationServlet</servlet-name><url-pattern>/RegistrationServlet</url-pattern></servlet-mapping><servlet-mapping><servlet-name>RegistrationSuccessServlet</servlet-name><url-pattern>/RegistrationSuccessServlet</url-pattern></servlet-mapping><session-config>
         <session-timeout>
