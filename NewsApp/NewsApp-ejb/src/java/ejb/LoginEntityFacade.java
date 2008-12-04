@@ -49,4 +49,8 @@ public class LoginEntityFacade implements LoginEntityFacadeLocal {
         return em.createQuery("select object(o) from LoginEntity as o where o.userId = ?1 and o.password = ?2").setParameter(1, userid).setParameter(2, pwd).getResultList();
     }
     
+    public List findById(String userid) {
+        return em.createQuery("select object(o) from LoginEntity as o where o.userId = ?1").setParameter(1, userid).getResultList();
+    }
+    
 }
