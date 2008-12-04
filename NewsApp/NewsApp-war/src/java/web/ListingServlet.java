@@ -49,8 +49,7 @@ public class ListingServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession(true);
-        if (isInvalidSession(session))
-        {
+        if (isInvalidSession(session)) {
             response.sendRedirect("NewLogin");
             return;
         }
@@ -58,11 +57,13 @@ public class ListingServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityEntityFacade();
         
+        boolean erroredSelect = false;
+        
         out.println("<html>");
         out.println("<head>");
         out.println("<title>Virtual Stock Exchance : Scrip lookup</title>");
         out.println("</head>");
-        //Common Styling Code        
+        //Common Styling Code
         out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
         out.println("</head>");
         out.println("<body>");
@@ -76,7 +77,10 @@ public class ListingServlet extends HttpServlet {
         
         out.println("<p align=center><span class=\"ttitle\" style=\"580px;\"><br>Scrip Lookup</span><br><br>");
         
-        if (request.getParameter("scripSelected")!=null ){
+        if(request.getParameter("scripSelected")!=null && request.getParameter("scripSelected").toString().equals("--SELECT--"))
+            erroredSelect = true;
+        
+        if (request.getParameter("scripSelected")!=null && !erroredSelect ){
             int change=0;
             String ScripId = request.getParameter("scripSelected");
             System.out.println( "method called " + ScripId);
@@ -114,6 +118,10 @@ public class ListingServlet extends HttpServlet {
         }else{
             
             //ScripsExchangeEntityFacadeLocal lookupExchangeEntityEntityFacade = (ScripsExchangeEntityFacadeLocal)lookupExchangeEntityEntityFacade();
+            
+            if(erroredSelect)
+              out.println("<font color=red><b><center>Select valid scrip</center></b></font><br/>");
+            
             List scrips1 = lookupExchangeEntityEntityFacade.findAll();
             
             ScripsUserEntityFacadeLocal scripsEntityFacade = (ScripsUserEntityFacadeLocal) lookupScripsUserEntityFacade();
@@ -127,13 +135,20 @@ public class ListingServlet extends HttpServlet {
             System.out.println("Size IS  " + changes.size() );
             
             out.println( "<tr><td align=center><select id=scripSelected name=scripSelected>");
+            out.println("<option value =\"--SELECT--\")>--SELECT--</option>");
             for (Iterator it = changes.iterator(); it.hasNext();){
                 ScripsExchangeEntity elem = (ScripsExchangeEntity) it.next();
                 out.println( "<option  name=scripSelected value"+ elem.getScripId() +">"+elem.getScripId());
             }
             out.println("</select></td></tr>");
             out.println("<tr><td colspan=2> Submit <input type =submit value=Submit /> ");
-            out.println("<input type=\"button\" value=\"Cancel\" onClick=\"history.back();\"/></td></tr>");
+            
+            if(((String)session.getAttribute("userrole")).equals("t")) {
+                out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='TraderHome'\"/></td></tr>");}
+            
+            if(((String)session.getAttribute("userrole")).equals("i")) {
+                out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='InvestorServlet'\"/></td></tr>");}
+
             out.println("</table></p>");
             out.println("</form>");
             
@@ -154,11 +169,10 @@ public class ListingServlet extends HttpServlet {
         
     }
     
-    private boolean isInvalidSession(final HttpSession session)
-    {
-        return  session.isNew() || 
-                session.getAttribute("userid") == null || 
-                session.getAttribute("userrole") == null || 
+    private boolean isInvalidSession(final HttpSession session) {
+        return  session.isNew() ||
+                session.getAttribute("userid") == null ||
+                session.getAttribute("userrole") == null ||
                 ((String)session.getAttribute("userrole")).equals("a"); // only admins CANNOT do this.
     }
     
@@ -169,7 +183,7 @@ public class ListingServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-      if (request.getQueryString() != null)
+        if (request.getQueryString() != null)
             response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
         else
             processRequest(request, response);

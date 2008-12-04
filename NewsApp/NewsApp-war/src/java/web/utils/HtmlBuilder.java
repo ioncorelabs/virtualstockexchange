@@ -27,8 +27,7 @@ public class HtmlBuilder {
     
     public static final String DO_GET_REDIRECT_PAGE = "http://in.youtube.com/watch?v=Yu_moia-oVI";
     
-    public enum ERRORS
-    {
+    public enum ERRORS {
         USER_EXISTS,
         SCRIP_EXISTS,
         INVALID_BLANK,
@@ -48,7 +47,9 @@ public class HtmlBuilder {
         INVALID_MARKET_CAP,
         INVALID_NUMBER_GENERIC,
         INVALID_LOGIN,
-        ACCOUNT_DEACTIVATED
+        ACCOUNT_DEACTIVATED,
+        INVALID_USERTYPE_SELECT,
+        INVALID_REDELUSER_SELECT
     }
     
     public static String buildHtmlHeader(final String pageTitle) {
@@ -93,13 +94,12 @@ public class HtmlBuilder {
     }
     
     /**
-     * Takes a hashtable of HTML Form input name/value pairs and checks if any 
+     * Takes a hashtable of HTML Form input name/value pairs and checks if any
      * are null (i.e., that the form hasn't been submitted.)x
      * @param params hashtable of HTML Form input name/value pairs.
      * @return true if form submitted, false otherwise.
      */
-    public static boolean isFormSubmitted(final HashMap<String, String> params)
-    {
+    public static boolean isFormSubmitted(final HashMap<String, String> params) {
         for (String value : params.values())
             if (value == null)
                 return false;
@@ -108,34 +108,31 @@ public class HtmlBuilder {
     }
     
     /**
-     * Takes a hashtable of HTML Form input name/value pairs and checks if any 
+     * Takes a hashtable of HTML Form input name/value pairs and checks if any
      * any are blank. Assumes already checked that none are null using isFormSubmitted
      * @param params hashtable of HTML Form input name/value pairs.
      * @return true if form submitted, false otherwise.
      */
-    public static boolean hasBlankFields(final HashMap<String, String> params)
-    {
+    public static boolean hasBlankFields(final HashMap<String, String> params) {
         for (String value : params.values())
             if (value.equals(""))
                 return true;
         
         return false;
     }
-
-    public static void printErrorMessage(final PrintWriter out, final HtmlBuilder.ERRORS error)
-    {
-        switch (error)
-        {
+    
+    public static void printErrorMessage(final PrintWriter out, final HtmlBuilder.ERRORS error) {
+        switch (error) {
             case ACCOUNT_DEACTIVATED:
                 out.println("<font color=red><b>Your account has been deactivated. Please contact the administrator or try a different login." +
-                    "</b></font><br/>");
+                        "</b></font><br/>");
                 break;
-            
+                
             case INVALID_LOGIN:
                 out.println("<font color=red><b>Invalid Username or Password. Please try again.</b></font><br/>");
                 break;
                 
-            case INVALID_BLANK:         
+            case INVALID_BLANK:
                 out.println("<font color=red><b>All fields are required</b></font><br/>");
                 break;
                 
@@ -146,11 +143,11 @@ public class HtmlBuilder {
             case INVALID_USERNAME_TEXT:
                 out.println("<font color=red><b>User Name can only contain alphabets</b></font><br/>");
                 break;
-            
+                
             case INVALID_USERNAME_MAX:
                 out.println("<font color=red><b>User Name must be shorter than 40 characters</b></font><br/>");
                 break;
-            
+                
             case INVALID_TOTAL_SHARES:
                 out.println("<font color=red><b>Please enter a valid value for total shares</b></font><br/>");
                 break;
@@ -170,7 +167,7 @@ public class HtmlBuilder {
             case INVALID_USERID_MIN:
                 out.println("<font color=red><b>User IDs must be at least 3 characters long</b></font><br/>");
                 break;
-            
+                
             case INVALID_USERID_MAX:
                 out.println("<font color=red><b>User IDs must be shorter than 16 characters</b></font><br/>");
                 break;
@@ -186,7 +183,7 @@ public class HtmlBuilder {
             case INVALID_SCRIPID_MIN:
                 out.println("<font color=red><b>Scrip IDs must be at least 3 characters long</b></font><br/>");
                 break;
-            
+                
             case INVALID_SCRIPID_MAX:
                 out.println("<font color=red><b>Scrip IDs must be shorter than 16 characters</b></font><br/>");
                 break;
@@ -194,11 +191,11 @@ public class HtmlBuilder {
             case INVALID_PASSWORD_MIN:
                 out.println("<font color=red><b>Passwords must be at least 3 characters long</b></font><br/>");
                 break;
-            
+                
             case INVALID_PASSWORD_MAX:
                 out.println("<font color=red><b>Passwords must be shorter than 16 characters</b></font><br/>");
                 break;
-            
+                
             case INVALID_NUMBER_GENERIC:
                 out.println("<font color=red><b>Invalid number values. Please make sure values are sane</b></font><br/>");
                 break;
@@ -206,25 +203,30 @@ public class HtmlBuilder {
             case INVALID_SCRIPNAME_TEXT:
                 out.println("<font color=red><b>Scrip name can only contain alphabets</b></font><br/>");
                 break;
+                
+            case INVALID_USERTYPE_SELECT:
+                out.println("<font color=red><b>Please select a valid user type</b></font><br/>");
+                break;
+                
+            case INVALID_REDELUSER_SELECT:
+                out.println("<font color=red><b>Please select a valid user</b></font><br/>");
+                break;
         }
     }
     
-    public static boolean isValidUserName(String name)
-    {
+    public static boolean isValidUserName(String name) {
         Pattern p = Pattern.compile("[^A-Za-z ]");
         Matcher m = p.matcher(name);
         return !m.find();
     }
     
-    public static boolean isValidScripName(String name)
-    {
+    public static boolean isValidScripName(String name) {
         Pattern p = Pattern.compile("[^A-Za-z0-9 ]");
         Matcher m = p.matcher(name);
         return !m.find();
     }
     
-    public static boolean isValidID(String name)
-    {
+    public static boolean isValidID(String name) {
         Pattern p = Pattern.compile("[^A-Za-z0-9]");
         Matcher m = p.matcher(name);
         return !m.find();
