@@ -170,7 +170,7 @@ public class AddUserServlet extends HttpServlet {
         out.println("<table width=350px cellpadding=4px border=1>");
         out.println("<tr><td width=150px>User Id:</td><td><input type='text' name='userid' maxlength=16></td></tr>");
         out.println("<tr><td>Password:</td><td><input type='password' name='password' maxlength=16></td></tr>");
-        out.println("<tr><td>Retype Password:</td><td><input type='password' name='passwordCopy' maxlength=8></td></tr>");
+        out.println("<tr><td>Retype Password:</td><td><input type='password' name='passwordCopy' maxlength=16></td></tr>");
         out.println("<tr><td>User Name:</td><td><input type='text' name='username' maxlength=40></td></tr>");
         out.println("<tr><td>User Type:</td><td><select name='usertype'>");
         out.println("<option value =\"--SELECT--\")>--SELECT--</option>");
