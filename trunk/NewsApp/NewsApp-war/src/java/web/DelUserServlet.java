@@ -35,10 +35,9 @@ public class DelUserServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
+        
         HttpSession session = request.getSession(true);
-        if (isInvalidSession(session))
-        {
+        if (isInvalidSession(session)) {
             response.sendRedirect("NewLogin");
             return;
         }
@@ -49,20 +48,26 @@ public class DelUserServlet extends HttpServlet {
         String userid = request.getParameter("userid");
         UsersEntityFacadeLocal usersEntityFacade = (UsersEntityFacadeLocal) lookupUsersEntityFacade();
         
-        if (userid != null)
-        {   
+        LoginEntityFacadeLocal loginEntityFacade = (LoginEntityFacadeLocal) lookupLoginEntityFacade();
+        List userlist = loginEntityFacade.findById(userid);
+        
+        if (userid != null) {
             UsersEntity user = usersEntityFacade.find(userid);
-            user.setActive('n');                        
+            user.setActive('n');
             usersEntityFacade.edit(user);
             
+            LoginEntity newUser = (LoginEntity)userlist.get(0);            
+            newUser.setUserRole('n');
+            loginEntityFacade.edit(newUser);
+            
             session.setAttribute("message", user.getUserName()+" was successfully deactivated");
-            response.sendRedirect("AdminSuccessServlet"); 
+            response.sendRedirect("AdminSuccessServlet");
         }
         
         List users = usersEntityFacade.findAllActive();
         printForm(users, response);
     }
-
+    
     private void printForm(final List users, final HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Deactivate User"));
@@ -70,9 +75,8 @@ public class DelUserServlet extends HttpServlet {
         
         out.println("<form method=post>");
         out.println("<font size=4>User Id:</font> &nbsp;&nbsp;<select name='userid'>");
-                
-        for (Iterator it = users.iterator(); it.hasNext();)
-        {
+        
+        for (Iterator it = users.iterator(); it.hasNext();) {
             UsersEntity user = (UsersEntity)it.next();
             out.println("<option value='" + user.getUserId() + "'>" + user.getUserId() + "</option><br/>");
         }
@@ -80,17 +84,16 @@ public class DelUserServlet extends HttpServlet {
         out.println("</select><br><br>");
         out.println("<input type='submit' value='Submit'>   ");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
-        out.println("</form></center>");  
-                
+        out.println("</form></center>");
+        
         out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
     }
     
-    private boolean isInvalidSession(final HttpSession session)
-    {
-        return  session.isNew() || 
-                session.getAttribute("userid") == null || 
-                session.getAttribute("userrole") == null || 
+    private boolean isInvalidSession(final HttpSession session) {
+        return  session.isNew() ||
+                session.getAttribute("userid") == null ||
+                session.getAttribute("userrole") == null ||
                 !((String)session.getAttribute("userrole")).equals("a");
     }
     
@@ -123,7 +126,7 @@ public class DelUserServlet extends HttpServlet {
     }
     // </editor-fold>
     
-        private UsersEntityFacadeLocal lookupUsersEntityFacade() {
+    private UsersEntityFacadeLocal lookupUsersEntityFacade() {
         try {
             Context c = new InitialContext();
             return (UsersEntityFacadeLocal) c.lookup("NewsApp/UsersEntityFacade/local");
@@ -133,4 +136,17 @@ public class DelUserServlet extends HttpServlet {
         }
     }
     
+    /**
+     * Perform JNDI lookup for LoginEntity
+     * @return Local facade of LoginEntity bean.
+     */
+    private LoginEntityFacadeLocal lookupLoginEntityFacade() {
+        try {
+            Context c = new InitialContext();
+            return (LoginEntityFacadeLocal) c.lookup("NewsApp/LoginEntityFacade/local");
+        } catch(NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
+            throw new RuntimeException(ne);
+        }
+    }
 }

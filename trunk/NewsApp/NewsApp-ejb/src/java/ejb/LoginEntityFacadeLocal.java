@@ -28,4 +28,5 @@ public interface LoginEntityFacadeLocal {
 
     List findAll(String userid, String pwd);
     
+    List findById(String userid);    
 }
