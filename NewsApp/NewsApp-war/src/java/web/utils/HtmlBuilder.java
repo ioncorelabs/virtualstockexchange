@@ -57,7 +57,8 @@ public class HtmlBuilder {
         INVALID_LOGIN,
         ACCOUNT_DEACTIVATED,
         INVALID_USERTYPE_SELECT,
-        INVALID_REDELUSER_SELECT
+        INVALID_REDELUSER_SELECT,
+        INVALID_PASS_MISMATCH
     }
     
     public static String buildHtmlHeader(final String pageTitle) {
@@ -224,6 +225,10 @@ public class HtmlBuilder {
                 
             case INVALID_REDELUSER_SELECT:
                 out.println("<font color=red><b>Please select a valid user</b></font><br/>");
+                break;
+                
+            case INVALID_PASS_MISMATCH:
+                out.println("<font color=red><b>Passwords do not match, please try again</b></font><br/>");
                 break;
         }
     }
