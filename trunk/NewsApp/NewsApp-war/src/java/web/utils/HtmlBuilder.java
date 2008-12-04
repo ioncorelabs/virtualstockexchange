@@ -35,6 +35,7 @@ public class HtmlBuilder {
         INVALID_CASH,
         INVALID_USERNAME_TEXT,
         INVALID_USERNAME_MAX,
+        INVALID_SCRIPNAME_TEXT,
         INVALID_SCRIPNAME_MAX,
         INVALID_SCRIPID_MIN,
         INVALID_SCRIPID_MAX,
@@ -201,12 +202,23 @@ public class HtmlBuilder {
             case INVALID_NUMBER_GENERIC:
                 out.println("<font color=red><b>Invalid number values. Please make sure values are sane</b></font><br/>");
                 break;
+                
+            case INVALID_SCRIPNAME_TEXT:
+                out.println("<font color=red><b>Scrip name can only contain alphabets</b></font><br/>");
+                break;
         }
     }
     
-    public static boolean isValidName(String name)
+    public static boolean isValidUserName(String name)
     {
         Pattern p = Pattern.compile("[^A-Za-z ]");
+        Matcher m = p.matcher(name);
+        return !m.find();
+    }
+    
+    public static boolean isValidScripName(String name)
+    {
+        Pattern p = Pattern.compile("[^A-Za-z0-9 ]");
         Matcher m = p.matcher(name);
         return !m.find();
     }

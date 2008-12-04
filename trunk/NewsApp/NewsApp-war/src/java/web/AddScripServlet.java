@@ -56,6 +56,7 @@ public class AddScripServlet extends HttpServlet {
         
         boolean erroredScripExists = false;
         boolean erroredScripNameMax = false;
+        boolean erroredScripNameText = false;
         boolean erroredBlankFields = false;
         boolean erroredNumTotalShares = false;
         boolean erroredNumMarketCap = false;
@@ -93,9 +94,11 @@ public class AddScripServlet extends HttpServlet {
             
             if (!HtmlBuilder.isValidID(parameterMap.get("scripid")))
                 erroredScripIDText = true;
+            if (!HtmlBuilder.isValidScripName(parameterMap.get("scripname")))
+                erroredScripNameText = true;
             
             if (!erroredBlankFields && !erroredNumTotalShares && !erroredNumMarketCap && 
-                !erroredScripNameMax && !erroredScripIDMin && !erroredScripIDMax && !erroredScripIDText)
+                !erroredScripNameMax && !erroredScripIDMin && !erroredScripIDMax && !erroredScripIDText && !erroredScripNameText)
             {
                 int totalSharesInt              = Integer.parseInt(parameterMap.get("totalshares"));
                 double marketCapDbl             = Double.parseDouble(parameterMap.get("marketcap"));
@@ -118,7 +121,7 @@ public class AddScripServlet extends HttpServlet {
         
         printForm(out, request, response, 
                     erroredScripExists, erroredBlankFields, erroredNumTotalShares, erroredNumMarketCap, 
-                    erroredScripNameMax, erroredScripIDMin, erroredScripIDMax, erroredScripIDText);
+                    erroredScripNameMax, erroredScripIDMin, erroredScripIDMax, erroredScripIDText, erroredScripNameText);
     }
     
     private boolean isInvalidSession(final HttpSession session) {
@@ -136,7 +139,8 @@ public class AddScripServlet extends HttpServlet {
                     final boolean erroredScripNameMax, 
                     final boolean erroredScripIDMin, 
                     final boolean erroredScripIDMax,
-                    final boolean erroredScripIDText) throws IOException 
+                    final boolean erroredScripIDText,
+                    final boolean erroredScripNameText) throws IOException 
     {
         out.println(HtmlBuilder.buildHtmlHeader("Add Scrip"));
         out.println("<center><span class=\"ttitle\" style=\"580px;\"><br>Add Scrip Form</span><br><br>");
@@ -157,15 +161,17 @@ public class AddScripServlet extends HttpServlet {
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_SCRIPID_MAX);
         if (erroredScripIDText)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_ID_TEXT);
+        if (erroredScripNameText)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_SCRIPNAME_TEXT);
         
         out.println("<br/><form method=post>");
         
         out.println("<table width=350px cellpadding=4px border=1>");
-        out.println("<tr><td width=150px>Scrip Id:</td><td><input type='text' name='scripid' maxlength=6></td></tr>");
+        out.println("<tr><td width=150px>Scrip Id:</td><td><input type='text' name='scripid' maxlength=16></td></tr>");
         out.println("<tr><td>Scrip Name:</td><td><input type='text' name='scripname' maxlength=40></td></tr>");
-        out.println("<tr><td>Total Shares:</td><td><input type='text' name='totalshares' maxlength=12></td></tr>");
-        out.println("<tr><td>Market Cap:</td><td><input type='text' name='marketcap' maxlength=12></td></tr>");
-        out.println("<tr><td align=center colspan=2><input type='submit' value='Submit'>&nbsp; ");
+        out.println("<tr><td>Total Shares:</td><td><input type='text' name='totalshares' maxlength=9></td></tr>");
+        out.println("<tr><td>Market Cap:</td><td><input type='text' name='marketcap' maxlength=9></td></tr>");
+        out.println("<tr><td align=center colspan=2><input type='submit' value='Add Scrip'>&nbsp; ");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/></td></tr>");
         out.println("</table>");
         out.println("</form></center>");
