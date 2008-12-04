@@ -9,7 +9,6 @@ package web;
 import ejb.*;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -54,10 +53,21 @@ public class ReUserServlet extends HttpServlet {
         if(userid != null && userid.equals("--SELECT--"))
             erroredSelect = true;
         
+        LoginEntityFacadeLocal loginEntityFacade = (LoginEntityFacadeLocal) lookupLoginEntityFacade();
+        List userlist = loginEntityFacade.findById(userid);
+        
         if (userid != null && !erroredSelect) {
             UsersEntity user = usersEntityFacade.find(userid);
             user.setActive('y');
             usersEntityFacade.edit(user);
+            
+            LoginEntity newUser = (LoginEntity)userlist.get(0);
+            if(newUser.getUserRole() == 'j')
+                newUser.setUserRole('i');
+            if(newUser.getUserRole() == 'u')
+                newUser.setUserRole('t');
+            loginEntityFacade.edit(newUser);
+            
             response.sendRedirect("AdminServlet");
         }
         
@@ -92,6 +102,7 @@ public class ReUserServlet extends HttpServlet {
             out.println("<input type=\"button\" value=\"Cancel\" " +
                     "onClick=\"window.location='AdminServlet'\"/>");
         }
+        
         out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
     }
@@ -137,6 +148,20 @@ public class ReUserServlet extends HttpServlet {
         try {
             Context c = new InitialContext();
             return (UsersEntityFacadeLocal) c.lookup("NewsApp/UsersEntityFacade/local");
+        } catch(NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
+            throw new RuntimeException(ne);
+        }
+    }
+    
+    /**
+     * Perform JNDI lookup for LoginEntity
+     * @return Local facade of LoginEntity bean.
+     */
+    private LoginEntityFacadeLocal lookupLoginEntityFacade() {
+        try {
+            Context c = new InitialContext();
+            return (LoginEntityFacadeLocal) c.lookup("NewsApp/LoginEntityFacade/local");
         } catch(NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught" ,ne);
             throw new RuntimeException(ne);
