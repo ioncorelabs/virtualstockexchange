@@ -53,6 +53,7 @@ public class AddUserServlet extends HttpServlet {
         parameterMap.put("username",            request.getParameter("username"));
         parameterMap.put("usertype",            request.getParameter("usertype"));
         parameterMap.put("cashheld",            request.getParameter("cashheld"));
+        parameterMap.put("passwordCopy",        request.getParameter("passwordCopy"));
         
         boolean erroredBlankFields  = false;
         boolean erroredNumType      = false;
@@ -64,15 +65,15 @@ public class AddUserServlet extends HttpServlet {
         boolean erroredPasswordMin  = false;
         boolean erroredPasswordMax  = false;
         boolean erroredSelect       = false;
+        boolean erroredPasswordMisMatch =false;
         double dblCashHeld = 0;
         
-        if(HtmlBuilder.isFormSubmitted(parameterMap)) 
-        {    
+        
+        if(HtmlBuilder.isFormSubmitted(parameterMap)) {
             if(HtmlBuilder.hasBlankFields(parameterMap)) {
                 erroredBlankFields = true;
             } else {
-                try{dblCashHeld = Double.parseDouble(parameterMap.get("cashheld")); } 
-                catch(NumberFormatException e) { erroredNumType = true; }
+                try{dblCashHeld = Double.parseDouble(parameterMap.get("cashheld")); } catch(NumberFormatException e) { erroredNumType = true; }
             }
             
             if (!erroredNumType && (dblCashHeld < 0.0))
@@ -85,11 +86,13 @@ public class AddUserServlet extends HttpServlet {
             if (parameterMap.get("userid").length() > 16)
                 erroredUserIDMax = true;
             if(parameterMap.get("usertype").toString().equals("--SELECT--"))
-                erroredSelect = true;            
+                erroredSelect = true;
             if (parameterMap.get("password").length() < 3)
                 erroredPasswordMin = true;
             if (parameterMap.get("password").length() > 16)
                 erroredPasswordMax = true;
+            if(!(parameterMap.get("password").equals(parameterMap.get("passwordCopy"))))
+                erroredPasswordMisMatch = true;
             
             if(!HtmlBuilder.isValidUserName(parameterMap.get("username")))
                 erroredUserNameText = true;
@@ -99,10 +102,9 @@ public class AddUserServlet extends HttpServlet {
         
         boolean erroredUserExists = false;
         
-        if (HtmlBuilder.isFormSubmitted(parameterMap) && 
-                !erroredBlankFields && !erroredNumType && !erroredUserNameText && !erroredSelect &&
-                !erroredUserNameMax && !erroredUserIDMin && !erroredUserIDMax && !erroredPasswordMin && !erroredPasswordMax && !erroredUserIDText) 
-        {
+        if (HtmlBuilder.isFormSubmitted(parameterMap) &&
+                !erroredBlankFields && !erroredNumType && !erroredUserNameText && !erroredSelect && !erroredPasswordMisMatch &&
+                !erroredUserNameMax && !erroredUserIDMin && !erroredUserIDMax && !erroredPasswordMin && !erroredPasswordMax && !erroredUserIDText) {
             char userRole = parameterMap.get("usertype").charAt(0);
             double cashHeldDbl = Double.parseDouble(parameterMap.get("cashheld"));
             
@@ -124,12 +126,12 @@ public class AddUserServlet extends HttpServlet {
                 usersEntity.setInitialCashHeld(cashHeldDbl);
                 usersEntity.setCashHeld(cashHeldDbl);
                 usersEntity.setActive('y');
-
+                
                 loginEntityFacade.create(loginEntity);
                 usersEntityFacade.create(usersEntity);
                 
                 session.setAttribute("message", parameterMap.get("username")+" was successfully added to the exchange");
-                response.sendRedirect("AdminSuccessServlet");                
+                response.sendRedirect("AdminSuccessServlet");
             }
         }
         
@@ -161,11 +163,14 @@ public class AddUserServlet extends HttpServlet {
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_PASSWORD_MAX);
         if (erroredSelect)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_USERTYPE_SELECT);
+        if (erroredPasswordMisMatch)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_PASS_MISMATCH);
         
         out.println("<br/><form method=post>");
         out.println("<table width=350px cellpadding=4px border=1>");
         out.println("<tr><td width=150px>User Id:</td><td><input type='text' name='userid' maxlength=16></td></tr>");
         out.println("<tr><td>Password:</td><td><input type='password' name='password' maxlength=16></td></tr>");
+        out.println("<tr><td>Retype Password:</td><td><input type='password' name='passwordCopy' maxlength=8></td></tr>");
         out.println("<tr><td>User Name:</td><td><input type='text' name='username' maxlength=40></td></tr>");
         out.println("<tr><td>User Type:</td><td><select name='usertype'>");
         out.println("<option value =\"--SELECT--\")>--SELECT--</option>");
@@ -173,7 +178,7 @@ public class AddUserServlet extends HttpServlet {
         out.println("<option value='trader'>Trader</option>");
         out.println("<option value='investor'>Investor</option>");
         out.println("</select></td></tr>");
-        out.println("<tr><td>Cash Held:</td><td><input type='text' name='cashheld' maxlength=8></td></tr>");        
+        out.println("<tr><td>Cash Held:</td><td><input type='text' name='cashheld' maxlength=8></td></tr>");
         out.println("<tr><td align=center colspan=2><input type='submit' value='Register'> &nbsp;");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/></td></tr>");
         out.println("</table>");
