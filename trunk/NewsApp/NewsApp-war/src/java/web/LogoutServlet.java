@@ -73,10 +73,10 @@ public class LogoutServlet extends HttpServlet {
      * @param request servlet request
      * @param response servlet response
      */
-     protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         //processRequest(request, response);
-      if (request.getQueryString() != null)
+        if (request.getQueryString() != null)
             response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
         else
             processRequest(request, response);
