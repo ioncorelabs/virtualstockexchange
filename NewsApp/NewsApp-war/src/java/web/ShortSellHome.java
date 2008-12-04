@@ -56,7 +56,18 @@ public class ShortSellHome extends HttpServlet {
         //Common Ends
         
         
-        out.println("<p align=center><br><span class=\"ttitle\" style=\"580px;\">Short Sell Homepage</span><br>");
+        out.println("<p align=center><br><span class=\"ttitle\" style=\"580px;\">Short Sell Homepage</span><br><br>");
+        
+                
+        out.println("<div class=\"main-content\">");
+            out.println("Please refer to the menu on the left for short selling activities. " +
+                    " As a part of Short Selling, if you anticipate an impending drop in price of a particular Scrip, you may borrow" +
+                    " and sell shares of this scrip, hoping to return the borrowed shares when the price drops." +
+                    " .Essentially, you are allowed to borrow a certain amount of shares of the scrip, depending on availability" +
+                    " and sell them at a given price. Later, if the price of the scrip goes down, you may buy the shares " +
+                    "at that lower price and return them to the original lender, hence making profit equivalent to the difference " +
+                    "in original and new price.");
+        out.println("</div>");
         
         
         out.println("<div id=\"menius\">");

@@ -45,10 +45,13 @@ public class TraderHome extends HttpServlet {
         out.println("<div id=\"head\" align=\"center\"");
         out.println("<span class=\"ttitle\" style=\"580px;\"><br>Trader Homepage</span><br><br>");       
         out.println("</div>");
-        out.println("<br><br><br>");
+        out.println("<br>");
         
         out.println("<div class=\"main-content\">");
-        out.println("Please refer to the menu on the left for the activities available to you.");
+            out.println("Please refer to the menu on the left for the trading activities available to you. In the capacity of a Trader" +
+                    "some of the activities available to you include Buying shares, Selling shares and Short Selling shares. " +
+                    "You can also view your entire portfolio, including transaction history and lookup any Scrip whose status " +
+                    "you would like to check. ");
         out.println("</div>");
                 
         out.println("<div id=\"menius\">");

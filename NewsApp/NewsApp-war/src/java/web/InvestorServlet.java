@@ -28,8 +28,7 @@ public class InvestorServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession(true);
-        if (isInvalidSession(session))
-        {
+        if (isInvalidSession(session)) {
             response.sendRedirect("NewLogin");
             return;
         }
@@ -38,21 +37,21 @@ public class InvestorServlet extends HttpServlet {
         System.out.println("At investor page as user '" + userid + "'");
         
         PrintWriter out = response.getWriter();
-       
+        
         out.println("<html>");
         out.println("<head>");
         out.println("<title>Virtual Stock Exchance: Investor Homepage</title>");
         out.println("</head>");
         out.println("<body>");
         
-                //Common Styling Code
+        //Common Styling Code
         out.println("<link href=\"greeny.css\" rel=\"stylesheet\" type=\"text/css\" />");
         out.println("</head>");
         out.println("<body>");
         out.println("<div id=\"tot\">");
         out.println("<div id=\"header\">");
         out.println("<img src=\"img/genericlogo.png\" align=\"left\" alt=\"company logo\"/> <span class=\"title\">Virtual Stock Exchange</span>");
-        out.println("<div class=\"slogan\">Bulls & Bears</div>");       
+        out.println("<div class=\"slogan\">Bulls & Bears</div>");
         out.println("<div id=\"corp\">");
         out.println("<div class=\"main-text\">");
         //Common Ends
@@ -61,7 +60,14 @@ public class InvestorServlet extends HttpServlet {
         out.println("<br><span class=\"ttitle\" style=\"580px;\">Investor Homepage</span><br>");
         out.println("<br><br>");
         out.println("</div>");
-        out.println("<br><br><br><br><br>");
+        out.println("");
+        
+        out.println("<div class=\"main-content\">");
+        out.println("Please refer to the menu on the left for the trading activities available to you. In the capacity of an Investor," +
+                " some of the activities available to you include Buying shares and Selling shares. " +
+                "You can also view your entire portfolio, including transaction history and lookup any Scrip whose status " +
+                "you would like to check. ");
+        out.println("</div>");
         
         out.println("<div id=\"menius\">");
         out.println("<div class=\"menu-title\">Menu</div>");
@@ -69,28 +75,27 @@ public class InvestorServlet extends HttpServlet {
         out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"SellScrips\">Sell</a></div>");
         out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"InvestorPortfolio\">Your Portfolio</a></div>");
         out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"ListingServlet\">Scrip Lookup</a></div>");
-         out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"LogoutServlet\">Logout</a></div>");
+        out.println("<div class=\"menu-item\"><img src=\"img/arrow.gif\" hspace=\"10\" align=\"left\" /><a href=\"LogoutServlet\">Logout</a></div>");
         out.println("</div>");
         
         //Common Starts
         out.println("</div></div>");
-        out.println("<div class=\"clear\"></div>");        
+        out.println("<div class=\"clear\"></div>");
         out.println("<div class=\"footer\"><span style=\"margin-left:400px;\">The Bulls & Bears Team</span></div>");
         out.println("</div>");
         //Common Ends
         
-      
+        
         out.println("</body>");
         out.println("</html>");
         
         out.close();
     }
     
-    private boolean isInvalidSession(final HttpSession session)
-    {
-        return  session.isNew() || 
-                session.getAttribute("userid") == null || 
-                session.getAttribute("userrole") == null || 
+    private boolean isInvalidSession(final HttpSession session) {
+        return  session.isNew() ||
+                session.getAttribute("userid") == null ||
+                session.getAttribute("userrole") == null ||
                 !((String)session.getAttribute("userrole")).equals("i");
     }
     

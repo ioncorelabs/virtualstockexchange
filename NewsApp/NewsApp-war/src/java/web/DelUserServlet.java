@@ -62,7 +62,10 @@ public class DelUserServlet extends HttpServlet {
             usersEntityFacade.edit(user);
             
             LoginEntity newUser = (LoginEntity)userlist.get(0);            
-            newUser.setUserRole('n');
+            if(newUser.getUserRole() == 'i')
+                newUser.setUserRole('j');
+            if(newUser.getUserRole() == 't')
+                newUser.setUserRole('u');
             loginEntityFacade.edit(newUser);
             
             session.setAttribute("message", user.getUserName()+" was successfully deactivated");
