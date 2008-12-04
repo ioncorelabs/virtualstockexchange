@@ -93,7 +93,7 @@ public class DelUserServlet extends HttpServlet {
             }
             
             out.println("</select><br><br>");
-            out.println("<input type='submit' value='Submit'>   ");
+            out.println("<input type='submit' value='Deactivate'>   ");
             out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
             out.println("</form></center>");
         } else{

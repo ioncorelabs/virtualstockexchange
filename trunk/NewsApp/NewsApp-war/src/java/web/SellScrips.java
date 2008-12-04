@@ -217,7 +217,7 @@ public class SellScrips extends HttpServlet {
         out.println("<input type =hidden name = index >" );
         
         out.println("<tr><td colspan=4> Number of Shares to Sell <input type =text name=number id=num size =10 maxlength=6></tr> ");
-        out.println("<tr><td colspan=4 align=center><input type =submit value=Submit />");
+        out.println("<tr><td colspan=4 align=center><input type =submit value=Sell />");
         if(((String)appSession.getAttribute("userrole")).equals("t")) {
             out.println("<input type=\"button\" value=\"Cancel\" " +
                     "onClick=\"window.location='TraderHome'\"/></td></tr></table></p>");

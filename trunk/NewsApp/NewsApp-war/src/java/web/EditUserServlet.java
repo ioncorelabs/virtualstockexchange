@@ -56,7 +56,7 @@ public class EditUserServlet extends HttpServlet {
         HashMap<String, String> parameterMap = new HashMap<String, String>();
         parameterMap.put("userid",              request.getParameter("userid"));
         parameterMap.put("username",            request.getParameter("username"));
-        parameterMap.put("cashheld",            request.getParameter("cashheld"));
+//        parameterMap.put("cashheld",            request.getParameter("cashheld"));
         parameterMap.put("password",            request.getParameter("password"));
         parameterMap.put("usertype",            request.getParameter("usertype"));
         
@@ -64,7 +64,7 @@ public class EditUserServlet extends HttpServlet {
         LoginEntityFacadeLocal loginEntityFacade = (LoginEntityFacadeLocal) lookupLoginEntityFacade();
         
         boolean erroredBlankFields = false;
-        boolean erroredNumType = false;
+//        boolean erroredNumType = false;
         boolean erroredUserNameMax = false;
         boolean erroredUserNameText = false;
         boolean erroredPasswordMin = false;
@@ -77,11 +77,11 @@ public class EditUserServlet extends HttpServlet {
             if (HtmlBuilder.hasBlankFields(parameterMap)) {
                 erroredBlankFields = true;
             } else {
-                try{numDbl = Double.parseDouble(parameterMap.get("cashheld")); } 
-                catch(NumberFormatException e) { erroredNumType = true; }
+//                try{numDbl = Double.parseDouble(parameterMap.get("cashheld")); } 
+//                catch(NumberFormatException e) { erroredNumType = true; }
             }
-            if (!erroredNumType && (numDbl < 0.0))
-                erroredNumType = true;
+//            if (!erroredNumType && (numDbl < 0.0))
+//                erroredNumType = true;
             
             if (parameterMap.get("username").length() > 40)
                 erroredUserNameMax = true;
@@ -93,14 +93,14 @@ public class EditUserServlet extends HttpServlet {
             if (!HtmlBuilder.isValidUserName(parameterMap.get("username")))
                 erroredUserNameText = true;
             
-            if((!erroredBlankFields) && (!erroredNumType) && (!erroredUserNameText) && 
+            if((!erroredBlankFields) && /*(!erroredNumType) &&*/ (!erroredUserNameText) && 
                 !erroredUserNameMax && !erroredPasswordMin && !erroredPasswordMax)
             {
                 UsersEntity user = usersEntityFacade.find(parameterMap.get("userid"));
                 LoginEntity login = loginEntityFacade.find(parameterMap.get("userid"));
                 
                 user.setUserName(parameterMap.get("username"));
-                user.setCashHeld(Double.parseDouble(parameterMap.get("cashheld")));
+//                user.setCashHeld(Double.parseDouble(parameterMap.get("cashheld")));
                 login.setPassword(parameterMap.get("password"));
                 login.setUserRole(parameterMap.get("usertype").charAt(0));
                 
@@ -115,7 +115,7 @@ public class EditUserServlet extends HttpServlet {
         List users = usersEntityFacade.findAllActive();
         
         printForm(request, response, users, loginEntityFacade,
-                erroredBlankFields, erroredNumType, erroredUserNameMax, erroredUserNameText, erroredPasswordMin, erroredPasswordMax);
+                erroredBlankFields, /*erroredNumType,*/ erroredUserNameMax, erroredUserNameText, erroredPasswordMin, erroredPasswordMax);
     }
     
     private boolean isInvalidSession(final HttpSession session) {
@@ -128,7 +128,7 @@ public class EditUserServlet extends HttpServlet {
     private void printForm(final HttpServletRequest request, final HttpServletResponse response, 
                         List users, LoginEntityFacadeLocal loginEntityFacade,
                         final boolean erroredBlankFields, 
-                        final boolean erroredNumType, 
+//                        final boolean erroredNumType, 
                         final boolean erroredUserNameMax,
                         final boolean erroredUserNameText, 
                         final boolean erroredPasswordMin,
@@ -139,8 +139,8 @@ public class EditUserServlet extends HttpServlet {
         out.println("<center><span class=\"ttitle\" style=\"580px;\"><br/>Edit User Form</span><br><br>");
         if (erroredBlankFields)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_BLANK);
-        if (erroredNumType)
-            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_CASH);
+//        if (erroredNumType)
+//            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_CASH);
         if (erroredUserNameMax)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_USERNAME_MAX);
         if (erroredUserNameText)
@@ -151,7 +151,9 @@ public class EditUserServlet extends HttpServlet {
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_PASSWORD_MAX);
         
         out.println("<br/><table width=600px border=1>");
-        out.println("<tr><td>User ID</td><td>User Name</td><td>Password</td><td>User Role</td><td>Current Cash Held</td><td>&nbsp;</td></tr>");
+        out.println("<tr><td>User ID</td><td>User Name</td><td>Password</td><td>User Role</td>");
+//        out.println("<td>Current Cash Held</td>");
+        out.println("<td>&nbsp;</td></tr>");
         
         
         _nf.setMaximumFractionDigits(2);
@@ -164,7 +166,7 @@ public class EditUserServlet extends HttpServlet {
             
             out.println("<form method=post>");
             out.println("<tr><td>" + user.getUserId() + "<input type='hidden' name='userid' value='" + user.getUserId() + "'></td>");
-            out.println("<td><input type='text' name='username' value='" + user.getUserName() + "' maxlength=16></td>");
+            out.println("<td><input type='text' name='username' value='" + user.getUserName() + "' maxlength=40></td>");
             out.println("<td><input type='password' name='password' value='" + login.getPassword() + "' maxlength=16></td>");
             
             out.println("<td><select name='usertype'>");
@@ -173,12 +175,12 @@ public class EditUserServlet extends HttpServlet {
             out.println("<option value='investor'" + ((login.getUserRole() == 'i') ? " selected" : "") + ">Investor</option>");
             out.println("</select></td>");
             
-            out.println("<td><input type='text' name='cashheld' value='" + _nf.format(user.getCashHeld())+ "' maxlength=9></td>");
+//            out.println("<td><input type='text' name='cashheld' value='" + _nf.format(user.getCashHeld())+ "' maxlength=9></td>");
             out.println("<td><input type='submit' value='Edit'></td></tr>");
             out.println("</form>");
         }
                 
-        out.println("<tr><td align=center colspan=6><input " +
+        out.println("<tr><td align=center colspan=5><input " +
                 "type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/></center></td></tr>");
         
         out.println("</table><br><br>");

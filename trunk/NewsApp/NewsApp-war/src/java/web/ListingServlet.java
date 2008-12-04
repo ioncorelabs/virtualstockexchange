@@ -141,7 +141,7 @@ public class ListingServlet extends HttpServlet {
                 out.println( "<option  name=scripSelected value"+ elem.getScripId() +">"+elem.getScripId());
             }
             out.println("</select></td></tr>");
-            out.println("<tr><td colspan=2> Submit <input type =submit value=Submit /> ");
+            out.println("<tr><td colspan=2> Submit <input type =submit value=Lookup /> ");
             
             if(((String)session.getAttribute("userrole")).equals("t")) {
                 out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='TraderHome'\"/></td></tr>");}

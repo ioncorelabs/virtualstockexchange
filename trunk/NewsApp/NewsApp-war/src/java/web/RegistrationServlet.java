@@ -158,9 +158,9 @@ public class RegistrationServlet extends HttpServlet {
         
         out.println("<br/><form method=post>");
         out.println("<table width=350px cellpadding=4px border=1>");
-        out.println("<tr><td width=150px>User Id:</td><td><input type='text' name='userid' maxlength=6></td></tr>");
-        out.println("<tr><td>Password:</td><td><input type='password' name='password' maxlength=8></td></tr>");
-        out.println("<tr><td>Retype Password:</td><td><input type='password' name='passwordCopy' maxlength=8></td></tr>");
+        out.println("<tr><td width=150px>User Id:</td><td><input type='text' name='userid' maxlength=16></td></tr>");
+        out.println("<tr><td>Password:</td><td><input type='password' name='password' maxlength=16></td></tr>");
+        out.println("<tr><td>Retype Password:</td><td><input type='password' name='passwordCopy' maxlength=16></td></tr>");
         out.println("<tr><td>User Name:</td><td><input type='text' name='username' maxlength=40></td></tr>");
         out.println("<tr><td>User Type:</td><td><select name='usertypeshow' disabled>");
         out.println("<option value='investor'>Investor</option>");
@@ -168,7 +168,7 @@ public class RegistrationServlet extends HttpServlet {
         out.println("<input type='hidden' name='usertype' value='investor'>");
         out.println("<tr><td>Cash Held:</td><td><input type='text' disabled value=1000 name='cashheldshow' maxlength=8></td></tr>");
         out.println("<input type='hidden' name='cashheld' value='1000'>");
-        out.println("<tr><td align=center colspan=2><input type='submit' value='Submit'> &nbsp;");
+        out.println("<tr><td align=center colspan=2><input type='submit' value='Register'> &nbsp;");
         out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='NewLogin'\"/></td></tr>");
         out.println("</table>");
         out.println("</form></center><br><br>");

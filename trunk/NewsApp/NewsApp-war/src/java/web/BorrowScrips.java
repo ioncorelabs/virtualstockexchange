@@ -190,7 +190,7 @@ public class BorrowScrips extends HttpServlet {
         out.println("</select></td>");
         
         out.println("<tr><td>Number of shares: </td><td><input type='text' name='num' maxlength=6></td></tr>");
-        out.println("<tr><td colspan=2 align=center><input type='submit' value='Submit'>");
+        out.println("<tr><td colspan=2 align=center><input type='submit' value='Borrow'>");
         if(((String)appSession.getAttribute("userrole")).equals("t")) {
             out.println("<input type=\"button\" value=\"Cancel\" " +
                     "onClick=\"window.location='TraderHome'\"/></td></tr></table></p>");

@@ -215,7 +215,7 @@ public class BuyToCoverScrips extends HttpServlet {
         out.println("<input type =hidden name = index >" );
         
         out.println("<tr><td colspan=6> Number of Shares to cover: <input type =text name=number id=num size =10 maxlength=6></tr> ");
-        out.println("<tr><td colspan=6 align=center><input type =submit value=Submit /> ");
+        out.println("<tr><td colspan=6 align=center><input type=submit value=\"Buy to Cover\"/> ");
         if(((String)appSession.getAttribute("userrole")).equals("t")) {
             out.println("<input type=\"button\" value=\"Cancel\" " +
                     "onClick=\"window.location='TraderHome'\"/></td></tr></table></p>");
