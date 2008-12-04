@@ -42,6 +42,8 @@ public class DelUserServlet extends HttpServlet {
             return;
         }
         
+        boolean erroredSelect = false;
+        
         String selfid = (String)session.getAttribute("userid");
         System.out.println("At admin page as user '" + selfid + "'");
         
@@ -51,7 +53,10 @@ public class DelUserServlet extends HttpServlet {
         LoginEntityFacadeLocal loginEntityFacade = (LoginEntityFacadeLocal) lookupLoginEntityFacade();
         List userlist = loginEntityFacade.findById(userid);
         
-        if (userid != null) {
+                if(userid != null && userid.equals("--SELECT--"))
+            erroredSelect = true;
+        
+        if (userid != null  && !erroredSelect) {
             UsersEntity user = usersEntityFacade.find(userid);
             user.setActive('n');
             usersEntityFacade.edit(user);
@@ -65,27 +70,35 @@ public class DelUserServlet extends HttpServlet {
         }
         
         List users = usersEntityFacade.findAllActive();
-        printForm(users, response);
+        printForm(users, response, erroredSelect);
     }
     
-    private void printForm(final List users, final HttpServletResponse response) throws IOException {
+    private void printForm(final List users, final HttpServletResponse response, final boolean erroredSelect) throws IOException {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Deactivate User"));
-        out.println("<span class=\"ttitle\" style=\"580px;\"><center><br>Deactivate User Form</span><br><br>");
         
-        out.println("<form method=post>");
-        out.println("<font size=4>User Id:</font> &nbsp;&nbsp;<select name='userid'>");
-        
-        for (Iterator it = users.iterator(); it.hasNext();) {
-            UsersEntity user = (UsersEntity)it.next();
-            out.println("<option value='" + user.getUserId() + "'>" + user.getUserId() + "</option><br/>");
+        if(users.iterator().hasNext()){
+            out.println("<span class=\"ttitle\" style=\"580px;\"><center><br>Deactivate User Form</span><br><br>");
+            if(erroredSelect)
+                HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_REDELUSER_SELECT);
+            out.println("<form method=post>");
+            out.println("<font size=4>User Id:</font> &nbsp;&nbsp;<select name='userid'>");
+            out.println("<option value =\"--SELECT--\")>--SELECT--</option>");
+            for (Iterator it = users.iterator(); it.hasNext();) {
+                UsersEntity user = (UsersEntity)it.next();
+                out.println("<option value='" + user.getUserId() + "'>" + user.getUserId() + "</option><br/>");
+            }
+            
+            out.println("</select><br><br>");
+            out.println("<input type='submit' value='Submit'>   ");
+            out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
+            out.println("</form></center>");
+        } else{
+            out.println("<span class=\"ttitle\" style=\"580px;\"><center><br>No active user exists. To activate users go to activate user menu.</span><br><br>");
+            out.println("<input type=\"button\" value=\"Cancel\" " +
+                    "onClick=\"window.location='AdminServlet'\"/>");
         }
-        
-        out.println("</select><br><br>");
-        out.println("<input type='submit' value='Submit'>   ");
-        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
-        out.println("</form></center>");
-        
+
         out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
     }

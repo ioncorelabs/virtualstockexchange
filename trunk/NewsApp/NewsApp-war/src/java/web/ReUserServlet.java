@@ -36,13 +36,14 @@ public class ReUserServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
+        
         HttpSession session = request.getSession(true);
-        if (isInvalidSession(session))
-        {
+        if (isInvalidSession(session)) {
             response.sendRedirect("NewLogin");
             return;
         }
+        
+        boolean erroredSelect = false;
         
         String selfid = (String)session.getAttribute("userid");
         System.out.println("At admin page as user '" + selfid + "'");
@@ -50,46 +51,55 @@ public class ReUserServlet extends HttpServlet {
         String userid = request.getParameter("userid");
         UsersEntityFacadeLocal usersEntityFacade = (UsersEntityFacadeLocal) lookupUsersEntityFacade();
         
-        if (userid != null)
-        {   
+        if(userid != null && userid.equals("--SELECT--"))
+            erroredSelect = true;
+        
+        if (userid != null && !erroredSelect) {
             UsersEntity user = usersEntityFacade.find(userid);
-            user.setActive('y');                        
+            user.setActive('y');
             usersEntityFacade.edit(user);
-            response.sendRedirect("AdminServlet"); 
+            response.sendRedirect("AdminServlet");
         }
         
         List users = usersEntityFacade.findAllInActive();
-        printForm(users, response);
+        printForm(users, response, erroredSelect);
     }
-
-    private void printForm(final List users, final HttpServletResponse response) throws IOException {
+    
+    private void printForm(final List users, final HttpServletResponse response, final boolean erroredSelect) throws IOException {
         PrintWriter out = response.getWriter();
         out.println(HtmlBuilder.buildHtmlHeader("Reactivate User"));
-        out.println("<span class=\"ttitle\" style=\"580px;\"><center><br>Reactivate User Form</span><br><br>");
         
-        out.println("<form method=post>");
-        out.println("<font size=4>User Id:</font> <select name='userid'>");
-                
-        for (Iterator it = users.iterator(); it.hasNext();)
-        {
-            UsersEntity user = (UsersEntity)it.next();
-            out.println("<option value='" + user.getUserId() + "'>" + user.getUserId() + "</option><br/>");
+        if(users.iterator().hasNext()){
+            out.println("<span class=\"ttitle\" style=\"580px;\"><center><br>Reactivate User Form</span><br><br>");
+            if(erroredSelect)
+                HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_REDELUSER_SELECT);
+            
+            out.println("<form method=post>");
+            out.println("<font size=4>User Id:</font> <select name='userid'>");
+            out.println("<option value =\"--SELECT--\")>--SELECT--</option>");
+            
+            for (Iterator it = users.iterator(); it.hasNext();) {
+                UsersEntity user = (UsersEntity)it.next();
+                out.println("<option value='" + user.getUserId() + "'>" + user.getUserId() + "</option><br/>");
+            }
+            
+            out.println("</select><br><br>");
+            out.println("<input type='submit' value='Submit'>   ");
+            out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
+            out.println("</form><center>");
+        }  else{
+            out.println("<span class=\"ttitle\" style=\"580px;\"><center><br>Currently no user is deactivated.</span><br><br>");
+            out.println("<input type=\"button\" value=\"Cancel\" " +
+                    "onClick=\"window.location='AdminServlet'\"/>");
         }
-        
-        out.println("</select><br><br>");
-        out.println("<input type='submit' value='Submit'>   ");
-        out.println("<input type=\"button\" value=\"Cancel\" onClick=\"window.location='AdminServlet'\"/>");
-        out.println("</form><center>");  
-                
         out.println(HtmlBuilder.buildHtmlFooter());
         out.close();
     }
     
-    private boolean isInvalidSession(final HttpSession session)
-    {
-        return  session.isNew() || 
-                session.getAttribute("userid") == null || 
-                session.getAttribute("userrole") == null || 
+    private boolean isInvalidSession(final HttpSession session) {
+        return  session.isNew() ||
+                session.getAttribute("userid") == null ||
+                session.getAttribute("userrole") == null ||
                 !((String)session.getAttribute("userrole")).equals("a");
     }
     
@@ -98,7 +108,7 @@ public class ReUserServlet extends HttpServlet {
      * @param request servlet request
      * @param response servlet response
      */
-     protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         if (request.getQueryString() != null)
             response.sendRedirect(HtmlBuilder.DO_GET_REDIRECT_PAGE);
@@ -123,7 +133,7 @@ public class ReUserServlet extends HttpServlet {
     }
     // </editor-fold>
     
-        private UsersEntityFacadeLocal lookupUsersEntityFacade() {
+    private UsersEntityFacadeLocal lookupUsersEntityFacade() {
         try {
             Context c = new InitialContext();
             return (UsersEntityFacadeLocal) c.lookup("NewsApp/UsersEntityFacade/local");

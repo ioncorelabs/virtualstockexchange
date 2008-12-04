@@ -21,6 +21,7 @@ import javax.naming.NamingException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.apache.html.dom.HTMLBuilder;
+import org.apache.myfaces.renderkit.html.HTML;
 import web.utils.*;
 
 /**
@@ -62,6 +63,7 @@ public class AddUserServlet extends HttpServlet {
         boolean erroredUserIDMax    = false;
         boolean erroredPasswordMin  = false;
         boolean erroredPasswordMax  = false;
+        boolean erroredSelect       = false;
         double dblCashHeld = 0;
         
         if(HtmlBuilder.isFormSubmitted(parameterMap)) 
@@ -82,7 +84,8 @@ public class AddUserServlet extends HttpServlet {
                 erroredUserIDMin = true;
             if (parameterMap.get("userid").length() > 16)
                 erroredUserIDMax = true;
-            
+            if(parameterMap.get("usertype").toString().equals("--SELECT--"))
+                erroredSelect = true;            
             if (parameterMap.get("password").length() < 3)
                 erroredPasswordMin = true;
             if (parameterMap.get("password").length() > 16)
@@ -97,7 +100,7 @@ public class AddUserServlet extends HttpServlet {
         boolean erroredUserExists = false;
         
         if (HtmlBuilder.isFormSubmitted(parameterMap) && 
-                !erroredBlankFields && !erroredNumType && !erroredUserNameText && 
+                !erroredBlankFields && !erroredNumType && !erroredUserNameText && !erroredSelect &&
                 !erroredUserNameMax && !erroredUserIDMin && !erroredUserIDMax && !erroredPasswordMin && !erroredPasswordMax && !erroredUserIDText) 
         {
             char userRole = parameterMap.get("usertype").charAt(0);
@@ -156,6 +159,8 @@ public class AddUserServlet extends HttpServlet {
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_PASSWORD_MIN);
         if (erroredPasswordMax)
             HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_PASSWORD_MAX);
+        if (erroredSelect)
+            HtmlBuilder.printErrorMessage(out, HtmlBuilder.ERRORS.INVALID_USERTYPE_SELECT);
         
         out.println("<br/><form method=post>");
         out.println("<table width=350px cellpadding=4px border=1>");
@@ -163,6 +168,7 @@ public class AddUserServlet extends HttpServlet {
         out.println("<tr><td>Password:</td><td><input type='password' name='password' maxlength=16></td></tr>");
         out.println("<tr><td>User Name:</td><td><input type='text' name='username' maxlength=40></td></tr>");
         out.println("<tr><td>User Type:</td><td><select name='usertype'>");
+        out.println("<option value =\"--SELECT--\")>--SELECT--</option>");
         out.println("<option value='admin'>Admin</option>");
         out.println("<option value='trader'>Trader</option>");
         out.println("<option value='investor'>Investor</option>");

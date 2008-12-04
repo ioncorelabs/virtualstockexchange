@@ -85,7 +85,7 @@ public class RegistrationServlet extends HttpServlet {
             if (parameterMap.get("password").length() > 16)
                 erroredPasswordMax = true;
             
-            if(!HtmlBuilder.isValidName(parameterMap.get("username")))
+            if(!HtmlBuilder.isValidUserName(parameterMap.get("username")))
                 erroredUserNameText = true;
             if (!HtmlBuilder.isValidID(parameterMap.get("userid")))
                 erroredUserIDText = true;
