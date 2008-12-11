@@ -47,8 +47,8 @@ public class NewLoginTest extends ServletTestCase {
     
     public void beginAdminLoginTest(WebRequest theRequest) throws Exception {
         System.setProperty("cactus.contextURL", "http://localhost:8080/NewsApp-war");
-        theRequest.addParameter("userid", "admin");
-        theRequest.addParameter("password", "pass");
+        theRequest.addParameter("userid", "admin", theRequest.POST_METHOD);
+        theRequest.addParameter("password", "pass", theRequest.POST_METHOD);
     }
 
     /**
@@ -58,7 +58,7 @@ public class NewLoginTest extends ServletTestCase {
         System.out.println("processRequest");
         
         NewLogin instance = new NewLogin();
-        instance.doGet(request, response);
+        instance.processRequest(request, response);
         
         assertNotNull("userid passed is null?", request.getParameter("userid"));
         assertNotNull("password passed is null?", request.getParameter("password"));
@@ -103,8 +103,8 @@ public class NewLoginTest extends ServletTestCase {
     
     public void beginTraderLoginTest(WebRequest theRequest) throws Exception {
         System.setProperty("cactus.contextURL", "http://localhost:8080/NewsApp-war");
-        theRequest.addParameter("userid", "trader");
-        theRequest.addParameter("password", "pass");
+        theRequest.addParameter("userid", "trader", theRequest.POST_METHOD);
+        theRequest.addParameter("password", "pass", theRequest.POST_METHOD);
     }
 
     /**
@@ -114,7 +114,7 @@ public class NewLoginTest extends ServletTestCase {
         System.out.println("processRequest");
         
         NewLogin instance = new NewLogin();
-        instance.doGet(request, response);
+        instance.processRequest(request, response);
         
         assertNotNull("userid passed is null?", request.getParameter("userid"));
         assertNotNull("password passed is null?", request.getParameter("password"));
@@ -158,8 +158,8 @@ public class NewLoginTest extends ServletTestCase {
     
     public void beginInvestorLoginTest(WebRequest theRequest) throws Exception {
         System.setProperty("cactus.contextURL", "http://localhost:8080/NewsApp-war");
-        theRequest.addParameter("userid", "investor");
-        theRequest.addParameter("password", "pass");
+        theRequest.addParameter("userid", "investor", theRequest.POST_METHOD);
+        theRequest.addParameter("password", "pass", theRequest.POST_METHOD);
     }
 
     /**
@@ -169,7 +169,7 @@ public class NewLoginTest extends ServletTestCase {
         System.out.println("processRequest");
         
         NewLogin instance = new NewLogin();
-        instance.doGet(request, response);
+        instance.processRequest(request, response);
         
         assertNotNull("userid passed is null?", request.getParameter("userid"));
         assertNotNull("password passed is null?", request.getParameter("password"));
@@ -214,8 +214,8 @@ public class NewLoginTest extends ServletTestCase {
     
     public void beginBadLoginTest(WebRequest theRequest) throws Exception {
         System.setProperty("cactus.contextURL", "http://localhost:8080/NewsApp-war");
-        theRequest.addParameter("userid", "idontexist");
-        theRequest.addParameter("password", "idontexist");
+        theRequest.addParameter("userid", "idontexist", theRequest.POST_METHOD);
+        theRequest.addParameter("password", "idontexist", theRequest.POST_METHOD);
     }
 
     /**
@@ -225,7 +225,7 @@ public class NewLoginTest extends ServletTestCase {
         System.out.println("processRequest");
         
         NewLogin instance = new NewLogin();
-        instance.doGet(request, response);
+        instance.processRequest(request, response);
         
         assertNotNull("userid passed is null?", request.getParameter("userid"));
         assertNotNull("password passed is null?", request.getParameter("password"));
@@ -244,6 +244,7 @@ public class NewLoginTest extends ServletTestCase {
     public void endBadLoginTest(WebResponse theResponse) throws Exception {
         System.out.println("the response text: '" + theResponse.getText() + "'");
         assertFalse("hmm... there isn't any response for the bad login? Thought there should be the error page.", theResponse.getText().equals(""));
+        assertTrue("should of received bad username error", theResponse.getText().contains("Invalid Username or Password. Please try again."));
         System.out.println("the redirector name: '" + theResponse.getWebRequest().getRedirectorName() + "'");
         ServletURL url = theResponse.getWebRequest().getURL();
         if (url != null)
