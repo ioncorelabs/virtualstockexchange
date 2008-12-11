@@ -24,6 +24,8 @@ public class TestAll extends TestCase {
         
         suite.addTest(new TestSuite(web.NewLoginTest.class));
         suite.addTest(new TestSuite(web.AddScripServletTest.class));
+        //suite.addTest(new TestSuite(web.AddUserServletTest.class));
+        
         return suite;
     }
 
