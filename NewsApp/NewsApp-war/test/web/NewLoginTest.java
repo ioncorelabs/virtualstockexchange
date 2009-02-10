@@ -176,39 +176,14 @@ public class NewLoginTest extends ServletTestCase {
         
         assertNotNull("userid session not set?", session.getAttribute("userid"));
         assertNotNull("userrole session not set?", session.getAttribute("userrole"));
-        
-        // try printing request stuff here
-        System.out.println("=-=-=-=-=-=-=-=-=-=- INVESTOR =-=-=-=-=-=-=-=-=-=-=-");
-        System.out.println("request URI: " + request.getRequestURI());
-        System.out.println("request context path: " + request.getContextPath());
-        System.out.println("request servlet path: " + request.getServletPath());
-        System.out.println("request path info: " + request.getPathInfo());
     }
     
     public void endInvestorLoginTest(WebResponse theResponse) throws Exception {
         System.out.println("the response text: '" + theResponse.getText() + "'");
         System.out.println("the redirector name: '" + theResponse.getWebRequest().getRedirectorName() + "'");
         ServletURL url = theResponse.getWebRequest().getURL();
-        if (url != null)
-        {
-            System.out.println("the url contextx path: '" + theResponse.getWebRequest().getURL().getContextPath() + "'");
-            System.out.println("the url path: '" + theResponse.getWebRequest().getURL().getPath() + "'");
-            System.out.println("the url path info: '" + theResponse.getWebRequest().getURL().getPathInfo() + "'");
-            System.out.println("the url servlet path: '" + theResponse.getWebRequest().getURL().getServletPath() + "'");
-            System.out.println("the url query string: '" + theResponse.getWebRequest().getURL().getQueryString() + "'");
-        }
-        
-        HttpURLConnection java_url_conn = theResponse.getConnection();
-        if (java_url_conn != null)
-        {
-            System.out.println("java url conn request method: " + java_url_conn.getRequestMethod());
-            java.net.URL java_url = java_url_conn.getURL();
-            if (java_url != null)
-            {
-                System.out.println("java url path: " + java_url.getPath());
-                System.out.println("java url query: " + java_url.getQuery());
-            }
-        }
+        System.out.println("the response text: '" + theResponse.getText() + "'");
+        assertTrue("hmm... we weren't forwarded to Investor's homepage?", theResponse.getText().equals(""));
     }
     
     
